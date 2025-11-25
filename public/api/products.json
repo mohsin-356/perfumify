@@ -1,0 +1,104 @@
+[
+  {
+    "id": 1,
+    "name": "Chanel No. 5 Eau de Parfum",
+    "description": "The legendary fragrance that has captivated women for generations. A timeless composition of aldehydes, ylang-ylang, rose, lily of the valley, and iris.",
+    "short_description": "The world's most iconic fragrance - timeless, elegant, and sophisticated.",
+    "slug": "chanel-no-5-eau-de-parfum",
+    "brand": "CHANEL",
+    "sku": "CHANEL-NO5-EDP-100ML",
+    "image": {
+      "id": 1,
+      "thumbnail": "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=400&q=80",
+      "original": "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=800&q=85"
+    },
+    "gallery": [
+      {
+        "id": 1,
+        "thumbnail": "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=400&q=80",
+        "original": "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=800&q=85"
+      }
+    ],
+    "price": 150,
+    "sale_price": 120,
+    "category": "Women's Perfume",
+    "quantity": 25,
+    "weight": "100ml",
+    "dimensions": "10cm x 5cm x 15cm",
+    "status": "active",
+    "featured": true,
+    "meta_title": "Chanel No. 5 Eau de Parfum - Iconic Women's Fragrance",
+    "meta_description": "Experience the timeless elegance of Chanel No. 5 Eau de Parfum. The world's most famous fragrance with aldehydes, rose, and jasmine.",
+    "tags": [
+      "chanel",
+      "women",
+      "classic",
+      "elegant",
+      "floral"
+    ],
+    "variations": [
+      {
+        "id": 1,
+        "value": "100ml",
+        "attribute": {
+          "id": 1,
+          "name": "Size",
+          "slug": "size"
+        }
+      }
+    ],
+    "created_at": "2025-11-14T18:47:55.617Z",
+    "updated_at": "2025-11-14T18:47:55.617Z"
+  },
+  {
+    "id": 2,
+    "name": "Dior Sauvage Eau de Toilette",
+    "description": "A radically fresh composition, Sauvage is both raw and noble. The fragrance is inspired by wide-open spaces, a white-hot desert landscape under a vast blue sky.",
+    "short_description": "Fresh, raw, and noble - inspired by wide-open desert landscapes.",
+    "slug": "dior-sauvage-eau-de-toilette",
+    "brand": "Dior",
+    "sku": "DIOR-SAUVAGE-EDT-100ML",
+    "image": {
+      "id": 2,
+      "thumbnail": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=400&q=80",
+      "original": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=800&q=85"
+    },
+    "gallery": [
+      {
+        "id": 2,
+        "thumbnail": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=400&q=80",
+        "original": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=800&q=85"
+      }
+    ],
+    "price": 95,
+    "sale_price": null,
+    "category": "Men's Perfume",
+    "quantity": 40,
+    "weight": "100ml",
+    "dimensions": "8cm x 5cm x 12cm",
+    "status": "active",
+    "featured": true,
+    "meta_title": "Dior Sauvage Eau de Toilette - Fresh Men's Fragrance",
+    "meta_description": "Discover Dior Sauvage EDT - a radically fresh and raw fragrance inspired by desert landscapes. Perfect for the modern man.",
+    "tags": [
+      "dior",
+      "men",
+      "fresh",
+      "woody",
+      "bergamot"
+    ],
+    "variations": [
+      {
+        "id": 1,
+        "value": "100ml",
+        "attribute": {
+          "id": 1,
+          "name": "Size",
+          "slug": "size"
+        }
+      }
+    ],
+    "created_at": "2025-11-14T18:47:55.617Z",
+    "updated_at": "2025-11-14T18:47:55.617Z"
+  }
+]

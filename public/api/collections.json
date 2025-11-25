@@ -1,0 +1,54 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "Designer Collection",
+      "slug": "designer-collection"
+    },
+    {
+      "id": 2,
+      "name": "Summer Fragrances",
+      "slug": "summer-fragrances"
+    },
+    {
+      "id": 3,
+      "name": "Winter Scents",
+      "slug": "winter-scents"
+    },
+    {
+      "id": 4,
+      "name": "Date Night Collection",
+      "slug": "date-night-collection"
+    },
+    {
+      "id": 5,
+      "name": "Gift Sets",
+      "slug": "gift-sets"
+    },
+    {
+      "id": 6,
+      "name": "Men's Signature",
+      "slug": "mens-signature"
+    },
+    {
+      "id": 7,
+      "name": "Women's Luxury",
+      "slug": "womens-luxury"
+    },
+    {
+      "id": 8,
+      "name": "Unisex Collection",
+      "slug": "unisex-collection"
+    },
+    {
+      "id": 9,
+      "name": "Oriental Collection",
+      "slug": "oriental-collection"
+    },
+    {
+      "id": 10,
+      "name": "Fresh & Citrus",
+      "slug": "fresh-citrus"
+    }
+  ]
+}
