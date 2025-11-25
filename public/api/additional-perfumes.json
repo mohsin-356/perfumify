@@ -1,0 +1,146 @@
+[
+  {
+    "id": 13,
+    "name": "Yves Saint Laurent Y",
+    "description": "A fresh, woody fragrance for the modern man.",
+    "slug": "ysl-y-edp",
+    "brand": "YSL",
+    "image": {
+      "thumbnail": "https://images.unsplash.com/photo-1585910267606-a2df17975ebb?w=400&q=80",
+      "original": "https://images.unsplash.com/photo-1585910267606-a2df17975ebb?w=800&q=85"
+    },
+    "gallery": [],
+    "price": 95.00,
+    "sale_price": 82.00,
+    "category": "men",
+    "quantity": 35,
+    "tags": ["fresh", "woody", "modern"],
+    "variations": []
+  },
+  {
+    "id": 14,
+    "name": "Versace Eros",
+    "description": "A passionate fragrance inspired by Greek mythology.",
+    "slug": "versace-eros",
+    "brand": "Versace",
+    "image": {
+      "thumbnail": "https://images.pexels.com/photos/3738386/pexels-photo-3738386.jpeg?w=400",
+      "original": "https://images.pexels.com/photos/3738386/pexels-photo-3738386.jpeg?w=800"
+    },
+    "gallery": [],
+    "price": 78.00,
+    "sale_price": 65.00,
+    "category": "men",
+    "quantity": 40,
+    "tags": ["fresh", "minty", "passionate"],
+    "variations": []
+  },
+  {
+    "id": 15,
+    "name": "Lancôme La Vie Est Belle",
+    "description": "A luminous fragrance for women who choose their own path.",
+    "slug": "lancome-la-vie-est-belle",
+    "brand": "Lancôme",
+    "image": {
+      "thumbnail": "https://images.unsplash.com/photo-1585386959984-a4155224a1ad?w=400&q=80",
+      "original": "https://images.unsplash.com/photo-1585386959984-a4155224a1ad?w=800&q=85"
+    },
+    "gallery": [],
+    "price": 105.00,
+    "sale_price": 89.00,
+    "category": "women",
+    "quantity": 38,
+    "tags": ["sweet", "gourmand", "feminine"],
+    "variations": []
+  },
+  {
+    "id": 16,
+    "name": "Viktor & Rolf Flowerbomb",
+    "description": "An explosion of flowers, a whirlwind of emotions.",
+    "slug": "viktor-rolf-flowerbomb",
+    "brand": "Viktor & Rolf",
+    "image": {
+      "thumbnail": "https://images.pexels.com/photos/4041279/pexels-photo-4041279.jpeg?w=400",
+      "original": "https://images.pexels.com/photos/4041279/pexels-photo-4041279.jpeg?w=800"
+    },
+    "gallery": [],
+    "price": 125.00,
+    "sale_price": 105.00,
+    "category": "women",
+    "quantity": 25,
+    "tags": ["floral", "explosive", "feminine"],
+    "variations": []
+  },
+  {
+    "id": 17,
+    "name": "Hermès Terre d'Hermès",
+    "description": "A symbolic narrative exploring raw material and its metamorphosis.",
+    "slug": "hermes-terre-dhermes",
+    "brand": "Hermès",
+    "image": {
+      "thumbnail": "https://images.unsplash.com/photo-1528821128474-27f963b062bf?w=400&q=80",
+      "original": "https://images.unsplash.com/photo-1528821128474-27f963b062bf?w=800&q=85"
+    },
+    "gallery": [],
+    "price": 98.00,
+    "sale_price": 88.00,
+    "category": "men",
+    "quantity": 30,
+    "tags": ["earthy", "woody", "mineral"],
+    "variations": []
+  },
+  {
+    "id": 18,
+    "name": "Guerlain Mon Guerlain",
+    "description": "A fresh oriental fragrance enhanced by exceptional ingredients.",
+    "slug": "guerlain-mon-guerlain",
+    "brand": "Guerlain",
+    "image": {
+      "thumbnail": "https://images.unsplash.com/photo-1563170351-be82bc888aa4?w=400&q=80",
+      "original": "https://images.unsplash.com/photo-1563170351-be82bc888aa4?w=800&q=85"
+    },
+    "gallery": [],
+    "price": 115.00,
+    "sale_price": 98.00,
+    "category": "women",
+    "quantity": 22,
+    "tags": ["oriental", "fresh", "lavender"],
+    "variations": []
+  },
+  {
+    "id": 19,
+    "name": "Dolce & Gabbana Light Blue",
+    "description": "A sparkling fruity-floral scent that evokes summer.",
+    "slug": "dg-light-blue",
+    "brand": "Dolce & Gabbana",
+    "image": {
+      "thumbnail": "https://images.pexels.com/photos/3059609/pexels-photo-3059609.jpeg?w=400",
+      "original": "https://images.pexels.com/photos/3059609/pexels-photo-3059609.jpeg?w=800"
+    },
+    "gallery": [],
+    "price": 72.00,
+    "sale_price": 62.00,
+    "category": "women",
+    "quantity": 45,
+    "tags": ["fresh", "citrus", "summer"],
+    "variations": []
+  },
+  {
+    "id": 20,
+    "name": "Montblanc Explorer",
+    "description": "An unconventional woody-aromatic fragrance for adventurers.",
+    "slug": "montblanc-explorer",
+    "brand": "Montblanc",
+    "image": {
+      "thumbnail": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=400&q=80",
+      "original": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=800&q=85"
+    },
+    "gallery": [],
+    "price": 58.00,
+    "sale_price": 48.00,
+    "category": "men",
+    "quantity": 50,
+    "tags": ["woody", "aromatic", "adventurous"],
+    "variations": []
+  }
+]

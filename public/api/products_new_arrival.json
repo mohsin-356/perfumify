@@ -1,0 +1,19 @@
+[
+  {
+    "id": 3,
+    "name": "Tom Ford Black Orchid",
+    "description": "A luxurious and sensual fragrance of rich, dark accords.",
+    "slug": "tom-ford-black-orchid",
+    "brand": "TOM FORD",
+    "image": {
+      "id": 3,
+      "thumbnail": "https://images.unsplash.com/photo-1563170351-be82bc888aa4?w=400&q=80",
+      "original": "https://images.unsplash.com/photo-1563170351-be82bc888aa4?w=800&q=85"
+    },
+    "price": 180,
+    "sale_price": 160,
+    "category": "unisex",
+    "quantity": 15,
+    "tags": ["tom ford", "unisex", "luxury"]
+  }
+]

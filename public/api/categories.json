@@ -1,0 +1,92 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "Men's Perfumes",
+      "slug": "men",
+      "productCount": 25,
+      "image": {
+        "id": 1,
+        "thumbnail": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=400&q=80",
+        "original": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=800&q=85"
+      }
+    },
+    {
+      "id": 2,
+      "name": "Women's Perfumes",
+      "slug": "women",
+      "productCount": 25,
+      "image": {
+        "id": 2,
+        "thumbnail": "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=400&q=80",
+        "original": "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=800&q=85"
+      }
+    },
+    {
+      "id": 3,
+      "name": "Unisex Fragrances",
+      "slug": "unisex",
+      "productCount": 15,
+      "image": {
+        "id": 3,
+        "thumbnail": "https://images.unsplash.com/photo-1563170351-be82bc888aa4?w=400&q=80",
+        "original": "https://images.unsplash.com/photo-1563170351-be82bc888aa4?w=800&q=85"
+      }
+    },
+    {
+      "id": 4,
+      "name": "Luxury Collection",
+      "slug": "luxury",
+      "productCount": 20,
+      "image": {
+        "id": 4,
+        "thumbnail": "https://images.unsplash.com/photo-1594035910387-fea47794261f?w=400&q=80",
+        "original": "https://images.unsplash.com/photo-1594035910387-fea47794261f?w=800&q=85"
+      }
+    },
+    {
+      "id": 5,
+      "name": "Gift Sets",
+      "slug": "gift-sets",
+      "productCount": 12,
+      "image": {
+        "id": 5,
+        "thumbnail": "https://images.unsplash.com/photo-1587017539504-67cfbddac569?w=400&q=80",
+        "original": "https://images.unsplash.com/photo-1587017539504-67cfbddac569?w=800&q=85"
+      }
+    },
+    {
+      "id": 6,
+      "name": "Niche Perfumes",
+      "slug": "niche",
+      "productCount": 18,
+      "image": {
+        "id": 6,
+        "thumbnail": "https://images.unsplash.com/photo-1585386959984-a4155224a1ad?w=400&q=80",
+        "original": "https://images.unsplash.com/photo-1585386959984-a4155224a1ad?w=800&q=85"
+      }
+    },
+    {
+      "id": 7,
+      "name": "Oriental",
+      "slug": "oriental",
+      "productCount": 16,
+      "image": {
+        "id": 7,
+        "thumbnail": "https://images.pexels.com/photos/3018845/pexels-photo-3018845.jpeg?w=400",
+        "original": "https://images.pexels.com/photos/3018845/pexels-photo-3018845.jpeg?w=800"
+      }
+    },
+    {
+      "id": 8,
+      "name": "Fresh & Citrus",
+      "slug": "fresh-citrus",
+      "productCount": 22,
+      "image": {
+        "id": 8,
+        "thumbnail": "https://images.pexels.com/photos/3059609/pexels-photo-3059609.jpeg?w=400",
+        "original": "https://images.pexels.com/photos/3059609/pexels-photo-3059609.jpeg?w=800"
+      }
+    }
+  ]
+}

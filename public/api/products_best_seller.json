@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1,
+    "name": "Chanel No. 5 Eau de Parfum",
+    "description": "The legendary fragrance that has captivated women for generations.",
+    "slug": "chanel-no-5-eau-de-parfum",
+    "brand": "CHANEL",
+    "image": {
+      "id": 1,
+      "thumbnail": "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=400&q=80",
+      "original": "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?w=800&q=85"
+    },
+    "price": 150,
+    "sale_price": 120,
+    "category": "women",
+    "quantity": 25,
+    "tags": ["chanel", "women", "classic"]
+  },
+  {
+    "id": 2,
+    "name": "Dior Sauvage Eau de Toilette",
+    "description": "A radically fresh composition, Sauvage is both raw and noble.",
+    "slug": "dior-sauvage-eau-de-toilette",
+    "brand": "Dior",
+    "image": {
+      "id": 2,
+      "thumbnail": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=400&q=80",
+      "original": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=800&q=85"
+    },
+    "price": 95,
+    "category": "men",
+    "quantity": 40,
+    "tags": ["dior", "men", "fresh"]
+  }
+]

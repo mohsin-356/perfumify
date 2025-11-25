@@ -1,0 +1,13 @@
+{
+  "env": {
+    "NEXT_PUBLIC_REST_API_ENDPOINT": "/api",
+    "NODE_OPTIONS": "--openssl-legacy-provider"
+  },
+  "build": {
+    "env": {
+      "NEXT_PUBLIC_REST_API_ENDPOINT": "/api",
+      "NODE_OPTIONS": "--openssl-legacy-provider"
+    }
+  },
+  "installCommand": "npm install"
+}

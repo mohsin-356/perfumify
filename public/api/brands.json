@@ -1,0 +1,292 @@
+{
+  "brands": [
+    {
+      "id": 1,
+      "name": "Calvin Klein",
+      "slug": "calvin-klein",
+      "image": {
+        "id": 1,
+        "thumbnail": "/assets/images/brands/images_1.jpg",
+        "original": "/assets/images/brands/images_1.jpg"
+      },
+      "productCount": 18
+    },
+    {
+      "id": 2,
+      "name": "Azzaro",
+      "slug": "azzaro",
+      "image": {
+        "id": 2,
+        "thumbnail": "/assets/images/brands/images_2.webp",
+        "original": "/assets/images/brands/images_2.webp"
+      },
+      "productCount": 12
+    },
+    {
+      "id": 3,
+      "name": "Creed",
+      "slug": "creed",
+      "image": {
+        "id": 3,
+        "thumbnail": "/assets/images/brands/images_3.webp",
+        "original": "/assets/images/brands/images_3.webp"
+      },
+      "productCount": 14
+    },
+    {
+      "id": 4,
+      "name": "Dior",
+      "slug": "dior",
+      "image": {
+        "id": 4,
+        "thumbnail": "/assets/images/brands/images_4.webp",
+        "original": "/assets/images/brands/images_4.webp"
+      },
+      "productCount": 25
+    },
+    {
+      "id": 5,
+      "name": "Prada",
+      "slug": "prada",
+      "image": {
+        "id": 5,
+        "thumbnail": "/assets/images/brands/images_5.webp",
+        "original": "/assets/images/brands/images_5.webp"
+      },
+      "productCount": 16
+    },
+    {
+      "id": 6,
+      "name": "Carolina Herrera",
+      "slug": "carolina-herrera",
+      "image": {
+        "id": 6,
+        "thumbnail": "/assets/images/brands/images_6.webp",
+        "original": "/assets/images/brands/images_6.webp"
+      },
+      "productCount": 15
+    },
+    {
+      "id": 7,
+      "name": "CHANEL",
+      "slug": "chanel",
+      "image": {
+        "id": 7,
+        "thumbnail": "/assets/images/brands/images_7.png",
+        "original": "/assets/images/brands/images_7.png"
+      },
+      "productCount": 22
+    },
+    {
+      "id": 8,
+      "name": "GIORGIO ARMANI",
+      "slug": "giorgio-armani",
+      "image": {
+        "id": 8,
+        "thumbnail": "/assets/images/brands/images_8.webp",
+        "original": "/assets/images/brands/images_8.webp"
+      },
+      "productCount": 20
+    },
+    {
+      "id": 9,
+      "name": "TOM FORD",
+      "slug": "tom-ford",
+      "image": {
+        "id": 9,
+        "thumbnail": "/assets/images/brands/images_9.webp",
+        "original": "/assets/images/brands/images_9.webp"
+      },
+      "productCount": 19
+    },
+    {
+      "id": 10,
+      "name": "Valentino",
+      "slug": "valentino",
+      "image": {
+        "id": 10,
+        "thumbnail": "/assets/images/brands/images_10.webp",
+        "original": "/assets/images/brands/images_10.webp"
+      },
+      "productCount": 11
+    }
+  ],
+  "brandsGrid": [
+    {
+      "id": 1,
+      "name": "Calvin Klein",
+      "slug": "calvin-klein",
+      "image": {
+        "id": 1,
+        "thumbnail": "/assets/images/brands/grid/calvin-klein.png",
+        "original": "/assets/images/brands/grid/calvin-klein.png"
+      },
+      "background_image": {
+        "id": 1,
+        "thumbnail": "/assets/images/brands/grid/calvin-klein-bg.jpg",
+        "original": "/assets/images/brands/grid/calvin-klein-bg.jpg"
+      },
+      "productCount": 18
+    },
+    {
+      "id": 2,
+      "name": "Azzaro",
+      "slug": "azzaro",
+      "image": {
+        "id": 2,
+        "thumbnail": "/assets/images/brands/grid/azzaro.png",
+        "original": "/assets/images/brands/grid/azzaro.png"
+      },
+      "background_image": {
+        "id": 2,
+        "thumbnail": "/assets/images/brands/grid/azzaro-bg.jpg",
+        "original": "/assets/images/brands/grid/azzaro-bg.jpg"
+      },
+      "productCount": 12
+    },
+    {
+      "id": 3,
+      "name": "Coach",
+      "slug": "coach",
+      "image": {
+        "id": 3,
+        "thumbnail": "/assets/images/brands/grid/coach.png",
+        "original": "/assets/images/brands/grid/coach.png"
+      },
+      "background_image": {
+        "id": 3,
+        "thumbnail": "/assets/images/brands/grid/coach-bg.jpg",
+        "original": "/assets/images/brands/grid/coach-bg.jpg"
+      },
+      "productCount": 10
+    },
+    {
+      "id": 4,
+      "name": "Creed",
+      "slug": "creed",
+      "image": {
+        "id": 4,
+        "thumbnail": "/assets/images/brands/grid/creed.png",
+        "original": "/assets/images/brands/grid/creed.png"
+      },
+      "background_image": {
+        "id": 4,
+        "thumbnail": "/assets/images/brands/grid/creed-bg.jpg",
+        "original": "/assets/images/brands/grid/creed-bg.jpg"
+      },
+      "productCount": 14
+    },
+    {
+      "id": 5,
+      "name": "Dior",
+      "slug": "dior",
+      "image": {
+        "id": 5,
+        "thumbnail": "/assets/images/brands/grid/dior.png",
+        "original": "/assets/images/brands/grid/dior.png"
+      },
+      "background_image": {
+        "id": 5,
+        "thumbnail": "/assets/images/brands/grid/dior-bg.jpg",
+        "original": "/assets/images/brands/grid/dior-bg.jpg"
+      },
+      "productCount": 25
+    },
+    {
+      "id": 6,
+      "name": "CHANEL",
+      "slug": "chanel",
+      "image": {
+        "id": 6,
+        "thumbnail": "/assets/images/brands/grid/chanel.png",
+        "original": "/assets/images/brands/grid/chanel.png"
+      },
+      "background_image": {
+        "id": 6,
+        "thumbnail": "/assets/images/brands/grid/chanel-bg.jpg",
+        "original": "/assets/images/brands/grid/chanel-bg.jpg"
+      },
+      "productCount": 22
+    },
+    {
+      "id": 7,
+      "name": "GIORGIO ARMANI",
+      "slug": "giorgio-armani",
+      "image": {
+        "id": 7,
+        "thumbnail": "/assets/images/brands/grid/giorgio-armani.png",
+        "original": "/assets/images/brands/grid/giorgio-armani.png"
+      },
+      "background_image": {
+        "id": 7,
+        "thumbnail": "/assets/images/brands/grid/giorgio-armani-bg.jpg",
+        "original": "/assets/images/brands/grid/giorgio-armani-bg.jpg"
+      },
+      "productCount": 20
+    },
+    {
+      "id": 8,
+      "name": "Carolina Herrera",
+      "slug": "carolina-herrera",
+      "image": {
+        "id": 8,
+        "thumbnail": "/assets/images/brands/grid/carolina-herrera.png",
+        "original": "/assets/images/brands/grid/carolina-herrera.png"
+      },
+      "background_image": {
+        "id": 8,
+        "thumbnail": "/assets/images/brands/grid/carolina-herrera-bg.jpg",
+        "original": "/assets/images/brands/grid/carolina-herrera-bg.jpg"
+      },
+      "productCount": 15
+    },
+    {
+      "id": 9,
+      "name": "TOM FORD",
+      "slug": "tom-ford",
+      "image": {
+        "id": 9,
+        "thumbnail": "/assets/images/brands/grid/tom-ford.png",
+        "original": "/assets/images/brands/grid/tom-ford.png"
+      },
+      "background_image": {
+        "id": 9,
+        "thumbnail": "/assets/images/brands/grid/tom-ford-bg.jpg",
+        "original": "/assets/images/brands/grid/tom-ford-bg.jpg"
+      },
+      "productCount": 19
+    },
+    {
+      "id": 10,
+      "name": "Prada",
+      "slug": "prada",
+      "image": {
+        "id": 10,
+        "thumbnail": "/assets/images/brands/grid/prada.png",
+        "original": "/assets/images/brands/grid/prada.png"
+      },
+      "background_image": {
+        "id": 10,
+        "thumbnail": "/assets/images/brands/grid/prada-bg.jpg",
+        "original": "/assets/images/brands/grid/prada-bg.jpg"
+      },
+      "productCount": 16
+    },
+    {
+      "id": 11,
+      "name": "Valentino",
+      "slug": "valentino",
+      "image": {
+        "id": 11,
+        "thumbnail": "/assets/images/brands/grid/valentino.png",
+        "original": "/assets/images/brands/grid/valentino.png"
+      },
+      "background_image": {
+        "id": 11,
+        "thumbnail": "/assets/images/brands/grid/valentino-bg.jpg",
+        "original": "/assets/images/brands/grid/valentino-bg.jpg"
+      },
+      "productCount": 11
+    }
+  ]
+}
