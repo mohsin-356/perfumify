@@ -23,8 +23,8 @@ export const useSignUpMutation = () => {
       authorize();
       closeModal();
     },
-    onError: (data) => {
-      console.log(data, "login error response");
+    onError: () => {
+      // Handle signup error
     },
   });
 };

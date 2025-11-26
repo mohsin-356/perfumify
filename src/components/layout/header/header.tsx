@@ -50,13 +50,11 @@ const Header: React.FC = () => {
 					<nav className="hidden lg:flex items-center space-x-8 xl:space-x-10">
 						{site_header.menu.map((item) => (
 							<div key={item.id} className="relative group">
-								<Link href={item.path}>
-									<a className="text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors duration-200 uppercase tracking-wide">
-										{item.label}
-										{item.subMenu && (
-											<span className="ml-1">▼</span>
-										)}
-									</a>
+								<Link href={item.path} className="text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors duration-200 uppercase tracking-wide">
+									{item.label}
+									{item.subMenu && (
+										<span className="ml-1">▼</span>
+									)}
 								</Link>
 								
 								{/* Dropdown Menu */}
@@ -64,10 +62,8 @@ const Header: React.FC = () => {
 									<div className="absolute top-full left-0 mt-2 w-48 bg-white border border-gray-200 shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
 										<div className="py-2">
 											{item.subMenu.map((subItem) => (
-												<Link key={subItem.id} href={subItem.path}>
-													<a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors">
-														{subItem.label}
-													</a>
+												<Link key={subItem.id} href={subItem.path} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors">
+													{subItem.label}
 												</Link>
 											))}
 										</div>

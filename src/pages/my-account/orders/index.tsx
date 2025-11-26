@@ -17,12 +17,13 @@ OrdersTablePage.Layout = Layout;
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
 	return {
 		props: {
-			...(await serverSideTranslations(locale!, [
+			...(await serverSideTranslations(locale ?? "en", [
 				"common",
 				"forms",
 				"menu",
 				"footer",
 			])),
 		},
+		revalidate: 86400,
 	};
 };

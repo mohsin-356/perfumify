@@ -1,13 +1,20 @@
+'use client';
+
 import { NextSeo } from "next-seo";
 import Head from "next/head";
 import Header from "@components/layout/header/header";
 import Footer from "@components/layout/footer/footer";
-import MobileNavigation from "@components/layout/mobile-navigation/mobile-navigation";
-import Search from "@components/common/search";
+import dynamic from "next/dynamic";
 import CookieBar from "@components/common/cookie-bar";
 import { useAcceptCookies } from "@utils/use-accept-cookies";
 import Button from "@components/ui/button";
 import { useTranslation } from "next-i18next";
+
+const MobileNavigation = dynamic(
+    () => import("@components/layout/mobile-navigation/mobile-navigation"),
+    { ssr: false }
+);
+const Search = dynamic(() => import("@components/common/search"), { ssr: false });
 
 const Layout: React.FC = ({ children }) => {
 	const { acceptedCookies, onAcceptCookies } = useAcceptCookies();
@@ -31,7 +38,7 @@ const Layout: React.FC = ({ children }) => {
 						"Discover luxury perfumes and designer fragrances for men, women and unisex. Shop authentic perfumes from top brands with fast delivery.",
 					images: [
 						{
-							url: "/api/favicon",
+							url: "/favicon.ico.png",
 							width: 800,
 							height: 600,
 							alt: "Perfumify",
@@ -40,7 +47,7 @@ const Layout: React.FC = ({ children }) => {
 				}}
 			/>
 			<Head>
-				<link rel="icon" href="/api/favicon" type="image/jpeg" />
+				<link rel="icon" href="/favicon.ico" type="image/x-icon" />
 			</Head>
 			<Header />
 			<main

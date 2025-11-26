@@ -2,7 +2,6 @@ import BannerCard from "@components/common/banner-card";
 import CategoryListCard from "@components/common/category-list-card";
 import SellWithProgress from "@components/common/sale-with-progress";
 import Carousel from "@components/ui/carousel/carousel";
-import { SwiperSlide } from "swiper/react";
 import { useCategoriesQuery } from "@framework/category/get-all-categories";
 import { useFlashSaleProductsQuery } from "@framework/product/get-all-flash-sale-products";
 import { useWindowSize } from "@utils/use-window-size";
@@ -73,16 +72,16 @@ export function CategoryListCardSection() {
 					<Carousel breakpoints={categoryResponsive} buttonSize="small">
 						{isLoading
 							? Array.from({ length: 7 }).map((_, idx) => (
-									<SwiperSlide key={idx}>
+									<div key={idx}>
 										<CategoryListCardLoader
 											uniqueKey={`category-list-${idx}`}
 										/>
-									</SwiperSlide>
+									</div>
 							  ))
 							: data?.categories.data.map((category: any) => (
-									<SwiperSlide key={`sm-category--key${category.id}`}>
+									<div key={`sm-category--key${category.id}`}>
 										<CategoryListCard category={category} />
-									</SwiperSlide>
+									</div>
 							  ))}
 					</Carousel>
 				</div>

@@ -1,7 +1,6 @@
 import BannerCard from "@components/common/banner-card";
 import CategoryListCard from "@components/common/category-list-card";
 import Carousel from "@components/ui/carousel/carousel";
-import { SwiperSlide } from "swiper/react";
 import { useCategoriesQuery } from "@framework/category/get-all-categories";
 import { useWindowSize } from "@utils/use-window-size";
 import { homeTwoHeroBanner as heroBanner } from "@framework/static/banner";
@@ -51,17 +50,17 @@ const HeroWithCategory: React.FC<Props> = ({
 					<Carousel breakpoints={categoryResponsive} buttonSize="small">
 						{isLoading && !data?.categories?.data?.length
 							? Array.from({ length: 8 }).map((_, idx) => (
-									<SwiperSlide key={`category-list-${idx}`}>
+									<div key={`category-list-${idx}`}>
 										<CategoryListCardLoader
 											uniqueKey={`category-list-${idx}`}
 										/>
-									</SwiperSlide>
-							  ))
+									</div>
+								))
 							: data?.categories?.data?.map((category) => (
-									<SwiperSlide key={`category--key${category.id}`}>
+									<div key={`category--key${category.id}`}>
 										<CategoryListCard category={category} />
-									</SwiperSlide>
-							  ))}
+									</div>
+								))}
 					</Carousel>
 				</div>
 			) : (
@@ -90,13 +89,13 @@ const HeroWithCategory: React.FC<Props> = ({
 					buttonClassName="hidden"
 				>
 					{heroBanner?.map((banner: any) => (
-						<SwiperSlide key={`banner--key${banner.id}`}>
+						<div key={`banner--key${banner.id}`}>
 							<BannerCard
 								banner={banner}
 								href={`${ROUTES.COLLECTIONS}/${banner.slug}`}
 								className="xl:h-full"
 							/>
-						</SwiperSlide>
+						</div>
 					))}
 				</Carousel>
 			</div>

@@ -155,11 +155,12 @@ const ProductsPage = () => {
             </p>
           </div>
           <div className="mt-4 sm:mt-0">
-            <Link href="/admin/products/add">
-              <a className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                <PlusIcon className="-ml-1 mr-2 h-5 w-5" />
-                Add Product
-              </a>
+            <Link
+              href="/admin/products/add"
+              className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              <PlusIcon className="-ml-1 mr-2 h-5 w-5" />
+              Add Product
             </Link>
           </div>
         </div>
@@ -258,15 +259,11 @@ const ProductsPage = () => {
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <Link href={`/products/${product.id}`}>
-                        <a className="text-indigo-600 hover:text-indigo-900">
-                          <EyeIcon className="h-5 w-5" />
-                        </a>
+                      <Link href={`/products/${product.id}`} className="text-indigo-600 hover:text-indigo-900">
+                        <EyeIcon className="h-5 w-5" />
                       </Link>
-                      <Link href={`/admin/products/edit/${product.id}`}>
-                        <a className="text-indigo-600 hover:text-indigo-900">
-                          <PencilIcon className="h-5 w-5" />
-                        </a>
+                      <Link href={`/admin/products/edit/${product.id}`} className="text-indigo-600 hover:text-indigo-900">
+                        <PencilIcon className="h-5 w-5" />
                       </Link>
                       <button
                         onClick={() => handleDelete(product.id)}

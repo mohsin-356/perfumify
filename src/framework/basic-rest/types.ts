@@ -84,6 +84,12 @@ export type Product = {
   meta?: any[];
   description?: string;
   variations?: object;
+  images?: {
+    url: string;
+    public_id: string;
+    width?: number;
+    height?: number;
+  }[];
   [key: string]: unknown;
 };
 export type OrderItem = {

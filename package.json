@@ -7,7 +7,8 @@
     "dev": "set NODE_OPTIONS=--openssl-legacy-provider&& next dev",
     "dev:local": "set PORT=3010&& set NODE_OPTIONS=--openssl-legacy-provider&& set NEXT_PUBLIC_REST_API_ENDPOINT=http://localhost:3010/api&& next dev -p 3010",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "analyze": "set ANALYZE=true&& next build"
   },
   "engines": {
     "node": "22.x"
@@ -21,22 +22,24 @@
     "axios": "^0.21.1",
     "body-scroll-lock": "^3.1.5",
     "classnames": "^2.3.1",
+    "cloudinary": "^2.8.0",
     "formidable": "^3.5.4",
     "framer-motion": "^4.1.17",
     "js-cookie": "^2.2.1",
     "lodash": "^4.17.21",
     "mongoose": "^8.19.4",
-    "next": "11.0.0",
+    "next": "^14.2.15",
+    "next-cloudinary": "^6.17.5",
     "next-i18next": "^8.5.0",
     "next-pwa": "^5.2.21",
     "next-seo": "^4.25.1",
     "overlayscrollbars": "^1.13.1",
     "overlayscrollbars-react": "^0.5.3",
     "rc-drawer": "^4.3.1",
-    "react": "17.0.2",
+    "react": "^18.3.1",
     "react-content-loader": "^6.0.3",
     "react-countdown": "^2.3.2",
-    "react-dom": "17.0.2",
+    "react-dom": "^18.3.1",
     "react-hook-form": "^7.8.8",
     "react-icons": "^4.2.0",
     "react-query": "^3.17.1",
@@ -46,7 +49,9 @@
     "react-tabs": "^3.2.2",
     "react-toastify": "^7.0.4",
     "react-use": "^17.2.4",
-    "swiper": "^6.7.0"
+    "server-only": "^0.0.1",
+    "swiper": "^6.7.0",
+    "zod": "^4.1.13"
   },
   "devDependencies": {
     "@types/body-scroll-lock": "^2.6.1",
@@ -54,8 +59,8 @@
     "@types/lodash": "^4.14.170",
     "@types/node": "^15.14.9",
     "@types/overlayscrollbars": "^1.12.0",
-    "@types/react": "17.0.39",
-    "@types/react-dom": "17.0.11",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
     "@types/react-scroll": "^1.8.2",
     "@types/react-tabs": "^2.3.2",
     "autoprefixer": "^10.2.6",
@@ -63,10 +68,11 @@
     "rimraf": "^3.0.2",
     "tailwindcss": "^2.1.4",
     "tailwindcss-rtl": "^0.7.3",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "webpack-bundle-analyzer": "^4.10.1"
   },
   "overrides": {
-    "@types/react": "17.0.39",
-    "@types/react-dom": "17.0.11"
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0"
   }
 }

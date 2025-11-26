@@ -1,6 +1,5 @@
 import BannerCard from "@components/common/banner-card";
 import Carousel from "@components/ui/carousel/carousel";
-import { SwiperSlide } from "swiper/react";
 import { bannerGrid } from "@framework/static/banner";
 import { useWindowSize } from "@utils/use-window-size";
 import { ROUTES } from "@utils/routes";
@@ -34,13 +33,13 @@ const BannerGridBlock: React.FC<BannerProps> = ({
 				<div>
 					<Carousel breakpoints={breakpoints}>
 						{bannerGrid?.map((banner: any) => (
-							<SwiperSlide key={`banner--key${banner.id}`}>
+							<div key={`banner--key${banner.id}`}>
 								<BannerCard
 									banner={banner}
 									href={`${ROUTES.COLLECTIONS}/${banner.slug}`}
 									className="h-full"
 								/>
-							</SwiperSlide>
+							</div>
 						))}
 					</Carousel>
 				</div>

@@ -120,15 +120,13 @@ const HeroSlider: React.FC = () => {
 						<Image
 							src={slide.image}
 							alt={slide.brand}
-							layout="fill"
-							objectFit="cover"
-							objectPosition="center"
+							fill
 							priority={slide.id === 1}
 							sizes="100vw"
 							quality={70}
-							className="w-full h-full"
+							className="w-full h-full object-cover object-center"
 						/>
-						
+
 						{/* Shop Now Button - Left Bottom */}
 						<div className="absolute bottom-6 left-6">
 							<button

@@ -1,6 +1,5 @@
 import BannerCard from "@components/common/banner-card";
 import Carousel from "@components/ui/carousel/carousel";
-import { SwiperSlide } from "swiper/react";
 import { promotionBanner } from "@framework/static/banner";
 import { ROUTES } from "@utils/routes";
 
@@ -30,7 +29,7 @@ const BannerSliderBlock: React.FC<BannerProps> = ({
 					buttonClassName="hidden"
 				>
 					{promotionBanner.map((banner: any) => (
-						<SwiperSlide
+						<div
 							key={`banner--key${banner.id}`}
 							className="px-1.5 md:px-2.5 xl:px-3.5"
 						>
@@ -39,7 +38,7 @@ const BannerSliderBlock: React.FC<BannerProps> = ({
 								effectActive={true}
 								href={`${ROUTES.COLLECTIONS}/${banner.slug}`}
 							/>
-						</SwiperSlide>
+						</div>
 					))}
 				</Carousel>
 			</div>

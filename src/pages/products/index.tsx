@@ -12,6 +12,10 @@ import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { ROUTES } from "@utils/routes";
 import { GetStaticProps } from "next";
+import { QueryClient } from "react-query";
+import { dehydrate } from "react-query/hydration";
+import { API_ENDPOINTS } from "@framework/utils/api-endpoints";
+import { fetchProducts } from "@framework/product/get-all-products";
 
 export default function Products() {
 	const { t } = useTranslation("common");
@@ -56,14 +60,32 @@ export default function Products() {
 Products.Layout = Layout;
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
+	const queryClient = new QueryClient();
+
+	const prefetches = [
+		queryClient.prefetchInfiniteQuery(
+			[API_ENDPOINTS.PRODUCTS, { limit: 10 }],
+			fetchProducts
+		),
+	];
+
+	await Promise.allSettled(prefetches);
+
+	let i18nProps: Record<string, any> = {};
+	try {
+		i18nProps = await serverSideTranslations(locale ?? "en", [
+			"common",
+			"forms",
+			"menu",
+			"footer",
+		]);
+	} catch {}
+
 	return {
 		props: {
-			...(await serverSideTranslations(locale!, [
-				"common",
-				"forms",
-				"menu",
-				"footer",
-			])),
+			dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
+			...i18nProps,
 		},
+		revalidate: 600,
 	};
 };

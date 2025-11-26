@@ -17,6 +17,7 @@ export default function Search() {
 	const [searchText, setSearchText] = React.useState("");
 	const { data, isLoading } = useSearchQuery({
 		text: searchText,
+		enabled: displaySearch && searchText.trim().length >= 2,
 	});
 
 	function handleSearch(e: React.SyntheticEvent) {

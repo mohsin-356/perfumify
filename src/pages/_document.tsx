@@ -22,7 +22,7 @@ export default class CustomDocument extends Document {
 		return (
 			<Html dir={getDirection(locale)}>
 				<Head>
-					<link rel="icon" href="/api/favicon" type="image/jpeg" />
+					<link rel="icon" href="/favicon.ico" type="image/x-icon" />
 					<meta name="theme-color" content="#7c3aed" />
 					<link rel="preconnect" href="https://images.unsplash.com" />
 					<link rel="preconnect" href="https://images.pexels.com" />

@@ -47,17 +47,17 @@ export default function AccountNav() {
 				const menuPath = `/${menuPathname[0]}`;
 
 				return (
-					<Link key={item.slug} href={item.slug}>
-						<a
-							className={
-								mainPath === menuPath
-									? "bg-gray-100 font-semibold flex items-center cursor-pointer text-sm lg:text-base text-heading py-3.5 px-4 lg:px-5 rounded mb-2 "
-									: "flex items-center cursor-pointer text-sm lg:text-base text-heading font-normal py-3.5 px-4 lg:px-5 rounded mb-2"
-							}
-						>
-							{item.icon}
-							<span className="ps-2">{t(`${item.name}`)}</span>
-						</a>
+					<Link
+						key={item.slug}
+						href={item.slug}
+						className={
+							mainPath === menuPath
+								? "bg-gray-100 font-semibold flex items-center cursor-pointer text-sm lg:text-base text-heading py-3.5 px-4 lg:px-5 rounded mb-2 "
+								: "flex items-center cursor-pointer text-sm lg:text-base text-heading font-normal py-3.5 px-4 lg:px-5 rounded mb-2"
+						}
+					>
+						{item.icon}
+						<span className="ps-2">{t(`${item.name}`)}</span>
 					</Link>
 				);
 			})}

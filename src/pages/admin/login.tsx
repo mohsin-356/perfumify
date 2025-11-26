@@ -47,7 +47,7 @@ const AdminLogin = () => {
     <>
       <Head>
         <title>Admin Login - Perfumify</title>
-        <link rel="icon" href="/api/favicon" type="image/jpeg" />
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
       </Head>
       <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8">

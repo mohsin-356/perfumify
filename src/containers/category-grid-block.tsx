@@ -1,6 +1,5 @@
 import SectionHeader from "@components/common/section-header";
 import Carousel from "@components/ui/carousel/carousel";
-import { SwiperSlide } from "swiper/react";
 import CategoryCard from "@components/common/category-card";
 import { useWindowSize } from "@utils/use-window-size";
 import CategoryCardLoader from "@components/ui/loaders/category-card-loader";
@@ -52,16 +51,16 @@ const CategoryGridBlock: React.FC<CategoriesProps> = ({
 							<Carousel breakpoints={breakpoints}>
 								{isLoading
 									? Array.from({ length: 6 }).map((_, idx) => (
-											<SwiperSlide key={idx}>
+											<div key={idx}>
 												<CategoryCardLoader
 													uniqueKey={`featured-category-${idx}`}
 												/>
-											</SwiperSlide>
+											</div>
 									  ))
 									: data?.map((category) => (
-											<SwiperSlide key={`category--key${category.id}`}>
+											<div key={`category--key${category.id}`}>
 												<CategoryCard category={category} />
-											</SwiperSlide>
+											</div>
 									  ))}
 							</Carousel>
 						</div>

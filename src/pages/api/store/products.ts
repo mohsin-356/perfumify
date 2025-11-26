@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import dbConnect from '../../../lib/mongodb';
+import { dbConnect } from '../../../lib/mongodb';
 import { simpleCache } from '../../../lib/simpleCache';
-import Product from '../../../models/Product';
+import { Product } from '../../../models/Product';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') {

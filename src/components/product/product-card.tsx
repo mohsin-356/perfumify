@@ -6,6 +6,7 @@ import { useUI } from "@contexts/ui.context";
 import usePrice from "@framework/product/use-price";
 import { Product } from "@framework/types";
 import { FiShoppingCart, FiEye, FiHeart } from "react-icons/fi";
+import CloudImage from "@components/ui/CloudImage";
 
 interface ProductProps {
 	product: Product;
@@ -60,6 +61,11 @@ const ProductCard: FC<ProductProps> = ({
 	};
 
 	const badge = getBadge();
+
+	// New Cloudinary logic
+	const cloudImage = product?.images?.[0];
+	const cloudHoverImage = product?.images?.[1] || cloudImage;
+
 	// Choose best available image for card display (handle string or object shapes)
 	const asString = (v: any): string | undefined => (typeof v === 'string' ? v : undefined);
 	const firstGallery = Array.isArray(product?.gallery) ? product.gallery[0] : undefined;
@@ -118,31 +124,47 @@ const ProductCard: FC<ProductProps> = ({
 					imageContentClassName
 				)}
 			>
-				<Image
-					src={imgSrc}
-					width={imgWidth}
-					height={imgHeight}
-					loading={imgLoading}
-					unoptimized
-					quality={70}
-					sizes="(min-width: 1536px) 20vw, (min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-					alt={product?.name || "Product Image"}
-					onError={() => setImgSrc(placeholderImage)}
-					className={cn("bg-gray-300 object-cover rounded-s-md transition-all duration-300", {
-						"w-full rounded-md group-hover:rounded-b-none":
-							variant === "grid",
-						"rounded-md transform group-hover:scale-105":
-							variant === "gridSlim",
-						"rounded-s-md transform group-hover:scale-105":
-							variant === "list",
-					})}
-				/>
-				
+				{cloudImage ? (
+					<CloudImage
+						publicId={isHovered && cloudHoverImage ? cloudHoverImage.public_id : cloudImage.public_id}
+						alt={product?.name || "Product Image"}
+						width={Number(imgWidth) || 340}
+						height={Number(imgHeight) || 440}
+						className={cn("bg-gray-300 object-cover rounded-s-md transition-all duration-300", {
+							"w-full rounded-md group-hover:rounded-b-none":
+								variant === "grid",
+							"rounded-md transform group-hover:scale-105":
+								variant === "gridSlim",
+							"rounded-s-md transform group-hover:scale-105":
+								variant === "list",
+						})}
+					/>
+				) : (
+					<Image
+						src={imgSrc}
+						width={imgWidth}
+						height={imgHeight}
+						loading={imgLoading}
+						unoptimized
+						quality={70}
+						sizes="(min-width: 1536px) 20vw, (min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+						alt={product?.name || "Product Image"}
+						onError={() => setImgSrc(placeholderImage)}
+						className={cn("bg-gray-300 object-cover rounded-s-md transition-all duration-300", {
+							"w-full rounded-md group-hover:rounded-b-none":
+								variant === "grid",
+							"rounded-md transform group-hover:scale-105":
+								variant === "gridSlim",
+							"rounded-s-md transform group-hover:scale-105":
+								variant === "list",
+						})}
+					/>
+				)}
+
 				{/* Action Buttons on Hover */}
 				{variant === "grid" && (
-					<div className={`absolute bottom-0 left-0 right-0 flex justify-center items-center gap-2 p-3 bg-white transition-all duration-300 ${
-						isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-full'
-					}`}>
+					<div className={`absolute bottom-0 left-0 right-0 flex justify-center items-center gap-2 p-3 bg-white transition-all duration-300 ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-full'
+						}`}>
 						<button
 							onClick={(e) => {
 								e.stopPropagation();
@@ -206,11 +228,10 @@ const ProductCard: FC<ProductProps> = ({
 					</p>
 				)}
 				<div
-					className={`text-heading font-semibold text-sm sm:text-base mt-1.5 space-s-2 ${
-						variant === "grid"
+					className={`text-heading font-semibold text-sm sm:text-base mt-1.5 space-s-2 ${variant === "grid"
 							? "lg:text-lg lg:mt-2.5"
 							: "sm:text-xl md:text-base lg:text-xl md:mt-2.5 2xl:mt-3"
-					}`}
+						}`}
 				>
 					<span className="inline-block">{price}</span>
 					{discount && (
