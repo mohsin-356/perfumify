@@ -1,6 +1,5 @@
 import ProductCard from "@components/product/product-card";
 import Carousel from "@components/ui/carousel/carousel";
-import { SwiperSlide } from "swiper/react";
 import ProductFlashSaleGridLoader from "@components/ui/loaders/product-flash-sale-grid-loader";
 import ProductFlashSaleLoader from "@components/ui/loaders/product-flash-sale-loader";
 import ProgressCard from "@components/common/progress-card";
@@ -77,16 +76,16 @@ const SellWithProgress: React.FC<Props> = ({
 							>
 								{productVariant === "gridSlim"
 									? Array.from({ length: 3 }).map((_, idx) => (
-											<SwiperSlide key={`product-grid-${idx}`}>
+											<div key={`product-grid-${idx}`}>
 												<ProductFlashSaleGridLoader
 													uniqueKey={`product-grid-${idx}`}
 												/>
-											</SwiperSlide>
+											</div>
 									  ))
 									: Array.from({ length: 10 }).map((_, idx) => (
-											<SwiperSlide key={`product-${idx}`}>
+											<div key={`product-${idx}`}>
 												<ProductFlashSaleLoader uniqueKey={`product-${idx}`} />
-											</SwiperSlide>
+											</div>
 									  ))}
 							</Carousel>
 						</div>
@@ -109,7 +108,7 @@ const SellWithProgress: React.FC<Props> = ({
 									}
 								>
 									{products.map((product) => (
-										<SwiperSlide key={`product--key${product.id}`}>
+										<div key={`product--key${product.id}`}>
 											<div className="h-full flex flex-col justify-between">
 												<div className="mb-5 sm:mb-7 lg:mb-8 2xl:mb-10 3xl:mb-12">
 													<ProductCard
@@ -132,7 +131,7 @@ const SellWithProgress: React.FC<Props> = ({
 													totalProduct={product?.quantity}
 												/>
 											</div>
-										</SwiperSlide>
+										</div>
 									))}
 								</Carousel>
 							</div>

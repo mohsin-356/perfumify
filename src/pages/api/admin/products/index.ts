@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import dbConnect from '../../../../lib/mongodb';
-import Product from '../../../../models/Product';
+import { dbConnect } from '../../../../lib/mongodb';
+import { Product } from '../../../../models/Product';
 import { simpleCache } from '../../../../lib/simpleCache';
 
 function generateSlug(name: string) {

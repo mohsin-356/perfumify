@@ -19,11 +19,11 @@ async function checkout(input: CheckoutInputType) {
 }
 export const useCheckoutMutation = () => {
   return useMutation((input: CheckoutInputType) => checkout(input), {
-    onSuccess: (data) => {
-      console.log(data, "Checkout success response");
+    onSuccess: () => {
+      // Checkout successful
     },
-    onError: (data) => {
-      console.log(data, "Checkout error response");
+    onError: () => {
+      // Handle checkout error
     },
   });
 };

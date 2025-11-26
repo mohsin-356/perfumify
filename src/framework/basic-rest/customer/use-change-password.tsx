@@ -14,11 +14,11 @@ export const useChangePasswordMutation = () => {
   return useMutation(
     (input: ChangePasswordInputType) => changePassword(input),
     {
-      onSuccess: (data) => {
-        console.log(data, "ChangePassword success response");
+      onSuccess: () => {
+        // Password changed successfully
       },
-      onError: (data) => {
-        console.log(data, "ChangePassword error response");
+      onError: () => {
+        // Handle password change error
       },
     }
   );

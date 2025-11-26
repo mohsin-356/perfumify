@@ -1,7 +1,6 @@
 import Card from "@components/common/card";
 import SectionHeader from "@components/common/section-header";
 import Carousel from "@components/ui/carousel/carousel";
-import { SwiperSlide } from "swiper/react";
 import CardRoundedLoader from "@components/ui/loaders/card-rounded-loader";
 import { useBrandsQuery } from "@framework/brand/get-all-brands";
 import { ROUTES } from "@utils/routes";
@@ -57,12 +56,12 @@ const BrandBlock: React.FC<BrandProps> = ({
 				<Carousel breakpoints={breakpoints} buttonClassName="-mt-8 md:-mt-12">
 					{isLoading && !data
 						? Array.from({ length: 10 }).map((_, idx) => (
-								<SwiperSlide key={idx}>
+								<div key={idx}>
 									<CardRoundedLoader uniqueKey={`category-${idx}`} />
-								</SwiperSlide>
-						  ))
+								</div>
+							))
 						: brands?.map((brand) => (
-								<SwiperSlide key={`brand--key${brand.id}`}>
+								<div key={`brand--key${brand.id}`}>
 									<Card
 										item={brand}
 										variant="rounded"
@@ -72,8 +71,8 @@ const BrandBlock: React.FC<BrandProps> = ({
 											query: { brand: brand.slug },
 										}}
 									/>
-								</SwiperSlide>
-						  ))}
+								</div>
+							))}
 				</Carousel>
 			)}
 		</div>

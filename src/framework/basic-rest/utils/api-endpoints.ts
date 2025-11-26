@@ -7,7 +7,7 @@ export const API_ENDPOINTS = {
   FEATURED_CATEGORIES: "/featured_categories.json",
   COLLECTIONS: "/collections.json",
   BRANDS: "/brands.json",
-  PRODUCTS: "/store/products",
+  PRODUCTS: "/products.json",
   FEATURED_PRODUCTS: "/featured_products.json",
   TOP_SELLER_PRODUCTS: "/products_top_seller.json",
   ON_SELLING_PRODUCTS: "/products_on_selling.json",

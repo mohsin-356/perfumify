@@ -12,9 +12,7 @@ export default function AboutPage() {
 					<div className="max-w-4xl mx-auto">
 						{/* Breadcrumb */}
 						<div className="flex items-center space-x-2 text-sm text-gray-600 mb-8">
-							<Link href="/">
-								<a className="hover:text-gray-900">Home</a>
-							</Link>
+							<Link href="/" className="hover:text-gray-900">Home</Link>
 							<span>›</span>
 							<span>About</span>
 						</div>
@@ -159,12 +157,13 @@ AboutPage.Layout = Layout;
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
 	return {
 		props: {
-			...(await serverSideTranslations(locale!, [
+			...(await serverSideTranslations(locale ?? "en", [
 				"common",
 				"forms",
 				"menu",
 				"footer",
 			])),
 		},
+		revalidate: 86400,
 	};
 };

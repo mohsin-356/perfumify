@@ -14,7 +14,7 @@ export const siteSettings = {
 		address: "",
 	},
 	logo: {
-		url: "/api/favicon",
+		url: "/favicon.ico.png",
 		alt: "Perfumify",
 		href: "/",
 		width: 95,

@@ -10,7 +10,7 @@ import { ROUTES } from "@utils/routes";
 import { useTranslation } from "next-i18next";
 import CollectionTopBar from "@components/collection/collection-top-bar";
 import { CollectionFilters } from "@components/collection/collection-filters";
-import { GetServerSideProps } from "next";
+import { GetStaticProps, GetStaticPaths } from "next";
 
 export default function Shop() {
 	const { t } = useTranslation("common");
@@ -54,15 +54,23 @@ export default function Shop() {
 
 Shop.Layout = Layout;
 
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+export const getStaticPaths: GetStaticPaths = async () => {
+	return {
+		paths: [],
+		fallback: "blocking",
+	};
+};
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
 	return {
 		props: {
-			...(await serverSideTranslations(locale!, [
+			...(await serverSideTranslations(locale ?? "en", [
 				"common",
 				"forms",
 				"menu",
 				"footer",
 			])),
 		},
+		revalidate: 600,
 	};
 };

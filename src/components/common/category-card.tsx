@@ -21,20 +21,18 @@ const CategoryCard: React.FC<Props> = ({ category }) => {
 			</Text>
 			<div className="grid grid-cols-3 gap-2.5 xl:gap-3">
 				{products?.slice(0, 3)?.map((product) => (
-					<Link href={`${product?.slug}`} key={`image--key${product?.id}`}>
-						<a className="flex rounded-md overflow-hidden">
-							<Image
-								src={
-									product?.image?.original ??
-									"/assets/placeholder/products/product-cat.svg"
-								}
-								alt={name || t("text-category-thumbnail")}
-								width={165}
-								height={165}
-								unoptimized
-								className="bg-gray-300 object-cover rounded-md transition duration-300 ease-in-out transform hover:scale-110"
-							/>
-						</a>
+					<Link href={`${product?.slug}`} key={`image--key${product?.id}`} className="flex rounded-md overflow-hidden">
+						<Image
+							src={
+								product?.image?.original ??
+								"/assets/placeholder/products/product-cat.svg"
+							}
+							alt={name || t("text-category-thumbnail")}
+							width={165}
+							height={165}
+							unoptimized
+							className="bg-gray-300 object-cover rounded-md transition duration-300 ease-in-out transform hover:scale-110"
+						/>
 					</Link>
 				))}
 			</div>

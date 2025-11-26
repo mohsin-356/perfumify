@@ -19,11 +19,11 @@ const ReviewForm: React.FC = () => {
 		handleSubmit,
 		formState: { errors },
 	} = useForm<ReviewFormValues>();
-	function onSubmit(values: ReviewFormValues) {
-		console.log(values, "review");
+	function onSubmit(_values: ReviewFormValues) {
+		// Handle review submission
 	}
-	const ratingChanged = (newRating: any) => {
-		console.log(newRating);
+	const ratingChanged = (_newRating: any) => {
+		// Handle rating change
 	};
 	const { t } = useTranslation();
 	return (

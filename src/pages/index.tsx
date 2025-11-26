@@ -3,9 +3,39 @@ import Divider from "@components/ui/divider";
 import HeroSlider from "@components/common/hero-slider";
 import dynamic from "next/dynamic";
 import Layout from "@components/layout/layout";
-const BrandBlock = dynamic(() => import("@containers/brand-block"));
-const BestSellerProductFeed = dynamic(() => import("@components/product/feeds/best-seller-product-feed"));
-const NewArrivalsProductFeed = dynamic(() => import("@components/product/feeds/new-arrivals-product-feed"));
+import BrandCardLoader from "@components/ui/loaders/brand-card-loader";
+import ProductFeedLoader from "@components/ui/loaders/product-feed-loader";
+const BrandBlock = dynamic(() => import("@containers/brand-block"), {
+	loading: () => (
+		<div className="mt-8 md:mt-10 lg:mt-12 mb-11 md:mb-12 xl:mb-14">
+			<div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 md:gap-5">
+				{Array.from({ length: 8 }).map((_, idx) => (
+					<BrandCardLoader key={idx} />
+				))}
+			</div>
+		</div>
+	),
+});
+const BestSellerProductFeed = dynamic(
+	() => import("@components/product/feeds/best-seller-product-feed"),
+	{
+		loading: () => (
+			<div className="mt-8">
+				<ProductFeedLoader limit={10} uniqueKey="best-sellers-fallback" />
+			</div>
+		),
+	}
+);
+const NewArrivalsProductFeed = dynamic(
+	() => import("@components/product/feeds/new-arrivals-product-feed"),
+	{
+		loading: () => (
+			<div className="mt-8">
+				<ProductFeedLoader limit={10} uniqueKey="new-arrivals-fallback" />
+			</div>
+		),
+	}
+);
 import { GetStaticProps } from "next";
 import { QueryClient } from "react-query";
 import { dehydrate } from "react-query/hydration";

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Container from "@components/ui/container";
 import { siteSettings } from "@settings/site-settings-perfume";
 import { useTranslation } from "next-i18next";
@@ -36,12 +37,13 @@ const Copyright: React.FC<CopyrightProps> = ({ payment }) => {
 								className="mb-2 md:mb-0 transition hover:opacity-80"
 								key={`payment-list--key${item.id}`}
 							>
-								<a href={item.path ? item.path : "/#"} target="_blank">
-									<img
+								<a href={item.path ? item.path : "/#"} target="_blank" rel="noreferrer">
+									<Image
 										src={item.image}
 										alt={t(`${item.name}`)}
-										height={item.height}
 										width={item.width}
+										height={item.height}
+										className="h-auto w-auto"
 									/>
 								</a>
 							</li>

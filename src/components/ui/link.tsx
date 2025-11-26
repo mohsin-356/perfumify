@@ -1,13 +1,19 @@
 import NextLink, { LinkProps as NextLinkProps } from "next/link";
+import { ReactNode } from "react";
 
-const Link: React.FC<NextLinkProps & { className?: string }> = ({
+export interface InternalLinkProps extends NextLinkProps {
+  className?: string;
+  children?: ReactNode;
+}
+
+const Link: React.FC<InternalLinkProps> = ({
   href,
   children,
   ...props
 }) => {
   return (
-    <NextLink href={href}>
-      <a {...props}>{children}</a>
+    <NextLink href={href} {...props}>
+      {children}
     </NextLink>
   );
 };

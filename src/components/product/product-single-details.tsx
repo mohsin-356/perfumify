@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Image from "next/image";
 import Button from "@components/ui/button";
 import Counter from "@components/common/counter";
 import { useRouter } from "next/router";
@@ -13,6 +14,7 @@ import Link from "@components/ui/link";
 import { toast } from "react-toastify";
 import { useWindowSize } from "@utils/use-window-size";
 import RelatedProducts from "@components/product/related-products";
+import CloudImage from "@components/ui/CloudImage";
 
 const ProductSingleDetails: React.FC = () => {
 	const {
@@ -37,15 +39,22 @@ const ProductSingleDetails: React.FC = () => {
 	);
 
 	if (isLoading) return <p>Loading...</p>;
-	
+
 	const variations = getVariations(data?.variations);
-	const gallery = data?.gallery && data.gallery.length > 0 ? data.gallery : [data?.image];
+
+	// Cloudinary support
+	const cloudGallery = data?.images && data.images.length > 0 ? data.images : [];
+	const hasCloudImages = cloudGallery.length > 0;
+
+	const gallery = hasCloudImages
+		? cloudGallery
+		: (data?.gallery && data.gallery.length > 0 ? data.gallery : [data?.image]);
 
 	const isSelected = !isEmpty(variations)
 		? !isEmpty(attributes) &&
-		  Object.keys(variations).every((variation) =>
-				attributes.hasOwnProperty(variation)
-		  )
+		Object.keys(variations).every((variation) =>
+			attributes.hasOwnProperty(variation)
+		)
 		: true;
 
 	function addToCart() {
@@ -109,7 +118,7 @@ const ProductSingleDetails: React.FC = () => {
 		<div className="pt-4 pb-6 lg:pb-8">
 			{/* Image Modal */}
 			{showImageModal && (
-				<div 
+				<div
 					className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4"
 					onClick={() => setShowImageModal(false)}
 				>
@@ -122,11 +131,21 @@ const ProductSingleDetails: React.FC = () => {
 								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
 							</svg>
 						</button>
-						<img
-							src={gallery[selectedImage]?.original || "/assets/placeholder/products/product-gallery.svg"}
-							alt={data?.name}
-							className="w-full h-auto"
-						/>
+						{hasCloudImages ? (
+							<CloudImage
+								publicId={cloudGallery[selectedImage]?.public_id}
+								alt={data?.name || "Product Image"}
+								width={1200}
+								height={1200}
+								className="w-full h-auto"
+							/>
+						) : (
+							<img
+								src={gallery[selectedImage]?.original || "/assets/placeholder/products/product-gallery.svg"}
+								alt={data?.name}
+								className="w-full h-auto"
+							/>
+						)}
 					</div>
 				</div>
 			)}
@@ -142,30 +161,51 @@ const ProductSingleDetails: React.FC = () => {
 								<div
 									key={index}
 									onClick={() => setSelectedImage(index)}
-									className={`relative bg-gray-100 rounded overflow-hidden cursor-pointer border-2 transition flex-shrink-0 ${
-										selectedImage === index ? 'border-black' : 'border-transparent hover:border-gray-300'
-									}`}
+									className={`relative bg-gray-100 rounded overflow-hidden cursor-pointer border-2 transition flex-shrink-0 ${selectedImage === index ? 'border-black' : 'border-transparent hover:border-gray-300'
+										}`}
 								>
-									<img
-										src={image?.thumbnail || "/assets/placeholder/products/product-gallery.svg"}
-										alt={`${data?.name} ${index + 1}`}
-										className="w-full h-16 lg:h-20 object-cover"
-									/>
+									{hasCloudImages ? (
+										<CloudImage
+											publicId={image.public_id}
+											alt={`${data?.name} ${index + 1}`}
+											width={100}
+											height={100}
+											className="w-full h-16 lg:h-20 object-cover"
+										/>
+									) : (
+										<img
+											src={image?.thumbnail || "/assets/placeholder/products/product-gallery.svg"}
+											alt={`${data?.name} ${index + 1}`}
+											className="w-full h-16 lg:h-20 object-cover"
+										/>
+									)}
 								</div>
 							))}
 						</div>
 					)}
 
 					{/* Main Image */}
-					<div 
+					<div
 						className="flex-1 relative bg-gray-50 rounded overflow-hidden cursor-zoom-in max-h-[500px] lg:max-h-[600px]"
 						onClick={() => setShowImageModal(true)}
 					>
-						<img
-							src={gallery[selectedImage]?.original || "/assets/placeholder/products/product-gallery.svg"}
-							alt={data?.name}
-							className="w-full h-full object-contain"
-						/>
+						{hasCloudImages ? (
+							<CloudImage
+								publicId={cloudGallery[selectedImage]?.public_id}
+								alt={data?.name || "Product image"}
+								width={800}
+								height={800}
+								className="w-full h-full object-contain"
+							/>
+						) : (
+							<Image
+								src={gallery[selectedImage]?.original || "/assets/placeholder/products/product-gallery.svg"}
+								alt={data?.name || "Product image"}
+								width={800}
+								height={800}
+								className="w-full h-full object-contain"
+							/>
+						)}
 					</div>
 				</div>
 
@@ -233,9 +273,8 @@ const ProductSingleDetails: React.FC = () => {
 						<Button
 							onClick={addToCart}
 							variant="slim"
-							className={`w-full ${
-								!isSelected && "bg-gray-400 hover:bg-gray-400"
-							}`}
+							className={`w-full ${!isSelected && "bg-gray-400 hover:bg-gray-400"
+								}`}
 							disabled={!isSelected}
 							loading={addToCartLoader}
 						>
@@ -317,11 +356,10 @@ const ProductSingleDetails: React.FC = () => {
 								<button
 									key={tab.id}
 									onClick={() => setActiveTab(tab.id)}
-									className={`py-3 px-1 font-medium text-sm whitespace-nowrap transition border-b-2 ${
-										activeTab === tab.id
+									className={`py-3 px-1 font-medium text-sm whitespace-nowrap transition border-b-2 ${activeTab === tab.id
 											? 'border-black text-black'
 											: 'border-transparent text-gray-500 hover:text-gray-700'
-									}`}
+										}`}
 								>
 									{tab.label}
 								</button>
@@ -376,7 +414,7 @@ const ProductSingleDetails: React.FC = () => {
 
 			{/* Related Products Section */}
 			<div className="mt-8 lg:mt-10">
-				<RelatedProducts 
+				<RelatedProducts
 					sectionHeading="You Might Also Like"
 					category={(typeof data?.category === 'object' ? data?.category?.slug : data?.category) as string}
 					currentProductId={data?.id}
@@ -387,7 +425,7 @@ const ProductSingleDetails: React.FC = () => {
 			{/* Recently Viewed Products */}
 			<div className="mt-8 lg:mt-10">
 				<h2 className="text-xl font-bold text-heading mb-4">Recently Viewed Products</h2>
-				<RelatedProducts 
+				<RelatedProducts
 					sectionHeading=""
 					category={(typeof data?.category === 'object' ? data?.category?.slug : data?.category) as string}
 					currentProductId={data?.id}

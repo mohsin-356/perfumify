@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { AnimatePresence } from "framer-motion";
 import { ManagedUIContext } from "@contexts/ui.context";
 import dynamic from "next/dynamic";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Hydrate } from "react-query/hydration";
 // import { ReactQueryDevtools } from "react-query/devtools";
@@ -36,6 +36,48 @@ function handleExitComplete() {
 
 const Noop: React.FC = ({ children }) => <>{children}</>;
 
+const RouteProgress: React.FC = () => {
+  const router = useRouter();
+  const [progress, setProgress] = useState(0);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    let timer: any;
+    const start = () => {
+      setVisible(true);
+      setProgress(30);
+      clearInterval(timer);
+      timer = setInterval(() => {
+        setProgress((p) => (p < 90 ? p + 10 : p));
+      }, 200);
+    };
+    const done = () => {
+      setProgress(100);
+      clearInterval(timer);
+      setTimeout(() => {
+        setVisible(false);
+        setProgress(0);
+      }, 200);
+    };
+    router.events.on("routeChangeStart", start);
+    router.events.on("routeChangeComplete", done);
+    router.events.on("routeChangeError", done);
+    return () => {
+      router.events.off("routeChangeStart", start);
+      router.events.off("routeChangeComplete", done);
+      router.events.off("routeChangeError", done);
+      clearInterval(timer);
+    };
+  }, [router.events]);
+
+  if (!visible) return null;
+  return (
+    <div style={{ position: "fixed", top: 0, left: 0, right: 0, height: 3, zIndex: 9999, background: "transparent" }}>
+      <div style={{ width: `${progress}%`, height: "100%", background: "#000", transition: "width 0.2s ease" }} />
+    </div>
+  );
+};
+
 const CustomApp = ({ Component, pageProps }: AppProps) => {
 	const queryClientRef = useRef<any>();
 	if (!queryClientRef.current) {
@@ -65,6 +107,7 @@ const CustomApp = ({ Component, pageProps }: AppProps) => {
 					<ManagedUIContext>
 						<Layout pageProps={pageProps}>
 							<DefaultSeo />
+							<RouteProgress />
 							<Component {...pageProps} key={router.route} />
 							<ToastContainer />
 						</Layout>

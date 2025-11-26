@@ -95,7 +95,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title = 'Admin Dash
     <>
       <Head>
         <title>{title} - Perfumify Admin</title>
-        <link rel="icon" href="/api/favicon" type="image/jpeg" />
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
       </Head>
       <div className="h-screen flex overflow-hidden bg-gray-100">
         {/* Mobile sidebar */}
@@ -116,15 +116,17 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title = 'Admin Dash
               </div>
               <nav className="mt-5 px-2 space-y-1">
                 {navigation.map((item) => (
-                  <Link key={item.name} href={item.href}>
-                    <a className={`group flex items-center px-2 py-2 text-base font-medium rounded-md ${
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className={`group flex items-center px-2 py-2 text-base font-medium rounded-md ${
                       router.pathname === item.href
                         ? 'bg-gray-100 text-gray-900'
                         : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                    }`}>
-                      <item.icon className="mr-4 h-6 w-6" />
-                      {item.name}
-                    </a>
+                    }`}
+                  >
+                    <item.icon className="mr-4 h-6 w-6" />
+                    {item.name}
                   </Link>
                 ))}
               </nav>
@@ -151,15 +153,17 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title = 'Admin Dash
                 </div>
                 <nav className="mt-5 flex-1 px-2 bg-white space-y-1">
                   {navigation.map((item) => (
-                    <Link key={item.name} href={item.href}>
-                      <a className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
                         router.pathname === item.href
                           ? 'bg-gray-100 text-gray-900'
                           : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                      }`}>
-                        <item.icon className="mr-3 h-5 w-5" />
-                        {item.name}
-                      </a>
+                      }`}
+                    >
+                      <item.icon className="mr-3 h-5 w-5" />
+                      {item.name}
                     </Link>
                   ))}
                 </nav>

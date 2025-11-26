@@ -19,8 +19,8 @@ export default function Newsletter() {
 		defaultValues,
 	});
 	const { closeModal } = useUI();
-	function onSubmit(values: NewsLetterFormValues) {
-		console.log(values, "news letter");
+	function onSubmit(_values: NewsLetterFormValues) {
+		// Handle newsletter subscription
 		closeModal();
 	}
 	const { t } = useTranslation();

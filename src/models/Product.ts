@@ -1,62 +1,45 @@
-import mongoose, { Schema, models, model } from 'mongoose';
+import mongoose, { Schema, Document, models, model } from 'mongoose';
 
-const ImageSchema = new Schema(
+export interface ProductImage {
+  url: string;
+  public_id: string;
+  width?: number;
+  height?: number;
+}
+
+export interface ProductDocument extends Document {
+  name: string;
+  slug: string;
+  description?: string;
+  price: number;
+  images: ProductImage[];
+  // add any other fields you already use: category, brand, etc.
+}
+
+const ProductImageSchema = new Schema<ProductImage>(
   {
-    id: { type: Number },
-    thumbnail: { type: String },
-    original: { type: String },
+    url: { type: String, required: true },
+    public_id: { type: String, required: true },
+    width: { type: Number },
+    height: { type: Number },
   },
-  { _id: false }
+  { _id: false },
 );
 
-const VariationSchema = new Schema(
+const ProductSchema = new Schema<ProductDocument>(
   {
-    id: { type: Number },
-    value: String,
-    attribute: {
-      id: Number,
-      name: String,
-      slug: String,
+    name: { type: String, required: true },
+    slug: { type: String, required: true, unique: true },
+    description: { type: String },
+    price: { type: Number, required: true },
+    images: {
+      type: [ProductImageSchema],
+      default: [],
     },
   },
-  { _id: false }
+  { timestamps: true },
 );
 
-const ProductSchema = new Schema(
-  {
-    id: { type: Number },
-    name: { type: String, required: true },
-    description: String,
-    short_description: String,
-    slug: { type: String, required: true, unique: true },
-    brand: String,
-    sku: String,
-    image: ImageSchema,
-    gallery: [ImageSchema],
-    price: { type: Number, required: true, default: 0 },
-    sale_price: { type: Number, default: null },
-    category: String,
-    quantity: { type: Number, default: 0 },
-    weight: String,
-    dimensions: String,
-    status: { type: String, default: 'active' },
-    featured: { type: Boolean, default: false },
-    meta_title: String,
-    meta_description: String,
-    tags: [String],
-    variations: [VariationSchema],
-    created_at: { type: Date, default: Date.now },
-    updated_at: { type: Date, default: Date.now },
-  },
-  {
-    timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
-  }
-);
-
-// Indexes for faster queries
-ProductSchema.index({ slug: 1 }, { unique: true, sparse: true });
-ProductSchema.index({ created_at: -1 });
-ProductSchema.index({ brand: 1 });
-ProductSchema.index({ category: 1 });
-
-export default (models.Product as mongoose.Model<any>) || model('Product', ProductSchema);
+export const Product =
+  (models.Product as mongoose.Model<ProductDocument>) ||
+  model<ProductDocument>('Product', ProductSchema);

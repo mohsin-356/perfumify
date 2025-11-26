@@ -98,9 +98,8 @@ export default function BrandsPage() {
 										<Image
 											src={brand.image}
 											alt={brand.name}
-											layout="fill"
-											objectFit="cover"
-											className="group-hover:scale-105 transition-transform duration-300"
+											fill
+											className="group-hover:scale-105 transition-transform duration-300 object-cover"
 										/>
 									</div>
 									
@@ -123,12 +122,13 @@ BrandsPage.Layout = Layout;
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
 	return {
 		props: {
-			...(await serverSideTranslations(locale!, [
+			...(await serverSideTranslations(locale ?? "en", [
 				"common",
 				"forms",
 				"menu",
 				"footer",
 			])),
 		},
+		revalidate: 86400,
 	};
 };

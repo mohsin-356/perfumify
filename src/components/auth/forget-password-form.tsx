@@ -29,8 +29,8 @@ const ForgetPasswordForm = () => {
 		return openModal();
 	}
 
-	const onSubmit = (values: FormValues) => {
-		console.log(values, "token");
+	const onSubmit = (_values: FormValues) => {
+		// Handle password reset
 	};
 
 	return (

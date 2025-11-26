@@ -4,7 +4,7 @@ import Subscription from "@components/common/subscription";
 import { ProductGrid } from "@components/product/product-grid";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import CategoryBanner from "@containers/category-banner";
-import { GetServerSideProps } from "next";
+import { GetStaticProps, GetStaticPaths } from "next";
 
 export default function Category() {
 	return (
@@ -22,15 +22,23 @@ export default function Category() {
 
 Category.Layout = Layout;
 
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+export const getStaticPaths: GetStaticPaths = async () => {
+	return {
+		paths: [],
+		fallback: "blocking",
+	};
+};
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
 	return {
 		props: {
-			...(await serverSideTranslations(locale!, [
+			...(await serverSideTranslations(locale ?? "en", [
 				"common",
 				"forms",
 				"menu",
 				"footer",
 			])),
 		},
+		revalidate: 600,
 	};
 };
