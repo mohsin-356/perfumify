@@ -19,6 +19,9 @@ const productSchema = z.object({
     stock: z.number().min(0).default(0),
     sku: z.string().optional(),
     weight: z.number().optional(),
+    bestSeller: z.boolean().optional().default(false),
+    newArrival: z.boolean().optional().default(false),
+    featured: z.boolean().optional().default(false),
 });
 
 export async function GET(req: Request) {
@@ -32,7 +35,22 @@ export async function GET(req: Request) {
         const brandSlug = searchParams.get("brand");
         const sort = searchParams.get("sort") || "-createdAt";
 
+        // Badge filters
+        const bestSellerParam = searchParams.get("bestSeller");
+        const newArrivalParam = searchParams.get("newArrival");
+        const featuredParam = searchParams.get("featured");
+
         const query: any = {};
+
+        if (bestSellerParam === "true") {
+            query.bestSeller = true;
+        }
+        if (newArrivalParam === "true") {
+            query.newArrival = true;
+        }
+        if (featuredParam === "true") {
+            query.featured = true;
+        }
 
         if (search) {
             query.$or = [

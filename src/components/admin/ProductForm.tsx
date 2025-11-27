@@ -30,6 +30,9 @@ export default function ProductForm({ initialData, brands = [], categories = [] 
             category: initialData?.category?._id || initialData?.category || "",
             sku: initialData?.sku || "",
             weight: initialData?.weight || "",
+            bestSeller: initialData?.bestSeller || false,
+            newArrival: initialData?.newArrival || false,
+            featured: initialData?.featured || false,
         },
     });
 
@@ -120,6 +123,9 @@ export default function ProductForm({ initialData, brands = [], categories = [] 
                 category: data.category || null,
                 sku: data.sku || undefined,
                 weight: data.weight ? parseFloat(data.weight) : undefined,
+                bestSeller: data.bestSeller ?? false,
+                newArrival: data.newArrival ?? false,
+                featured: data.featured ?? false,
                 images,
             };
 
@@ -228,6 +234,25 @@ export default function ProductForm({ initialData, brands = [], categories = [] 
                             placeholder="e.g. CH-001"
                         />
                     </div>
+                </div>
+            </div>
+
+            {/* Badges */}
+            <div className="space-y-6">
+                <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">Homepage Badges</h3>
+                <div className="flex items-center gap-6">
+                    <label className="flex items-center gap-2 text-sm">
+                        <input type="checkbox" {...register("bestSeller")} className="h-4 w-4 text-indigo-600 border-gray-300 rounded" />
+                        Best Seller
+                    </label>
+                    <label className="flex items-center gap-2 text-sm">
+                        <input type="checkbox" {...register("newArrival")} className="h-4 w-4 text-indigo-600 border-gray-300 rounded" />
+                        New Arrival
+                    </label>
+                    <label className="flex items-center gap-2 text-sm">
+                        <input type="checkbox" {...register("featured")} className="h-4 w-4 text-indigo-600 border-gray-300 rounded" />
+                        Featured
+                    </label>
                 </div>
             </div>
 
