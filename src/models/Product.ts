@@ -1,19 +1,10 @@
-import mongoose, { Schema, Document, models, model } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 export interface ProductImage {
   url: string;
   public_id: string;
   width?: number;
   height?: number;
-}
-
-export interface ProductDocument extends Document {
-  name: string;
-  slug: string;
-  description?: string;
-  price: number;
-  images: ProductImage[];
-  // add any other fields you already use: category, brand, etc.
 }
 
 const ProductImageSchema = new Schema<ProductImage>(
@@ -25,8 +16,7 @@ const ProductImageSchema = new Schema<ProductImage>(
   },
   { _id: false },
 );
-
-const ProductSchema = new Schema<ProductDocument>(
+const ProductSchema = new Schema(
   {
     name: { type: String, required: true },
     slug: { type: String, required: true, unique: true },
@@ -36,10 +26,34 @@ const ProductSchema = new Schema<ProductDocument>(
       type: [ProductImageSchema],
       default: [],
     },
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+    },
+    brand: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Brand",
+    },
+    stock: {
+      type: Number,
+      default: 0,
+    },
+    sku: {
+      type: String,
+      unique: true,
+      sparse: true,
+    },
+    weight: {
+      type: Number,
+    },
+    tags: [String],
+    variations: Object,
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
-export const Product =
-  (models.Product as mongoose.Model<ProductDocument>) ||
-  model<ProductDocument>('Product', ProductSchema);
+export type ProductDocument = mongoose.InferSchemaType<typeof ProductSchema>;
+
+const Product = mongoose.models.Product || mongoose.model("Product", ProductSchema);
+
+export { Product };

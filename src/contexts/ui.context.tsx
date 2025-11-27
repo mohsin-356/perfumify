@@ -207,7 +207,11 @@ function uiReducer(state: State, action: Action) {
   }
 }
 
-export const UIProvider: React.FC = (props) => {
+interface UIProviderProps {
+  children: React.ReactNode;
+}
+
+export function UIProvider({ children }: UIProviderProps) {
   const [state, dispatch] = React.useReducer(uiReducer, initialState);
 
   const authorize = () => dispatch({ type: "SET_AUTHORIZED" });
@@ -274,8 +278,8 @@ export const UIProvider: React.FC = (props) => {
     [state]
   );
 
-  return <UIContext.Provider value={value} {...props} />;
-};
+  return <UIContext.Provider value={value}>{children}</UIContext.Provider>;
+}
 
 export const useUI = () => {
   const context = React.useContext(UIContext);
@@ -285,8 +289,10 @@ export const useUI = () => {
   return context;
 };
 
-export const ManagedUIContext: React.FC = ({ children }) => (
-  <CartProvider>
-    <UIProvider>{children}</UIProvider>
-  </CartProvider>
-);
+export function ManagedUIContext({ children }: { children: React.ReactNode }) {
+  return (
+    <CartProvider>
+      <UIProvider>{children}</UIProvider>
+    </CartProvider>
+  );
+}

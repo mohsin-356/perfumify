@@ -16,7 +16,8 @@ export type CloudinaryUploadResult = typeof cloudinary.uploader.upload extends (
     : never;
 
 const defaultUploadOptions: UploadApiOptions = {
-    upload_preset: env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET,
+    // Do not force an upload_preset here; it requires a matching preset in Cloudinary
+    // and will fail with "Upload preset not found" if it does not exist.
     folder: 'perfumify',
     // automatic quality + format
     transformation: [{ quality: 'auto', fetch_format: 'auto' }],

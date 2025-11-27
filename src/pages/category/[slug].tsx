@@ -6,13 +6,16 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import CategoryBanner from "@containers/category-banner";
 import { GetStaticProps, GetStaticPaths } from "next";
 
+import { useRouter } from "next/router";
+
 export default function Category() {
+	const { query } = useRouter();
 	return (
 		<div className="border-t-2 border-borderBottom">
 			<Container>
 				<CategoryBanner />
 				<div className="pb-16 lg:pb-20">
-					<ProductGrid className="3xl:grid-cols-6" />
+					<ProductGrid className="3xl:grid-cols-6" category={query.slug as string} />
 				</div>
 				<Subscription />
 			</Container>
