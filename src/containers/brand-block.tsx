@@ -45,7 +45,13 @@ const BrandBlock: React.FC<BrandProps> = ({
 	const { data, isLoading, error } = useBrandsQuery({
 		limit: 8,
 	});
-	const brands = data?.brands;
+	// Dedupe brands by ID to prevent duplicates
+	const uniqueBrands = data?.brands?.filter((brand, index, self) =>
+		index === self.findIndex((t) => (
+			t.id === brand.id || t._id === brand._id
+		))
+	);
+	const brands = uniqueBrands;
 	return (
 		<div className={className}>
 			<SectionHeader sectionHeading={sectionHeading} />
@@ -56,23 +62,23 @@ const BrandBlock: React.FC<BrandProps> = ({
 				<Carousel breakpoints={breakpoints} buttonClassName="-mt-8 md:-mt-12">
 					{isLoading && !data
 						? Array.from({ length: 10 }).map((_, idx) => (
-								<div key={idx}>
-									<CardRoundedLoader uniqueKey={`category-${idx}`} />
-								</div>
-							))
+							<div key={idx}>
+								<CardRoundedLoader uniqueKey={`category-${idx}`} />
+							</div>
+						))
 						: brands?.map((brand) => (
-								<div key={`brand--key${brand.id}`}>
-									<Card
-										item={brand}
-										variant="rounded"
-										size="medium"
-										href={{
-											pathname: ROUTES.SEARCH,
-											query: { brand: brand.slug },
-										}}
-									/>
-								</div>
-							))}
+							<div key={`brand--key${brand.id}`}>
+								<Card
+									item={brand}
+									variant="rounded"
+									size="medium"
+									href={{
+										pathname: ROUTES.SEARCH,
+										query: { brand: brand.slug },
+									}}
+								/>
+							</div>
+						))}
 				</Carousel>
 			)}
 		</div>

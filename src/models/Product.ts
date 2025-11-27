@@ -48,6 +48,20 @@ const ProductSchema = new Schema(
     },
     tags: [String],
     variations: Object,
+
+    // Badge flags
+    bestSeller: {
+      type: Boolean,
+      default: false,
+    },
+    newArrival: {
+      type: Boolean,
+      default: false,
+    },
+    featured: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

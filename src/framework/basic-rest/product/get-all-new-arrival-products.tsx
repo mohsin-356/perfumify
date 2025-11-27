@@ -6,7 +6,7 @@ import { useQuery } from "react-query";
 export const fetchNewArrivalProducts = async ({ queryKey }: any) => {
   const [_key, _params] = queryKey;
   try {
-    const { data } = await http.get(API_ENDPOINTS.NEW_ARRIVAL_PRODUCTS);
+    const { data } = await http.get(`/api/products?newArrival=true&sort=-createdAt&limit=10`);
     return Array.isArray(data) ? data as Product[] : [];
   } catch (error) {
     console.error('Error fetching new arrival products:', error);

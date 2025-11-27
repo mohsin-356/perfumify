@@ -19,6 +19,9 @@ const productUpdateSchema = z.object({
     stock: z.number().min(0).optional(),
     sku: z.string().optional(),
     weight: z.number().optional(),
+    bestSeller: z.boolean().optional(),
+    newArrival: z.boolean().optional(),
+    featured: z.boolean().optional(),
 });
 
 export async function GET(
@@ -62,7 +65,7 @@ export async function PUT(
 
         if (!validation.success) {
             return NextResponse.json(
-                { error: "Validation failed", details: validation.error.errors },
+                { error: "Validation failed", details: validation.error.issues },
                 { status: 400 }
             );
         }
