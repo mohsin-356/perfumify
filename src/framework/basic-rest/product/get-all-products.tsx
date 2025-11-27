@@ -11,7 +11,7 @@ export const fetchProducts = async ({ queryKey, pageParam = 1 }: any) => {
 	try {
 		const limit = _params?.limit || 10;
 		const { data: resp } = await http.get(API_ENDPOINTS.PRODUCTS, {
-			params: { page: pageParam, limit },
+			params: { ..._params, page: pageParam, limit },
 		});
 		// Support both new paginated shape and legacy array
 		const serverPaginator = resp?.paginatorInfo;

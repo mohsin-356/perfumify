@@ -26,7 +26,11 @@ export const useCart = () => {
   return context;
 };
 
-export const CartProvider: React.FC = (props) => {
+interface CartProviderProps {
+  children: React.ReactNode;
+}
+
+export function CartProvider({ children }: CartProviderProps) {
   const [savedCart, saveCart] = useLocalStorage(
     `royal-perfume-cart`,
     JSON.stringify(initialState)
@@ -60,5 +64,5 @@ export const CartProvider: React.FC = (props) => {
     }),
     [state]
   );
-  return <cartContext.Provider value={value} {...props} />;
-};
+  return <cartContext.Provider value={value}>{children}</cartContext.Provider>;
+}
