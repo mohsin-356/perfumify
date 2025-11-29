@@ -14,8 +14,13 @@ export async function GET() {
         await connectDB();
         const brands = await Brand.find().sort({ createdAt: -1 });
         return NextResponse.json(brands);
-    } catch (error) {
-        return NextResponse.json({ error: "Failed to fetch brands" }, { status: 500 });
+    } catch (error: any) {
+        console.error("Fetch brands error", error);
+        // In development, return empty list to avoid UI crash
+        if (process.env.NODE_ENV !== "production") {
+            return NextResponse.json([]);
+        }
+        return NextResponse.json({ error: "Failed to fetch brands", details: error?.message }, { status: 500 });
     }
 }
 

@@ -43,12 +43,18 @@ const ProductSingleDetails: React.FC = () => {
 	const variations = getVariations(data?.variations);
 
 	// Cloudinary support
-	const cloudGallery = data?.images && data.images.length > 0 ? data.images : [];
+	const cloudGalleryRaw = Array.isArray(data?.images) ? data.images.filter((img: any) => img && img.public_id) : [];
+// normalise cloud objects so they also have original/thumbnail for unified use
+const cloudGallery = cloudGalleryRaw.map((img: any) => ({
+  ...img,
+  original: img.url,
+  thumbnail: img.url,
+}));
 	const hasCloudImages = cloudGallery.length > 0;
 
 	const gallery = hasCloudImages
-		? cloudGallery
-		: (data?.gallery && data.gallery.length > 0 ? data.gallery : [data?.image]);
+  ? cloudGallery
+  : (data?.gallery && data.gallery.length > 0 ? data.gallery : [data?.image]);
 
 	const isSelected = !isEmpty(variations)
 		? !isEmpty(attributes) &&
@@ -102,7 +108,16 @@ const ProductSingleDetails: React.FC = () => {
 		return stars;
 	};
 
-	const tabs = [
+	// --- Default tab contents (shown if product meta is missing) ---
+const DEFAULT_DESCRIPTION = `Any Perfume according to Title....\n\nAzzaro The Most Wanted Parfum 100ml is the boldest and most intense expression in the Azzaro Wanted line — a dark, seductive scent crafted for the man who thrives on standing out. Rich, spicy, and undeniably addictive, this fragrance makes a lasting impression with every spray.\n\nAt its heart is a unique caramel accord, wrapped in the deep warmth of Bourbon vanilla and glowing incandescent woods. The result is a fiery fougère ambery oriental blend that radiates confidence and power. Designed to be long-lasting and magnetic, this parfum is your signature for unforgettable nights.\n\n**Fragrance Details:**\n• **Brand:** Azzaro\n• **Range:** The Most Wanted Parfum\n• **Gender:** Male\n• **Fragrance Family:** Oriental\n• **Key Note:** Vanilla\n• **Strength:** Parfum\n• **Size:** 100ml\n• **Release Date:** 2022\n• **EAN:** 3614273638852\n\nWe only sell 100% original perfumes, always in stock and sourced from trusted suppliers.`;
+
+const DEFAULT_SHIPPING = `This policy is applicable to **United Kingdom** orders. This policy is designed to ensure that you are clearly aware of our shipping policies and procedures. By ordering from this store you accept the policies contained herein.\n\n**Delivery Terms**\nWe use UPS, DHL, and OSM to deliver the product.\n\n**TRANSIT, HANDLING & ORDER CUT-OFF TIME:**\n• Transit time is 0-1 Business Days (Monday–Sunday)\n• Handling time is 1 business day (Monday–Sunday)\n• All destinations: 1-2 business days\n• Order cut-off time: 05:00 PM (GMT)\n\n**Delivery Time:**\nStandard UK delivery typically takes 1 to 2 business days from the date of dispatch. Delivery times may vary depending on location, weather conditions, and the courier’s schedule.\n\n**SHIPPING COST:**\nFree shipping on all UK orders\n\n**CHANGE OF ADDRESS**\nWe cannot change the delivery address once an order is in transit. If you need to change the address, contact us within 24 hours of placing your order at support@perfumify.co.uk\n\n**Order Tracking:**\nAll parcels are sent with tracking; you will receive an email with your tracking number once your order has been shipped.\n\n**WRONG ADDRESS**\nIf an incorrect address is provided and delivery fails, the parcel will be returned to us. You will need to pay the full re-shipping cost.\n\n**Cancellations**\nYou may cancel any time before dispatch. If the order has already been dispatched, please refer to our refund policy.\n\nCustomer support: 24/7\nEmail: support@perfumify.co.uk\nAddress: 33 Richard Road, Rotherham, S60 2QP, England, United Kingdom`;
+
+const DEFAULT_REFUND = `This policy is applicable to **United Kingdom** orders. By ordering from this store (Perfumify) you accept the policies contained herein.\n\n**Return Eligibility:**\n• Item must be unused, unopened, and in the same condition received.\n• Must be in original packaging with protective seal intact.\n• We cannot accept returns on items that have been opened, tested, or used.\n\n**Exceptions / Non-Returnable Items**\n• Opened perfumes, beauty products, or personal-care goods (hygiene reasons).\n• Custom or personalised items.\n• Gift cards.\n• Sale / discounted items.\n\n**Return Shipping Costs**\nReturn shipping is **free** for UK customers – we provide a prepaid return label.\n\n**Steps for Returning an Item**\n1. Email us at support@perfumify.co.uk within 30 days of receiving your order.\n2. Once approved we’ll send a prepaid label and instructions.\n\n**Return Address:**\nPerfumify\n33 Richard Road\nRotherham\nS60 2QP\nEngland, United Kingdom\n\n**Refund Timing**\nRefunds are processed within 10 business days of receiving your return.\n\n**European Union 14-Day Cooling-Off Period**\nEU customers may cancel within 14 days provided items are unused and unopened.\n\nFor any questions contact support@perfumify.co.uk`; 
+
+// ---------------------------------------------------------
+
+const tabs = [
 		{ id: "description", label: "Product description" },
 		{ id: "shipping", label: "Shipping policy" },
 		{ id: "refund", label: "Refund policy" },
@@ -111,7 +126,14 @@ const ProductSingleDetails: React.FC = () => {
 
 	const getMetaContent = (title: string) => {
 		const meta = data?.meta?.find((m: any) => m.title === title);
-		return meta?.content || "";
+		if (meta && meta.content) return meta.content;
+
+		// Fallbacks when meta content is missing
+		if (title === "Description") return DEFAULT_DESCRIPTION;
+		if (title === "Shipping & Return" || title === "Shipping policy") return DEFAULT_SHIPPING;
+		if (title === "Refund Policy" || title === "Refund policy") return DEFAULT_REFUND;
+
+		return "";
 	};
 
 	return (
@@ -321,7 +343,7 @@ const ProductSingleDetails: React.FC = () => {
 									href={`/search?category=${data.category.slug}`}
 									className="text-gray-600 hover:text-heading transition text-xs"
 								>
-									{data.category.name || data.category}
+									{typeof data.category === 'object' ? (data.category as any).name : data.category}
 								</Link>
 							</div>
 						)}
@@ -335,7 +357,7 @@ const ProductSingleDetails: React.FC = () => {
 											href={`/search?tag=${tag.slug || tag}`}
 											className="text-gray-600 hover:text-heading transition text-xs"
 										>
-											{tag.name || tag}
+											{(tag as any).name ?? String(tag)}
 											{index < (data.tags as any[]).length - 1 && ","}
 										</Link>
 									))}

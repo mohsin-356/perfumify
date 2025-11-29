@@ -14,8 +14,8 @@ const productSchema = z.object({
         width: z.number().optional(),
         height: z.number().optional(),
     })).min(1, "At least one image is required"),
-    category: z.string().nullable().optional(),
-    brand: z.string().nullable().optional(),
+    category: z.string().nullable().optional(), // Receives ID from form
+    brand: z.string().nullable().optional(),    // Receives ID from form
     stock: z.number().min(0).default(0),
     sku: z.string().optional(),
     weight: z.number().optional(),
@@ -42,15 +42,9 @@ export async function GET(req: Request) {
 
         const query: any = {};
 
-        if (bestSellerParam === "true") {
-            query.bestSeller = true;
-        }
-        if (newArrivalParam === "true") {
-            query.newArrival = true;
-        }
-        if (featuredParam === "true") {
-            query.featured = true;
-        }
+        if (bestSellerParam === "true") query.bestSeller = true;
+        if (newArrivalParam === "true") query.newArrival = true;
+        if (featuredParam === "true") query.featured = true;
 
         if (search) {
             query.$or = [
@@ -59,37 +53,20 @@ export async function GET(req: Request) {
             ];
         }
 
-        // Handle Category Slug
+        // Direct Slug Filtering (Case Insensitive)
         if (categorySlug) {
-            // Support comma-separated slugs and ensure lowercase
-            const slugs = categorySlug.split(",").map(s => s.toLowerCase());
-            const Category = (await import("@/models/Category")).default;
-            const categories = await Category.find({ slug: { $in: slugs } }).select("_id");
-            if (categories.length > 0) {
-                query.category = { $in: categories.map(c => c._id) };
-            } else {
-                // If categories not found, return empty result
-                return NextResponse.json({ data: [], paginatorInfo: { total: 0, currentPage: page, lastPage: 1 } });
-            }
+            const slugs = categorySlug.split(",").map(s => s.trim().toLowerCase());
+            query.category = { $in: slugs };
         }
 
-        // Handle Brand Slug
         if (brandSlug) {
-            const slugs = brandSlug.split(",").map(s => s.toLowerCase());
-            const Brand = (await import("@/models/Brand")).default;
-            const brands = await Brand.find({ slug: { $in: slugs } }).select("_id");
-            if (brands.length > 0) {
-                query.brand = { $in: brands.map(b => b._id) };
-            } else {
-                return NextResponse.json({ data: [], paginatorInfo: { total: 0, currentPage: page, lastPage: 1 } });
-            }
+            const slugs = brandSlug.split(",").map(s => s.trim().toLowerCase());
+            query.brand = { $in: slugs };
         }
 
         const skip = (page - 1) * limit;
 
         const products = await Product.find(query)
-            .populate("category", "name slug")
-            .populate("brand", "name slug")
             .sort(sort)
             .skip(skip)
             .limit(limit)
@@ -142,14 +119,25 @@ export async function POST(req: Request) {
             );
         }
 
+        // Convert Brand/Category IDs to Slugs
+        if (productData.brand) {
+            const Brand = (await import("@/models/Brand")).default;
+            const brandDoc = await Brand.findById(productData.brand);
+            if (brandDoc) {
+                productData.brand = brandDoc.slug;
+            }
+        }
+
+        if (productData.category) {
+            const Category = (await import("@/models/Category")).default;
+            const categoryDoc = await Category.findById(productData.category);
+            if (categoryDoc) {
+                productData.category = categoryDoc.slug;
+            }
+        }
+
         // Create product
         const product = await Product.create(productData);
-
-        // Populate for response
-        await product.populate([
-            { path: "category", select: "name slug" },
-            { path: "brand", select: "name slug" }
-        ]);
 
         return NextResponse.json(
             { success: true, product },

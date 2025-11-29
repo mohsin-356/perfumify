@@ -18,29 +18,10 @@ export const fetchProducts = async ({ queryKey, pageParam = 1 }: any) => {
 		const serverData = Array.isArray(resp) ? resp : (resp?.data ?? []);
 		const allProducts = serverData;
 
-		const slugify = (s: string) =>
-			s
-				?.toString()
-				.toLowerCase()
-				.replace(/[^a-z0-9\s-]/g, "")
-				.replace(/\s+/g, "-")
-				.replace(/-+/g, "-");
-
 		let filtered = allProducts.slice();
 
-		if (_params?.category) {
-			const cats = String(_params.category)
-				.split(",")
-				.map((c: string) => c.toLowerCase());
-			filtered = filtered.filter((p: any) => cats.includes(slugify(p.category)));
-		}
-
-		if (_params?.brand) {
-			const brands = String(_params.brand)
-				.split(",")
-				.map((b: string) => b.toLowerCase());
-			filtered = filtered.filter((p: any) => brands.includes(slugify(p.brand)));
-		}
+		// Client-side filtering for Price (if needed) and Sorting
+		// Note: Category and Brand filtering is now handled server-side
 
 		if (_params?.price) {
 			const [minStr, maxStr] = String(_params.price).split("-");

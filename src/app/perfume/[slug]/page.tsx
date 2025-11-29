@@ -1,120 +1,89 @@
 import { notFound } from "next/navigation";
-import Image from "next/image";
-import path from "path";
-import fs from "fs";
-import { cache } from "react";
+import { connectDB } from "@/lib/db";
+import { Product } from "@/models/Product";
+import { ProductDetailProvider } from "@contexts/product-detail.context";
+import ProductGallery from "@components/product/detail/product-gallery";
+import ProductInfo from "@components/product/detail/product-info";
+import VariantSelector from "@components/product/detail/variant-selector";
+import QuantitySelector from "@components/product/detail/quantity-selector";
+import AddToCart from "@components/product/detail/add-to-cart";
+import ProductTabs from "@components/product/detail/product-tabs";
+import TrustBadges from "@components/product/detail/trust-badges";
+import RelatedProducts from "@components/product/detail/related-products";
+import RecentlyViewed from "@components/product/detail/recently-viewed";
+import ReviewList from "@components/product/detail/review-list";
+import ReviewForm from "@components/product/detail/review-form";
+import Breadcrumb from "@components/common/breadcrumb";
 
-// Cached server-side data fetch
-const getProductBySlug = cache(async (slug: string) => {
-  const filePath = path.join(process.cwd(), "public/api/products.json");
-  const fileContents = fs.readFileSync(filePath, "utf-8");
-  const products = JSON.parse(fileContents) as any[];
-  const product = products.find((p) => p.slug === slug);
+// Force dynamic rendering since we are fetching from DB
+export const dynamic = "force-dynamic";
+
+async function getProduct(slug: string) {
+  await connectDB();
+
+  // Fetch product and populate brand/category if needed (though we store slugs now)
+  // We might need to fetch brand/category details if we want to show more than just the slug/name
+  const product = await Product.findOne({ slug }).lean();
+
   if (!product) return null;
-  return product;
-});
+
+  // Transform _id to string for serialization
+  return JSON.parse(JSON.stringify(product));
+}
 
 type PageProps = {
   params: { slug: string };
 };
 
 export default async function PerfumeDetailPage({ params }: PageProps) {
-  const product = await getProductBySlug(params.slug);
+  const product = await getProduct(params.slug);
+  console.log("Fetched Product:", JSON.stringify(product, null, 2));
+
   if (!product) {
     notFound();
   }
 
-  const {
-    name,
-    description,
-    image,
-    price,
-    sale_price,
-    sku,
-    category,
-    tags,
-    gallery,
-  } = product;
-
-  const displayPrice = sale_price ?? price;
-
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8 space-y-8">
-      {/* Header */}
-      <div className="flex flex-col lg:flex-row gap-8">
-        {/* Image */}
-        <div className="flex-1">
-          {image?.original ? (
-            <Image
-              src={image.original}
-              alt={name}
-              width={600}
-              height={600}
-              className="rounded-lg object-cover w-full h-auto"
-              priority
-            />
-          ) : (
-            <div className="bg-gray-200 rounded-lg w-full h-[600px] flex items-center justify-center text-gray-500">
-              No image
-            </div>
-          )}
+    <ProductDetailProvider product={product}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Breadcrumb */}
+        <div className="mb-8 text-sm text-gray-500">
+          <a href="/" className="hover:text-black">Home</a>
+          <span className="mx-2">/</span>
+          <a href="/search" className="hover:text-black">All Products</a>
+          <span className="mx-2">/</span>
+          <span className="text-black font-medium">{product.name}</span>
         </div>
 
-        {/* Info */}
-        <div className="flex-1 space-y-4">
-          <h1 className="text-3xl font-bold">{name}</h1>
-          <p className="text-2xl font-semibold">£{displayPrice}</p>
-          {sale_price && (
-            <p className="text-lg text-gray-400 line-through">£{price}</p>
-          )}
-          <p className="text-gray-700">{description}</p>
-          {sku && <p className="text-sm text-gray-500">SKU: {sku}</p>}
-          {category && (
-            <p className="text-sm text-gray-500">
-              Category: {typeof category === "object" ? category.name : category}
-            </p>
-          )}
-          {tags && Array.isArray(tags) && tags.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {tags.map((tag: any) => (
-                <span
-                  key={tag.id || tag}
-                  className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded"
-                >
-                  {tag.name || tag}
-                </span>
-              ))}
-            </div>
-          )}
-          {/* Placeholder for Add to Cart/Quantity (client-side later) */}
-          <div className="pt-4">
-            <button className="bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition">
-              Add to Cart (placeholder)
-            </button>
+        <div className="flex flex-col lg:flex-row gap-12">
+          {/* Left Column: Gallery */}
+          <div className="w-full lg:w-3/5">
+            <ProductGallery />
+          </div>
+
+          {/* Right Column: Info & Actions */}
+          <div className="w-full lg:w-2/5 space-y-8 sticky top-24 self-start">
+            <ProductInfo />
+            <VariantSelector />
+            <QuantitySelector />
+            <AddToCart />
+            <TrustBadges />
           </div>
         </div>
+
+        {/* Full Width Sections */}
+        <div className="mt-16">
+          <ProductTabs />
+        </div>
+
+        <div className="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-16">
+          <ReviewList />
+          <ReviewForm />
+        </div>
+
+        <RelatedProducts />
+        <RecentlyViewed />
       </div>
-
-      {/* Gallery thumbnails */}
-      {gallery && Array.isArray(gallery) && gallery.length > 0 && (
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold">Gallery</h2>
-          <div className="grid grid-cols-4 gap-4">
-            {gallery.slice(0, 8).map((img: any, idx: number) => (
-              <div key={idx} className="relative aspect-square">
-                <Image
-                  src={img?.thumbnail ?? img?.original ?? "/assets/placeholder/products/product-thumbnail.svg"}
-                  alt={`${name} ${idx + 1}`}
-                  fill
-                  className="object-cover rounded-lg"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* More sections (description, shipping, reviews) can be added here */}
-    </div>
+    </ProductDetailProvider>
   );
 }

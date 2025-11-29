@@ -30,16 +30,26 @@ export async function GET(
 ) {
     try {
         await connectDB();
-        const product = await Product.findById(params.id)
-            .populate("category", "name slug")
-            .populate("brand", "name slug")
-            .lean();
+        const product = await Product.findById(params.id).lean();
 
         if (!product) {
             return NextResponse.json(
                 { error: "Product not found" },
                 { status: 404 }
             );
+        }
+
+        // Manual population for frontend compatibility
+        if (product.brand && typeof product.brand === 'string') {
+            const Brand = (await import("@/models/Brand")).default;
+            const brandDoc = await Brand.findOne({ slug: product.brand }).lean();
+            if (brandDoc) product.brand = brandDoc;
+        }
+
+        if (product.category && typeof product.category === 'string') {
+            const Category = (await import("@/models/Category")).default;
+            const categoryDoc = await Category.findOne({ slug: product.category }).lean();
+            if (categoryDoc) product.category = categoryDoc;
         }
 
         return NextResponse.json(product);
@@ -93,15 +103,31 @@ export async function PUT(
             }
         }
 
+        const updateData = { ...validation.data };
+
+        // Convert Brand/Category IDs to Slugs
+        if (updateData.brand) {
+            const Brand = (await import("@/models/Brand")).default;
+            const brandDoc = await Brand.findById(updateData.brand);
+            if (brandDoc) {
+                updateData.brand = brandDoc.slug;
+            }
+        }
+
+        if (updateData.category) {
+            const Category = (await import("@/models/Category")).default;
+            const categoryDoc = await Category.findById(updateData.category);
+            if (categoryDoc) {
+                updateData.category = categoryDoc.slug;
+            }
+        }
+
         // Update product
         const product = await Product.findByIdAndUpdate(
             params.id,
-            validation.data,
+            updateData,
             { new: true }
-        ).populate([
-            { path: "category", select: "name slug" },
-            { path: "brand", select: "name slug" }
-        ]);
+        );
 
         return NextResponse.json({ success: true, product });
     } catch (error: any) {

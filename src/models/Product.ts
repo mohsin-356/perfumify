@@ -27,12 +27,12 @@ const ProductSchema = new Schema(
       default: [],
     },
     category: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Category",
+      type: String, // Storing slug for easier filtering
+      required: true,
     },
     brand: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Brand",
+      type: String, // Storing slug for easier filtering
+      required: true,
     },
     stock: {
       type: Number,
@@ -62,6 +62,7 @@ const ProductSchema = new Schema(
       type: Boolean,
       default: false,
     },
+
   },
   { timestamps: true }
 );

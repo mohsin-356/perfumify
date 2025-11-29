@@ -1,6 +1,7 @@
 import React from "react";
 import { getToken } from "@framework/utils/get-token";
 import { CartProvider } from "./cart/cart.context";
+import { WishlistProvider } from "./wishlist/wishlist.context";
 
 export interface State {
   isAuthorized: boolean;
@@ -291,8 +292,10 @@ export const useUI = () => {
 
 export function ManagedUIContext({ children }: { children: React.ReactNode }) {
   return (
-    <CartProvider>
-      <UIProvider>{children}</UIProvider>
-    </CartProvider>
+    <WishlistProvider>
+      <CartProvider>
+        <UIProvider>{children}</UIProvider>
+      </CartProvider>
+    </WishlistProvider>
   );
 }

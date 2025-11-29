@@ -6,8 +6,12 @@ import { API_ENDPOINTS } from "@framework/utils/api-endpoints";
 export const fetchBestSellerProducts = async ({ queryKey }: any) => {
 	const [_key, _params] = queryKey;
 	try {
-		const { data } = await http.get(`/api/products?bestSeller=true&limit=10`);
-		return Array.isArray(data) ? data as Product[] : [];
+		// Use server-side filtering
+		const { data: resp } = await http.get(API_ENDPOINTS.PRODUCTS, {
+			params: { ..._params, bestSeller: true, limit: 10 }
+		});
+		// Handle paginated response structure { data: [...], paginatorInfo: ... }
+		return resp?.data || [];
 	} catch (error) {
 		console.error('Error fetching best seller products:', error);
 		return [] as Product[];
