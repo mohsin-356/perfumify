@@ -35,19 +35,25 @@ const ProductsBlock: React.FC<ProductsProps> = ({
 				<Alert message={error} />
 			) : (
 				<div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-x-3 md:gap-x-5 xl:gap-x-7 gap-y-3 xl:gap-y-5 2xl:gap-y-8">
-					{loading && !products?.length ? (
-						<ProductFeedLoader limit={10} uniqueKey={uniqueKey} />
-					) : (
-						products?.map((product: Product) => (
-							<ProductCard
-								key={`product--key${product.id}`}
-								product={product}
-								imgWidth={340}
-								imgHeight={440}
-								variant="grid"
-							/>
-						))
-					)}
+					{(() => {
+						// Normalize products to an array to avoid runtime type errors
+						const list: Product[] = Array.isArray(products)
+							? products!
+							: ((products as any)?.data ?? []);
+						return loading && list.length === 0 ? (
+							<ProductFeedLoader limit={10} uniqueKey={uniqueKey} />
+						) : (
+							list.map((product: Product) => (
+								<ProductCard
+									key={`product--key${product.id}`}
+									product={product}
+									imgWidth={340}
+									imgHeight={440}
+									variant="grid"
+								/>
+							))
+						);
+					})()}
 				</div>
 			)}
 		</div>

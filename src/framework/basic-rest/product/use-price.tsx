@@ -49,7 +49,7 @@ export default function usePrice(
     currencyCode: string;
   } | null
 ) {
-  const { amount, baseAmount, currencyCode } = data ?? {};
+  const { amount, baseAmount, currencyCode = "GBP" } = data ?? {};
   const locale = "en-GB";
   const value = useMemo(() => {
     if (typeof amount !== "number" || !currencyCode) return "";

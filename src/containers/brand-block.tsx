@@ -48,10 +48,17 @@ const BrandBlock: React.FC<BrandProps> = ({
 	// Dedupe brands by ID to prevent duplicates
 	const uniqueBrands = data?.brands?.filter((brand, index, self) =>
 		index === self.findIndex((t) => (
-			t.id === brand.id || t._id === brand._id
+			t._id ? t._id === brand._id : t.slug === brand.slug
 		))
 	);
-	const brands = uniqueBrands;
+	const brands = uniqueBrands?.map((b) => {
+    const raw = b as any;
+    const imageUrl = typeof raw.image === "string" ? raw.image : raw.image?.url || raw.image?.original || "";
+    return {
+        ...b,
+        image: { original: imageUrl },
+    };
+});
 	return (
 		<div className={className}>
 			<SectionHeader sectionHeading={sectionHeading} />

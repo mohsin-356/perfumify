@@ -929,7 +929,7 @@ export const siteSettings = {
 					},
 					{
 						id: 8,
-						path: "/category/man",
+						path: "/category/men",
 						label: "menu-category",
 					},
 					{
@@ -1538,7 +1538,7 @@ export const siteSettings = {
 					},
 					{
 						id: 8,
-						path: "/category/man",
+						path: "/category/men",
 						label: "menu-category",
 					},
 					{

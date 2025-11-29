@@ -12,12 +12,15 @@ interface Item {
   sale_price?: number;
   [key: string]: unknown;
 }
-export function generateCartItem(item: Item, attributes: object) {
-  const { id, name, slug, image, price, sale_price } = item;
+export function generateCartItem(item: any, attributes: object) {
+  if (!item) throw new Error("generateCartItem: item is undefined");
+  // Accept either `id` or Mongo `_id`
+  const baseId = (item as any).id ?? (item as any)._id;
+  const { name, slug, image, price, sale_price } = item as any;
   return {
     id: !isEmpty(attributes)
-      ? `${id}.${Object.values(attributes).join(".")}`
-      : id,
+      ? `${baseId}.${Object.values(attributes).join(".")}`
+      : baseId,
     name,
     slug,
     image: image.thumbnail,

@@ -1,11 +1,16 @@
 import cn from "classnames";
 import Image from "next/image";
 import type { FC } from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useUI } from "@contexts/ui.context";
 import usePrice from "@framework/product/use-price";
 import { Product } from "@framework/types";
 import { FiShoppingCart, FiEye, FiHeart } from "react-icons/fi";
+import { useCart } from "@contexts/cart/cart.context";
+import { useWishlist } from "@contexts/wishlist/wishlist.context";
+import { generateCartItem } from "@utils/generate-cart-item";
+import { toast } from "react-toastify";
+import { useWindowSize } from "@utils/use-window-size";
 import CloudImage from "@components/ui/CloudImage";
 
 interface ProductProps {
@@ -37,40 +42,30 @@ const ProductCard: FC<ProductProps> = ({
 		baseAmount: product.price,
 		currencyCode: "GBP",
 	});
-	function handlePopupView() {
+
+	// Hooks
+	const { width } = useWindowSize();
+	const { addItemToCart, isInCart } = useCart();
+	const { addItemToWishlist, removeItemFromWishlist, isInWishlist } = useWishlist();
+
+	// Helpers
+	const handlePopupView = () => {
 		setModalData({ data: product });
 		setModalView("PRODUCT_VIEW");
-		return openModal();
-	}
-	// Get badge type based on product data
-	const getBadge = () => {
-		if (product.sale_price && product.price > product.sale_price) {
-			return { text: "Sale", color: "bg-red-500" };
-		}
-		if (product.quantity && product.quantity < 10) {
-			return { text: "Limited", color: "bg-orange-500" };
-		}
-		const tags = Array.isArray(product.tags) ? product.tags : [];
-		if (tags.includes("hot") || tags.includes("trending")) {
-			return { text: "Hot", color: "bg-pink-500" };
-		}
-		if (tags.includes("new")) {
-			return { text: "New", color: "bg-blue-500" };
-		}
-		return null;
+		openModal();
 	};
 
-	const badge = getBadge();
+	const asString = (v: any): string | undefined => (typeof v === "string" ? v : undefined);
 
-	// New Cloudinary logic
+	// Image sources
 	const cloudImage = product?.images?.[0];
 	const cloudHoverImage = product?.images?.[1] || cloudImage;
 
-	// Choose best available image for card display (handle string or object shapes)
-	const asString = (v: any): string | undefined => (typeof v === 'string' ? v : undefined);
 	const firstGallery = Array.isArray(product?.gallery) ? product.gallery[0] : undefined;
 	const secondGallery = Array.isArray(product?.gallery) ? product.gallery[1] : undefined;
+
 	const primarySrc =
+		product?.images?.[0]?.url ||
 		asString((product as any)?.image) ||
 		(product as any)?.image?.thumbnail ||
 		(product as any)?.image?.original ||
@@ -78,19 +73,67 @@ const ProductCard: FC<ProductProps> = ({
 		(firstGallery as any)?.thumbnail ||
 		(firstGallery as any)?.original ||
 		placeholderImage;
+
 	const hoverSrc =
+		product?.images?.[1]?.url ||
 		asString(secondGallery) ||
 		(secondGallery as any)?.original ||
 		primarySrc;
-	const currentImage = isHovered ? hoverSrc : primarySrc;
-	const [imgSrc, setImgSrc] = useState<string>(currentImage);
+
+	const [imgSrc, setImgSrc] = useState<string>(primarySrc);
+
+	useEffect(() => {
+		setImgSrc(isHovered ? hoverSrc : primarySrc);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isHovered]);
+
+	// Badge
+	const badge = (() => {
+		if (product.sale_price && product.price > product.sale_price) return { text: "Sale", color: "bg-red-500" };
+		if (product.quantity && product.quantity < 10) return { text: "Limited", color: "bg-orange-500" };
+		const tags = Array.isArray(product.tags) ? product.tags : [];
+		if (tags.includes("hot") || tags.includes("trending")) return { text: "Hot", color: "bg-pink-500" };
+		if (tags.includes("new")) return { text: "New", color: "bg-blue-500" };
+		return null;
+	})();
+
+	// Handlers
+	const handleAddToCart = (e: React.MouseEvent) => {
+		e.stopPropagation();
+		if (isInCart(product.id)) return;
+
+		const productForCart = {
+			...product,
+			image: {
+				thumbnail: primarySrc,
+				original: primarySrc,
+			}
+		};
+
+		addItemToCart(generateCartItem(productForCart as any, {}), 1);
+		toast("Added to bag", {
+			type: "dark",
+			progressClassName: "fancy-progress-bar",
+			position: width > 768 ? "bottom-right" : "top-right",
+			autoClose: 2000,
+		});
+	};
+
+	const toggleWishlist = (e: React.MouseEvent) => {
+		e.stopPropagation();
+		if (isInWishlist(product.id)) {
+			removeItemFromWishlist(product.id);
+		} else {
+			addItemToWishlist(product);
+		}
+	};
 
 	return (
 		<div
 			className={cn(
 				"group box-border overflow-hidden flex rounded-md cursor-pointer relative",
 				{
-					"pe-0 pb-2 lg:pb-3 flex-col items-start bg-white transition duration-200 ease-in-out transform hover:-translate-y-1 hover:md:-translate-y-1.5 hover:shadow-product":
+					"pe-0 pb-2 lg:pb-3 flex-col items-start bg-white transition duration-200 ease-in-out transform hover:-translate-y-1 hover:shadow-product":
 						variant === "grid",
 					"pe-0 md:pb-1 flex-col items-start bg-white": variant === "gridSlim",
 					"items-center bg-transparent border border-gray-100 transition duration-200 ease-in-out transform hover:-translate-y-1 hover:shadow-listProduct":
@@ -102,24 +145,23 @@ const ProductCard: FC<ProductProps> = ({
 			)}
 			onMouseEnter={() => setIsHovered(true)}
 			onMouseLeave={() => setIsHovered(false)}
-			role="button"
-			title={product?.name}
+			onClick={handlePopupView}
 		>
 			{/* Badge */}
 			{badge && (
-				<div className={`absolute top-3 right-3 ${badge.color} text-white text-xs font-bold px-3 py-1 rounded-tl-xl rounded-br-xl z-10 shadow-lg`}>
+				<div className={cn("absolute top-3 right-3 text-white text-xs font-bold px-3 py-1 rounded-tl-xl rounded-br-xl z-10 shadow-lg", badge.color)}>
 					{badge.text}
 				</div>
 			)}
 
+			{/* Image */}
 			<div
 				className={cn(
 					"flex relative",
 					{
-						"mb-3 md:mb-3.5": variant === "grid",
+						"mb-3 md:mb-3.5 w-full": variant === "grid",
 						"mb-3 md:mb-3.5 pb-0": variant === "gridSlim",
-						"flex-shrink-0 w-32 sm:w-44 md:w-36 lg:w-44":
-							variant === "listSmall",
+						"flex-shrink-0 w-32 sm:w-44 md:w-36 lg:w-44": variant === "listSmall",
 					},
 					imageContentClassName
 				)}
@@ -131,19 +173,16 @@ const ProductCard: FC<ProductProps> = ({
 						width={Number(imgWidth) || 340}
 						height={Number(imgHeight) || 440}
 						className={cn("bg-gray-300 object-cover rounded-s-md transition-all duration-300", {
-							"w-full rounded-md group-hover:rounded-b-none":
-								variant === "grid",
-							"rounded-md transform group-hover:scale-105":
-								variant === "gridSlim",
-							"rounded-s-md transform group-hover:scale-105":
-								variant === "list",
+							"w-full rounded-md group-hover:rounded-b-none": variant === "grid",
+							"rounded-md transform group-hover:scale-105": variant === "gridSlim",
+							"rounded-s-md transform group-hover:scale-105": variant === "list",
 						})}
 					/>
 				) : (
 					<Image
 						src={imgSrc}
-						width={imgWidth}
-						height={imgHeight}
+						width={Number(imgWidth) || 340}
+						height={Number(imgHeight) || 440}
 						loading={imgLoading}
 						unoptimized
 						quality={70}
@@ -151,30 +190,33 @@ const ProductCard: FC<ProductProps> = ({
 						alt={product?.name || "Product Image"}
 						onError={() => setImgSrc(placeholderImage)}
 						className={cn("bg-gray-300 object-cover rounded-s-md transition-all duration-300", {
-							"w-full rounded-md group-hover:rounded-b-none":
-								variant === "grid",
-							"rounded-md transform group-hover:scale-105":
-								variant === "gridSlim",
-							"rounded-s-md transform group-hover:scale-105":
-								variant === "list",
+							"w-full rounded-md group-hover:rounded-b-none": variant === "grid",
+							"rounded-md transform group-hover:scale-105": variant === "gridSlim",
+							"rounded-s-md transform group-hover:scale-105": variant === "list",
 						})}
 					/>
 				)}
 
-				{/* Action Buttons on Hover */}
+				{/* Action buttons */}
 				{variant === "grid" && (
-					<div className={`absolute bottom-0 left-0 right-0 flex justify-center items-center gap-2 p-3 bg-white transition-all duration-300 ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-full'
-						}`}>
+					<div
+						className={cn(
+							"absolute bottom-0 left-0 right-0 flex justify-center items-center gap-2 p-3 backdrop-blur-sm bg-white/30 rounded-b-md transition-all duration-300",
+							{
+								"opacity-100 translate-y-0": isHovered,
+								"opacity-0 translate-y-full": !isHovered,
+							}
+						)}
+					>
+						{/* Cart */}
 						<button
-							onClick={(e) => {
-								e.stopPropagation();
-								// Add to cart logic
-							}}
+							onClick={handleAddToCart}
 							className="flex items-center justify-center w-10 h-10 bg-black text-white rounded-full hover:bg-gray-800 transition-colors"
 							title="Add to Cart"
 						>
 							<FiShoppingCart className="w-5 h-5" />
 						</button>
+						{/* Quick view */}
 						<button
 							onClick={(e) => {
 								e.stopPropagation();
@@ -185,19 +227,19 @@ const ProductCard: FC<ProductProps> = ({
 						>
 							<FiEye className="w-5 h-5" />
 						</button>
+						{/* Wishlist */}
 						<button
-							onClick={(e) => {
-								e.stopPropagation();
-								// Add to wishlist logic
-							}}
+							onClick={toggleWishlist}
 							className="flex items-center justify-center w-10 h-10 bg-white text-black rounded-full hover:bg-gray-100 transition-colors border-2 border-gray-200"
-							title="Add to Wishlist"
+							title={isInWishlist(product.id) ? "Remove from Wishlist" : "Add to Wishlist"}
 						>
 							<FiHeart className="w-5 h-5" />
 						</button>
 					</div>
 				)}
 			</div>
+
+			{/* Info */}
 			<div
 				className={cn(
 					"w-full overflow-hidden",
@@ -208,16 +250,13 @@ const ProductCard: FC<ProductProps> = ({
 					},
 					contactClassName
 				)}
-				onClick={handlePopupView}
 			>
 				<h2
 					className={cn("text-heading font-semibold truncate mb-1", {
 						"text-sm md:text-base": variant === "grid",
-						"md:mb-1.5 text-sm sm:text-base md:text-sm lg:text-base xl:text-lg":
-							variant === "gridSlim",
+						"md:mb-1.5 text-sm sm:text-base md:text-sm lg:text-base xl:text-lg": variant === "gridSlim",
 						"text-sm sm:text-base md:mb-1.5 pb-0": variant === "listSmall",
-						"text-sm sm:text-base md:text-sm lg:text-base xl:text-lg md:mb-1.5":
-							variant === "list",
+						"text-sm sm:text-base md:text-sm lg:text-base xl:text-lg md:mb-1.5": variant === "list",
 					})}
 				>
 					{product?.name}
@@ -228,17 +267,13 @@ const ProductCard: FC<ProductProps> = ({
 					</p>
 				)}
 				<div
-					className={`text-heading font-semibold text-sm sm:text-base mt-1.5 space-s-2 ${variant === "grid"
-							? "lg:text-lg lg:mt-2.5"
-							: "sm:text-xl md:text-base lg:text-xl md:mt-2.5 2xl:mt-3"
-						}`}
+					className={cn("text-heading font-semibold mt-1.5 space-s-2", {
+						"text-sm sm:text-base lg:text-lg": variant === "grid",
+						"text-sm sm:text-xl lg:text-xl": variant !== "grid",
+					})}
 				>
-					<span className="inline-block">{price}</span>
-					{discount && (
-						<del className="sm:text-base font-normal text-gray-800">
-							{basePrice}
-						</del>
-					)}
+					<span>{price}</span>
+					{discount && <del className="sm:text-base font-normal text-gray-800">{basePrice}</del>}
 				</div>
 			</div>
 		</div>

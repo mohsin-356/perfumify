@@ -5,8 +5,9 @@ import { useQuery } from "react-query";
 
 export const fetchFeaturedProducts = async ({ queryKey }: any) => {
   const [_key, _params] = queryKey;
-  const { data } = await http.get(`/api/products?featured=true&limit=10`);
-  return data;
+  const { data: resp } = await http.get(API_ENDPOINTS.PRODUCTS, { params: { limit: 100 } });
+  const items = Array.isArray(resp?.data) ? resp.data : Array.isArray(resp) ? resp : [];
+  return (items as Product[]).filter((p) => p.featured || p.isFeatured).slice(0, 10);
 };
 export const useFeaturedProductsQuery = (options: QueryOptionsType) => {
   return useQuery<Product[], Error>(
