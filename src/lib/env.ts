@@ -8,6 +8,11 @@ const envSchema = z.object({
   CLOUDINARY_API_SECRET: z.string().optional(),
   MONGODB_URI: z.string().optional(),
   ADMIN_SECRET_TOKEN: z.string().optional(),
+  SMTP_HOST: z.string().optional(),
+  SMTP_PORT: z.coerce.number().optional(),
+  SMTP_USER: z.string().optional(),
+  SMTP_PASS: z.string().optional(),
+  NOTIFY_EMAIL: z.string().optional(),
 });
 
 const parsed = envSchema.safeParse(process.env);

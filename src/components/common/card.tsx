@@ -26,6 +26,13 @@ const Card: React.FC<Props> = ({
 
 	const placeholderImage = `/assets/placeholder/card-${size}.svg`;
 	const { t } = useTranslation("common");
+	// Support multiple image shapes:
+	// - Attachment { original: string }
+	// - { url: string }
+	// - string URL
+	const imgSrc =
+		(typeof image === "string" ? image : image?.original ?? image?.url) ??
+		placeholderImage;
 	return (
 		<Link
 			href={href}
@@ -38,7 +45,7 @@ const Card: React.FC<Props> = ({
 			>
 				<div className="flex">
 					<Image
-						src={image?.original ?? placeholderImage}
+						src={imgSrc}
 						alt={name || t("text-card-thumbnail")}
 						width={imageSize}
 						height={imageSize}
