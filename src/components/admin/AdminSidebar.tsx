@@ -10,7 +10,8 @@ import {
     FiShoppingBag,
     FiUsers,
     FiSettings,
-    FiLogOut
+    FiLogOut,
+    FiMessageSquare,
 } from "react-icons/fi";
 
 const menuItems = [
@@ -20,11 +21,12 @@ const menuItems = [
     { name: "Brands", href: "/admin/brands", icon: FiTag },
     { name: "Orders", href: "/admin/orders", icon: FiShoppingBag },
     { name: "Customers", href: "/admin/customers", icon: FiUsers },
+    { name: "Chats", href: "/admin/chats", icon: FiMessageSquare },
     { name: "Settings", href: "/admin/settings", icon: FiSettings },
 ];
 
 export default function AdminSidebar() {
-    const pathname = usePathname();
+    const pathname = usePathname() ?? "";
 
     return (
         <aside className="w-64 bg-white border-r border-gray-200 min-h-screen flex flex-col fixed left-0 top-0 bottom-0 z-50">

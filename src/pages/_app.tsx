@@ -9,6 +9,7 @@ import { Hydrate } from "react-query/hydration";
 // import { ReactQueryDevtools } from "react-query/devtools";
 import { appWithTranslation } from "next-i18next";
 import { DefaultSeo } from "@components/common/default-seo";
+import ChatWidget from "@/components/chat/ChatWidget";
 
 const ManagedModal = dynamic(() => import("@components/common/modal/managed-modal"), { ssr: false });
 const ManagedDrawer = dynamic(() => import("@components/common/drawer/managed-drawer"), { ssr: false });
@@ -34,7 +35,9 @@ function handleExitComplete() {
 	}
 }
 
-const Noop: React.FC = ({ children }) => <>{children}</>;
+const Noop = ({ children }: { children?: React.ReactNode }) => <>{children}</>;
+
+const Presence: any = AnimatePresence;
 
 const RouteProgress: React.FC = () => {
   const router = useRouter();
@@ -101,7 +104,7 @@ const CustomApp = ({ Component, pageProps }: AppProps) => {
 	const Layout = (Component as any).Layout || Noop;
 
 	return (
-		<AnimatePresence exitBeforeEnter onExitComplete={handleExitComplete}>
+		<Presence onExitComplete={handleExitComplete}>
 			<QueryClientProvider client={queryClientRef.current}>
 				<Hydrate state={pageProps.dehydratedState}>
 					<ManagedUIContext>
@@ -109,6 +112,7 @@ const CustomApp = ({ Component, pageProps }: AppProps) => {
 							<DefaultSeo />
 							<RouteProgress />
 							<Component {...pageProps} key={router.route} />
+							<ChatWidget />
 							<ToastContainer />
 						</Layout>
 						<ManagedModal />
@@ -117,7 +121,7 @@ const CustomApp = ({ Component, pageProps }: AppProps) => {
 				</Hydrate>
 				{/* <ReactQueryDevtools /> */}
 			</QueryClientProvider>
-		</AnimatePresence>
+		</Presence>
 	);
 };
 
