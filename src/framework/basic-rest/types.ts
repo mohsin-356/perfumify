@@ -99,16 +99,26 @@ export type OrderItem = {
   quantity: number;
 };
 export type Order = {
-  id: string | number;
-  name: string;
-  slug: string;
-  products: OrderItem[];
+  id?: string | number;
+  _id?: any;
+  name?: string;
+  slug?: string;
+  products?: OrderItem[];
+  items?: OrderItem[];
   total: number;
-  tracking_number: string;
+  shipping_fee?: number;
+  tracking_number?: string;
+  trackingId?: string;
+  createdAt?: string | Date;
   customer: {
-    id: number;
+    id?: number | string;
     email: string;
+    name?: string;
   };
-  shipping_fee: number;
-  payment_gateway: string;
+  payment_gateway?: string;
+  paymentInfo?: {
+    method?: string;
+    transactionId?: string;
+    status?: string;
+  };
 };

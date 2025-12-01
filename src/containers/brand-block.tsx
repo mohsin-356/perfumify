@@ -66,7 +66,12 @@ const BrandBlock: React.FC<BrandProps> = ({
 			{error ? (
 				<Alert message={error?.message} />
 			) : (
-				<Carousel breakpoints={breakpoints} buttonClassName="-mt-8 md:-mt-12">
+				<Carousel
+					breakpoints={breakpoints}
+					buttonClassName="-mt-6 md:-mt-10"
+					buttonSize="small"
+					autoplay={{ marquee: true, speed: 0.8, pauseOnHover: true }}
+				>
 					{isLoading && !data
 						? Array.from({ length: 10 }).map((_, idx) => (
 							<div key={idx}>
@@ -74,11 +79,13 @@ const BrandBlock: React.FC<BrandProps> = ({
 							</div>
 						))
 						: brands?.map((brand) => (
-							<div key={`brand--key${brand.id}`}>
+							<div key={`brand--key${brand.id}`} className="w-28 md:w-32 lg:w-36 px-2">
 								<Card
 									item={brand}
 									variant="rounded"
-									size="medium"
+									size="small"
+									imageSizePx={96}
+									titleClassName="text-xs md:text-sm"
 									href={{
 										pathname: ROUTES.SEARCH,
 										query: { brand: brand.slug },

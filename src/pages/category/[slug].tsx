@@ -10,12 +10,14 @@ import { useRouter } from "next/router";
 
 export default function Category() {
 	const { query } = useRouter();
+	const slug = (query.slug as string) || "";
+	const isGender = slug === "men" || slug === "women" || slug === "unisex";
 	return (
 		<div className="border-t-2 border-borderBottom">
 			<Container>
 				<CategoryBanner />
 				<div className="pb-16 lg:pb-20">
-					<ProductGrid className="3xl:grid-cols-6" category={query.slug as string} />
+					<ProductGrid className="3xl:grid-cols-6" {...(isGender ? { gender: slug } : { category: slug })} />
 				</div>
 				<Subscription />
 			</Container>

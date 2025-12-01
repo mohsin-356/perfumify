@@ -30,3 +30,33 @@ export async function sendNotificationEmail(subject: string, text: string) {
     return { error: true } as const;
   }
 }
+
+export async function sendCustomerEmail(to: string, subject: string, text: string) {
+  try {
+    if (!env.SMTP_HOST || !env.SMTP_PORT || !env.SMTP_USER || !env.SMTP_PASS) {
+      return { skipped: true } as const;
+    }
+
+    const transporter = nodemailer.createTransport({
+      host: env.SMTP_HOST,
+      port: env.SMTP_PORT,
+      secure: false,
+      auth: {
+        user: env.SMTP_USER,
+        pass: env.SMTP_PASS,
+      },
+    });
+
+    await transporter.sendMail({
+      from: `Perfumify <${env.SMTP_USER}>`,
+      to,
+      subject,
+      text,
+    });
+
+    return { sent: true } as const;
+  } catch (e) {
+    console.error("Customer email send error", e);
+    return { error: true } as const;
+  }
+}

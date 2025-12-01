@@ -7,6 +7,9 @@ const productUpdateSchema = z.object({
     name: z.string().min(1).optional(),
     slug: z.string().min(1).optional(),
     description: z.string().optional(),
+    shipping_policy: z.string().optional(),
+    refund_policy: z.string().optional(),
+    sale_price: z.number().optional(),
     price: z.number().min(0).optional(),
     images: z.array(z.object({
         url: z.string(),
@@ -16,6 +19,8 @@ const productUpdateSchema = z.object({
     })).optional(),
     category: z.string().nullable().optional(),
     brand: z.string().nullable().optional(),
+    categories: z.array(z.string()).optional(),
+    gender: z.enum(["men","women","unisex"]).optional(),
     stock: z.number().min(0).optional(),
     sku: z.string().optional(),
     weight: z.number().optional(),
@@ -25,34 +30,37 @@ const productUpdateSchema = z.object({
 });
 
 export async function GET(
-    req: Request,
+    _req: Request,
     { params }: { params: { id: string } }
 ) {
     try {
         await connectDB();
         const product = await Product.findById(params.id).lean();
 
-        if (!product) {
+        if (!product || Array.isArray(product)) {
             return NextResponse.json(
                 { error: "Product not found" },
                 { status: 404 }
             );
         }
 
+        // Work with a mutable, loosely-typed copy to avoid Mongoose TS inference issues
+        const prod: any = product;
+
         // Manual population for frontend compatibility
-        if (product.brand && typeof product.brand === 'string') {
+        if (prod.brand && typeof prod.brand === 'string') {
             const Brand = (await import("@/models/Brand")).default;
-            const brandDoc = await Brand.findOne({ slug: product.brand }).lean();
-            if (brandDoc) product.brand = brandDoc;
+            const brandDoc = await Brand.findOne({ slug: prod.brand }).lean();
+            if (brandDoc) prod.brand = brandDoc;
         }
 
-        if (product.category && typeof product.category === 'string') {
+        if (prod.category && typeof prod.category === 'string') {
             const Category = (await import("@/models/Category")).default;
-            const categoryDoc = await Category.findOne({ slug: product.category }).lean();
-            if (categoryDoc) product.category = categoryDoc;
+            const categoryDoc = await Category.findOne({ slug: prod.category }).lean();
+            if (categoryDoc) prod.category = categoryDoc;
         }
 
-        return NextResponse.json(product);
+        return NextResponse.json(prod);
     } catch (error: any) {
         console.error("Fetch product error:", error);
         return NextResponse.json(
@@ -105,21 +113,30 @@ export async function PUT(
 
         const updateData = { ...validation.data };
 
-        // Convert Brand/Category IDs to Slugs
-        if (updateData.brand) {
+        // Convert Brand/Category fields: accept ObjectId or slug
+        const looksLikeObjectId = (v: any) => typeof v === 'string' && /^[a-fA-F0-9]{24}$/.test(v);
+
+        if (updateData.brand && looksLikeObjectId(updateData.brand)) {
             const Brand = (await import("@/models/Brand")).default;
             const brandDoc = await Brand.findById(updateData.brand);
-            if (brandDoc) {
-                updateData.brand = brandDoc.slug;
-            }
+            if (brandDoc) updateData.brand = brandDoc.slug;
         }
 
-        if (updateData.category) {
+        if (updateData.category && looksLikeObjectId(updateData.category)) {
             const Category = (await import("@/models/Category")).default;
             const categoryDoc = await Category.findById(updateData.category);
-            if (categoryDoc) {
-                updateData.category = categoryDoc.slug;
+            if (categoryDoc) updateData.category = categoryDoc.slug;
+        }
+
+        if (Array.isArray(updateData.categories) && updateData.categories.length) {
+            const Category = (await import("@/models/Category")).default;
+            const ids = updateData.categories.filter((c: string) => looksLikeObjectId(c));
+            let slugs: string[] = updateData.categories.filter((c: string) => !looksLikeObjectId(c));
+            if (ids.length) {
+                const cats = await Category.find({ _id: { $in: ids } }).select("slug").lean();
+                slugs = slugs.concat(cats.map((c: any) => c.slug));
             }
+            updateData.categories = slugs;
         }
 
         // Update product
@@ -140,7 +157,7 @@ export async function PUT(
 }
 
 export async function DELETE(
-    req: Request,
+    _req: Request,
     { params }: { params: { id: string } }
 ) {
     try {

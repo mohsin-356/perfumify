@@ -7,37 +7,32 @@ export const CategoryFilter = () => {
   const { t } = useTranslation("common");
   const router = useRouter();
   const { pathname, query } = router;
-  const selectedCategories = query?.category
-    ? (query.category as string).split(",")
-    : [];
-  const [formState, setFormState] = React.useState<string[]>(
-    selectedCategories
-  );
+  // We treat Men's/Women's as gender filter, not category slugs
+  const selectedGender = (query?.gender as string) || "";
+  const [gender, setGender] = React.useState<string>(selectedGender);
 
   React.useEffect(() => {
-    setFormState(selectedCategories);
-  }, [query?.category]);
+    setGender(selectedGender);
+  }, [query?.gender]);
 
-  // Only Men & Women categories
+  // Only Men & Women categories -> map to gender param
   const items = [
-    { id: 1, name: "Men's Perfumes", slug: "mens-perfume" },
-    { id: 2, name: "Women's Perfumes", slug: "womens-perfume" },
+    { id: 1, name: "Men's Perfumes", value: "men" },
+    { id: 2, name: "Women's Perfumes", value: "women" },
   ];
 
   function handleItemClick(e: React.FormEvent<HTMLInputElement>): void {
     const { value } = e.currentTarget;
-    let currentFormState = formState.includes(value)
-      ? formState.filter((i) => i !== value)
-      : [...formState, value];
-    const { category, ...restQuery } = query;
+    // Exclusive selection: if clicking same, clear; else set new gender
+    const next = gender === value ? "" : value;
+    const { gender: _old, ...rest } = query;
+    setGender(next);
     router.push(
       {
         pathname,
         query: {
-          ...restQuery,
-          ...(!!currentFormState.length
-            ? { category: currentFormState.join(",") }
-            : {}),
+          ...rest,
+          ...(next ? { gender: next } : {}),
         },
       },
       undefined,
@@ -55,8 +50,8 @@ export const CategoryFilter = () => {
             key={item.id}
             label={item.name}
             name={item.name.toLowerCase()}
-            checked={formState.includes(item.slug)}
-            value={item.slug}
+            checked={gender === item.value}
+            value={item.value}
             onChange={handleItemClick}
           />
         ))}

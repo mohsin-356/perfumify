@@ -3,6 +3,8 @@ import { connectDB } from "@/lib/db";
 import Order from "@/models/Order";
 import Customer from "@/models/Customer";
 import { z } from "zod";
+import { sendCustomerEmail, sendNotificationEmail } from "@/lib/mail";
+import crypto from "crypto";
 
 const orderSchema = z.object({
     customer: z.object({
@@ -68,17 +70,29 @@ export async function POST(req: Request) {
             await customer.save();
         }
 
+        // Generate tracking id
+        const trackingId = (crypto as any).randomUUID ? crypto.randomUUID() : `TRK-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,8)}`;
+
         const order = await Order.create({
+            trackingId,
             customer: customer._id,
             items,
             total,
             paymentInfo,
             shippingAddress: customerData.address,
+            status: "Pending",
+            statusHistory: [{ status: "Pending", date: new Date() }],
         });
 
         // Add order to customer history
         customer.orders.push(order._id);
         await customer.save();
+
+        // Send customer email (best-effort)
+        const subject = `Your Perfumify order is received – Tracking ID ${trackingId}`;
+        const text = `Hi ${customerData.name},\n\nThank you for your order.\n\nOrder total: £${total}\nTracking ID: ${trackingId}\nStatus: Pending\n\nKeep this Tracking ID to track your order or contact support.\n\n— Perfumify`;
+        try { await sendCustomerEmail(customerData.email, subject, text); } catch {}
+        try { await sendNotificationEmail("New Order Received", `Tracking: ${trackingId}  Total: £${total}`); } catch {}
 
         return NextResponse.json(order, { status: 201 });
     } catch (error) {

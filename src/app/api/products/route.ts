@@ -7,6 +7,9 @@ const productSchema = z.object({
     name: z.string().min(1, "Name is required"),
     slug: z.string().min(1, "Slug is required"),
     description: z.string().optional(),
+    shipping_policy: z.string().optional(),
+    refund_policy: z.string().optional(),
+    sale_price: z.number().optional(),
     price: z.number().min(0, "Price must be positive"),
     images: z.array(z.object({
         url: z.string(),
@@ -16,6 +19,8 @@ const productSchema = z.object({
     })).min(1, "At least one image is required"),
     category: z.string().nullable().optional(), // Receives ID from form
     brand: z.string().nullable().optional(),    // Receives ID from form
+    categories: z.array(z.string()).optional(),  // Receives IDs from form (multi)
+    gender: z.enum(["men", "women", "unisex"]).optional(),
     stock: z.number().min(0).default(0),
     sku: z.string().optional(),
     weight: z.number().optional(),
@@ -33,6 +38,7 @@ export async function GET(req: Request) {
         const search = searchParams.get("search") || "";
         const categorySlug = searchParams.get("category");
         const brandSlug = searchParams.get("brand");
+        const gender = searchParams.get("gender");
         const sort = searchParams.get("sort") || "-createdAt";
 
         // Badge filters
@@ -56,12 +62,21 @@ export async function GET(req: Request) {
         // Direct Slug Filtering (Case Insensitive)
         if (categorySlug) {
             const slugs = categorySlug.split(",").map(s => s.trim().toLowerCase());
-            query.category = { $in: slugs };
+            // Match either primary category or any in categories[]
+            const orArr = [
+                { category: { $in: slugs } },
+                { categories: { $in: slugs } },
+            ];
+            if (query.$or) query.$or = [...query.$or, ...orArr]; else query.$or = orArr;
         }
 
         if (brandSlug) {
             const slugs = brandSlug.split(",").map(s => s.trim().toLowerCase());
             query.brand = { $in: slugs };
+        }
+
+        if (gender && ["men","women","unisex"].includes(gender)) {
+            query.gender = gender;
         }
 
         const skip = (page - 1) * limit;
@@ -134,6 +149,13 @@ export async function POST(req: Request) {
             if (categoryDoc) {
                 productData.category = categoryDoc.slug;
             }
+        }
+
+        // Convert multi categories IDs -> slugs
+        if (Array.isArray(productData.categories) && productData.categories.length) {
+            const Category = (await import("@/models/Category")).default;
+            const cats = await Category.find({ _id: { $in: productData.categories } }).select("slug").lean();
+            productData.categories = cats.map((c: any) => c.slug);
         }
 
         // Create product

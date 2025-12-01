@@ -7,6 +7,7 @@ import ListBox from "@components/ui/list-box";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import { getDirection } from "@utils/get-direction";
+import { useProductsQuery } from "@framework/product/get-all-products";
 
 const SearchTopBar = () => {
 	const { openFilter, displayFilter, closeFilter } = useUI();
@@ -14,6 +15,10 @@ const SearchTopBar = () => {
 	const { locale } = useRouter();
 	const dir = getDirection(locale);
 	const contentWrapperCSS = dir === "ltr" ? { left: 0 } : { right: 0 };
+	const { query } = useRouter();
+	const { data: countData } = useProductsQuery({ ...query, limit: 1 });
+	const totalItems = countData?.pages?.[0]?.paginatorInfo?.total ?? undefined;
+
 	return (
 		<div className="flex justify-between items-center mb-7">
 			<Text variant="pageHeading" className="hidden lg:inline-flex pb-1">
@@ -28,7 +33,7 @@ const SearchTopBar = () => {
 			</button>
 			<div className="flex items-center justify-end">
 				<div className="flex-shrink-0 text-body text-xs md:text-sm leading-4 pe-4 md:me-6 ps-2 hidden lg:block">
-					9,608 {t("text-items")}
+					{typeof totalItems === 'number' ? totalItems.toLocaleString() : ''} {t("text-items")}
 				</div>
 				<ListBox
 					options={[

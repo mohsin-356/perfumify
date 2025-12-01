@@ -66,7 +66,7 @@ export const footer = {
         { id: 2, title: "Address: 33 Richard Road, Rotherham, S60 2QP, England", path: "/" },
         { id: 3, title: "Company Number: 15735984", path: "/" },
         { id: 4, title: "Email: info@perfumify.com", path: "mailto:info@perfumify.com" },
-        { id: 5, title: "TEL: +44 73 76 483590 Mon to Sun: 10am - 5pm (excludes Bank Holidays)", path: "/" },
+        { id: 5, title: "TEL: +447782274831 Mon to Sun: 10am - 5pm (excludes Bank Holidays)", path: "/" },
       ],
     },
 	],

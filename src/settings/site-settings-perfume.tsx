@@ -82,12 +82,12 @@ export const siteSettings = {
 			},
 			{
 				id: 3,
-				path: "/category/men",
+				path: "/search?gender=men",
 				label: "MEN",
 			},
 			{
 				id: 4,
-				path: "/category/women",
+				path: "/search?gender=women",
 				label: "WOMEN",
 			},
 			{
@@ -119,12 +119,12 @@ export const siteSettings = {
 			},
 			{
 				id: 3,
-				path: "/category/men",
+				path: "/search?gender=men",
 				label: "MEN",
 			},
 			{
 				id: 4,
-				path: "/category/women",
+				path: "/search?gender=women",
 				label: "WOMEN",
 			},
 			{

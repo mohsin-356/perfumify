@@ -11,6 +11,32 @@ interface Message {
   createdAt?: string | Date;
 }
 
+// Safe UUID generator that works even when crypto.randomUUID is unavailable (e.g., HTTP/LAN)
+function safeRandomUUID(): string {
+  try {
+    if (typeof crypto !== "undefined" && typeof (crypto as any).randomUUID === "function") {
+      return (crypto as any).randomUUID();
+    }
+  } catch {}
+  try {
+    if (typeof crypto !== "undefined" && typeof crypto.getRandomValues === "function") {
+      const bytes = new Uint8Array(16);
+      crypto.getRandomValues(bytes);
+      // Per RFC 4122 v4
+      bytes[6] = (bytes[6] & 0x0f) | 0x40;
+      bytes[8] = (bytes[8] & 0x3f) | 0x80;
+      const hex = Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
+      return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+    }
+  } catch {}
+  // Fallback: Math.random-based (less secure, but fine for a client cookie id)
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
+
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [chatId, setChatId] = useState<string | null>(null);
@@ -21,7 +47,7 @@ export default function ChatWidget() {
   const chatIdRef = useRef<string | null>(null);
 
   useEffect(() => {
-    const cid = Cookies.get("chat_client_id") || crypto.randomUUID();
+    const cid = Cookies.get("chat_client_id") || safeRandomUUID();
     Cookies.set("chat_client_id", cid, { expires: 365 });
     clientIdRef.current = cid;
   }, []);

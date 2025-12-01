@@ -27,8 +27,8 @@ const ProductSingleDetails: React.FC = () => {
 	const [quantity, setQuantity] = useState(1);
 	const [addToCartLoader, setAddToCartLoader] = useState<boolean>(false);
 	const [selectedImage, setSelectedImage] = useState(0);
-	const [activeTab, setActiveTab] = useState("description");
 	const [showImageModal, setShowImageModal] = useState(false);
+	const [activeTab, setActiveTab] = useState<'description'|'shipping'|'refund'>('description');
 
 	const { price, basePrice, discount } = usePrice(
 		data && {
@@ -38,23 +38,79 @@ const ProductSingleDetails: React.FC = () => {
 		}
 	);
 
+	// Reviews state
+	const [reviews, setReviews] = useState<any[]>([]);
+	const [avgRating, setAvgRating] = useState<number>(0);
+	const [reviewCount, setReviewCount] = useState<number>(0);
+	const [hasMoreReviews, setHasMoreReviews] = useState<boolean>(false);
+	const [pageReviews, setPageReviews] = useState<number>(1);
+	const [loadingMoreReviews, setLoadingMoreReviews] = useState<boolean>(false);
+	const [submittingReview, setSubmittingReview] = useState(false);
+	const [reviewForm, setReviewForm] = useState({ name: "", email: "", rating: 5, comment: "" });
+
+	React.useEffect(() => {
+		const productId = (data as any)?._id || (data as any)?.id;
+		if (!productId) return;
+		(async () => {
+			try {
+				const res = await fetch(`/api/reviews?productId=${productId}&page=1&limit=4`);
+				const json = await res.json();
+				if (res.ok) {
+					setReviews(json.reviews || []);
+					setAvgRating(json.average || 0);
+					setReviewCount(json.count || 0);
+					setHasMoreReviews(Boolean(json.hasMore));
+					setPageReviews(1);
+				}
+			} catch {}
+		})();
+	}, [data]);
+
+	async function loadMoreReviews() {
+		const productId = (data as any)?._id || (data as any)?.id;
+		if (!productId || !hasMoreReviews || loadingMoreReviews) return;
+		setLoadingMoreReviews(true);
+		try {
+			const nextPage = pageReviews + 1;
+			const res = await fetch(`/api/reviews?productId=${productId}&page=${nextPage}&limit=4`);
+			const json = await res.json();
+			if (res.ok) {
+				setReviews((prev) => [...prev, ...(json.reviews || [])]);
+				setHasMoreReviews(Boolean(json.hasMore));
+				setPageReviews(nextPage);
+			}
+		} finally {
+			setLoadingMoreReviews(false);
+		}
+	}
+
 	if (isLoading) return <p>Loading...</p>;
 
 	const variations = getVariations(data?.variations);
 
 	// Cloudinary support
 	const cloudGalleryRaw = Array.isArray(data?.images) ? data.images.filter((img: any) => img && img.public_id) : [];
-// normalise cloud objects so they also have original/thumbnail for unified use
-const cloudGallery = cloudGalleryRaw.map((img: any) => ({
-  ...img,
-  original: img.url,
-  thumbnail: img.url,
-}));
+	// normalise cloud objects so they also have original/thumbnail for unified use
+	const cloudGallery = cloudGalleryRaw.map((img: any) => ({
+		...img,
+		original: img.url,
+		thumbnail: img.url,
+	}));
 	const hasCloudImages = cloudGallery.length > 0;
 
-	const gallery = hasCloudImages
-  ? cloudGallery
-  : (data?.gallery && data.gallery.length > 0 ? data.gallery : [data?.image]);
+	// Normalize non-cloud gallery sources as well
+	let gallery: any[] = [];
+	if (hasCloudImages) {
+		gallery = cloudGallery;
+	} else if (Array.isArray((data as any)?.gallery) && (data as any).gallery.length > 0) {
+		gallery = (data as any).gallery;
+	} else if (typeof (data as any)?.image === 'string' && (data as any).image) {
+		gallery = [{ original: (data as any).image, thumbnail: (data as any).image }];
+	} else if ((data as any)?.image) {
+		gallery = [(data as any).image];
+	} else {
+		gallery = [];
+	}
 
 	const isSelected = !isEmpty(variations)
 		? !isEmpty(attributes) &&
@@ -109,32 +165,19 @@ const cloudGallery = cloudGalleryRaw.map((img: any) => ({
 	};
 
 	// --- Default tab contents (shown if product meta is missing) ---
-const DEFAULT_DESCRIPTION = `Any Perfume according to Title....\n\nAzzaro The Most Wanted Parfum 100ml is the boldest and most intense expression in the Azzaro Wanted line — a dark, seductive scent crafted for the man who thrives on standing out. Rich, spicy, and undeniably addictive, this fragrance makes a lasting impression with every spray.\n\nAt its heart is a unique caramel accord, wrapped in the deep warmth of Bourbon vanilla and glowing incandescent woods. The result is a fiery fougère ambery oriental blend that radiates confidence and power. Designed to be long-lasting and magnetic, this parfum is your signature for unforgettable nights.\n\n**Fragrance Details:**\n• **Brand:** Azzaro\n• **Range:** The Most Wanted Parfum\n• **Gender:** Male\n• **Fragrance Family:** Oriental\n• **Key Note:** Vanilla\n• **Strength:** Parfum\n• **Size:** 100ml\n• **Release Date:** 2022\n• **EAN:** 3614273638852\n\nWe only sell 100% original perfumes, always in stock and sourced from trusted suppliers.`;
+	const DEFAULT_DESCRIPTION = `Any Perfume according to Title....\n\nAzzaro The Most Wanted Parfum 100ml is the boldest and most intense expression in the Azzaro Wanted line — a dark, seductive scent crafted for the man who thrives on standing out. Rich, spicy, and undeniably addictive, this fragrance makes a lasting impression with every spray.\n\nAt its heart is a unique caramel accord, wrapped in the deep warmth of Bourbon vanilla and glowing incandescent woods. The result is a fiery fougère ambery oriental blend that radiates confidence and power. Designed to be long-lasting and magnetic, this parfum is your signature for unforgettable nights.\n\n**Fragrance Details:**\n• **Brand:** Azzaro\n• **Range:** The Most Wanted Parfum\n• **Gender:** Male\n• **Fragrance Family:** Oriental\n• **Key Note:** Vanilla\n• **Strength:** Parfum\n• **Size:** 100ml\n• **Release Date:** 2022\n• **EAN:** 3614273638852\n\nWe only sell 100% original perfumes, always in stock and sourced from trusted suppliers.`;
 
-const DEFAULT_SHIPPING = `This policy is applicable to **United Kingdom** orders. This policy is designed to ensure that you are clearly aware of our shipping policies and procedures. By ordering from this store you accept the policies contained herein.\n\n**Delivery Terms**\nWe use UPS, DHL, and OSM to deliver the product.\n\n**TRANSIT, HANDLING & ORDER CUT-OFF TIME:**\n• Transit time is 0-1 Business Days (Monday–Sunday)\n• Handling time is 1 business day (Monday–Sunday)\n• All destinations: 1-2 business days\n• Order cut-off time: 05:00 PM (GMT)\n\n**Delivery Time:**\nStandard UK delivery typically takes 1 to 2 business days from the date of dispatch. Delivery times may vary depending on location, weather conditions, and the courier’s schedule.\n\n**SHIPPING COST:**\nFree shipping on all UK orders\n\n**CHANGE OF ADDRESS**\nWe cannot change the delivery address once an order is in transit. If you need to change the address, contact us within 24 hours of placing your order at support@perfumify.co.uk\n\n**Order Tracking:**\nAll parcels are sent with tracking; you will receive an email with your tracking number once your order has been shipped.\n\n**WRONG ADDRESS**\nIf an incorrect address is provided and delivery fails, the parcel will be returned to us. You will need to pay the full re-shipping cost.\n\n**Cancellations**\nYou may cancel any time before dispatch. If the order has already been dispatched, please refer to our refund policy.\n\nCustomer support: 24/7\nEmail: support@perfumify.co.uk\nAddress: 33 Richard Road, Rotherham, S60 2QP, England, United Kingdom`;
+	const DEFAULT_SHIPPING = `This policy is applicable to **United Kingdom** orders. This policy is designed to ensure that you are clearly aware of our shipping policies and procedures. By ordering from this store you accept the policies contained herein.\n\n**Delivery Terms**\nWe use UPS, DHL, and OSM to deliver the product.\n\n**TRANSIT, HANDLING & ORDER CUT-OFF TIME:**\n• Transit time is 0-1 Business Days (Monday–Sunday)\n• Handling time is 1 business day (Monday–Sunday)\n• All destinations: 1-2 business days\n• Order cut-off time: 05:00 PM (GMT)\n\n**Delivery Time:**\nStandard UK delivery typically takes 1 to 2 business days from the date of dispatch. Delivery times may vary depending on location, weather conditions, and the courier’s schedule.\n\n**SHIPPING COST:**\nFree shipping on all UK orders\n\n**CHANGE OF ADDRESS**\nWe cannot change the delivery address once an order is in transit. If you need to change the address, contact us within 24 hours of placing your order at support@perfumify.co.uk\n\n**Order Tracking:**\nAll parcels are sent with tracking; you will receive an email with your tracking number once your order has been shipped.\n\n**WRONG ADDRESS**\nIf an incorrect address is provided and delivery fails, the parcel will be returned to us. You will need to pay the full re-shipping cost.\n\n**Cancellations**\nYou may cancel any time before dispatch. If the order has already been dispatched, please refer to our refund policy.\n\nCustomer support: 24/7\nEmail: support@perfumify.co.uk\nAddress: 33 Richard Road, Rotherham, S60 2QP, England, United Kingdom`;
 
-const DEFAULT_REFUND = `This policy is applicable to **United Kingdom** orders. By ordering from this store (Perfumify) you accept the policies contained herein.\n\n**Return Eligibility:**\n• Item must be unused, unopened, and in the same condition received.\n• Must be in original packaging with protective seal intact.\n• We cannot accept returns on items that have been opened, tested, or used.\n\n**Exceptions / Non-Returnable Items**\n• Opened perfumes, beauty products, or personal-care goods (hygiene reasons).\n• Custom or personalised items.\n• Gift cards.\n• Sale / discounted items.\n\n**Return Shipping Costs**\nReturn shipping is **free** for UK customers – we provide a prepaid return label.\n\n**Steps for Returning an Item**\n1. Email us at support@perfumify.co.uk within 30 days of receiving your order.\n2. Once approved we’ll send a prepaid label and instructions.\n\n**Return Address:**\nPerfumify\n33 Richard Road\nRotherham\nS60 2QP\nEngland, United Kingdom\n\n**Refund Timing**\nRefunds are processed within 10 business days of receiving your return.\n\n**European Union 14-Day Cooling-Off Period**\nEU customers may cancel within 14 days provided items are unused and unopened.\n\nFor any questions contact support@perfumify.co.uk`; 
+	const DEFAULT_REFUND = `This policy is applicable to **United Kingdom** orders. By ordering from this store (Perfumify) you accept the policies contained herein.\n\n**Return Eligibility:**\n• Item must be unused, unopened, and in the same condition received.\n• Must be in original packaging with protective seal intact.\n• We cannot accept returns on items that have been opened, tested, or used.\n\n**Exceptions / Non-Returnable Items**\n• Opened perfumes, beauty products, or personal-care goods (hygiene reasons).\n• Custom or personalised items.\n• Gift cards.\n• Sale / discounted items.\n\n**Return Shipping Costs**\nReturn shipping is **free** for UK customers – we provide a prepaid return label.\n\n**Steps for Returning an Item**\n1. Email us at support@perfumify.co.uk within 30 days of receiving your order.\n2. Once approved we’ll send a prepaid label and instructions.\n\n**Return Address:**\nPerfumify\n33 Richard Road\nRotherham\nS60 2QP\nEngland, United Kingdom\n\n**Refund Timing**\nRefunds are processed within 10 business days of receiving your return.\n\n**European Union 14-Day Cooling-Off Period**\nEU customers may cancel within 14 days provided items are unused and unopened.\n\nFor any questions contact support@perfumify.co.uk`; 
 
-// ---------------------------------------------------------
+	// ---------------------------------------------------------
 
-const tabs = [
-		{ id: "description", label: "Product description" },
-		{ id: "shipping", label: "Shipping policy" },
-		{ id: "refund", label: "Refund policy" },
-		{ id: "reviews", label: "Customer Review" },
-	];
-
-	const getMetaContent = (title: string) => {
-		const meta = data?.meta?.find((m: any) => m.title === title);
-		if (meta && meta.content) return meta.content;
-
-		// Fallbacks when meta content is missing
-		if (title === "Description") return DEFAULT_DESCRIPTION;
-		if (title === "Shipping & Return" || title === "Shipping policy") return DEFAULT_SHIPPING;
-		if (title === "Refund Policy" || title === "Refund policy") return DEFAULT_REFUND;
-
-		return "";
-	};
+	const getFallback = (key: 'description'|'shipping'|'refund') => {
+        if (key === 'description') return DEFAULT_DESCRIPTION;
+        if (key === 'shipping') return DEFAULT_SHIPPING;
+        return DEFAULT_REFUND;
+    };
 
 	return (
 		<div className="pt-4 pb-6 lg:pb-8">
@@ -239,9 +282,9 @@ const tabs = [
 					{/* Rating */}
 					<div className="flex items-center space-x-2">
 						<div className="flex items-center">
-							{renderStars(4.9)}
+							{renderStars(avgRating || 0)}
 						</div>
-						<span className="text-sm text-gray-600">(156 reviews)</span>
+						<span className="text-sm text-gray-600">({reviewCount} reviews)</span>
 					</div>
 
 					{/* Price */}
@@ -254,6 +297,7 @@ const tabs = [
 								<span className="text-lg text-gray-400 line-through">
 									{basePrice}
 								</span>
+								<span className="text-sm font-semibold text-red-600">{discount}</span>
 							</>
 						)}
 					</div>
@@ -339,28 +383,39 @@ const tabs = [
 						{data?.category && (
 							<div className="flex items-start">
 								<span className="font-semibold text-heading min-w-[70px]">Category:</span>
-								<Link
-									href={`/search?category=${data.category.slug}`}
-									className="text-gray-600 hover:text-heading transition text-xs"
-								>
-									{typeof data.category === 'object' ? (data.category as any).name : data.category}
-								</Link>
+								{(() => {
+									const catSlug = typeof data.category === 'object' ? String((data.category as any).slug) : String(data.category);
+									const catName = typeof data.category === 'object' ? String((data.category as any).name) : String(data.category);
+									return (
+										<Link
+											href={`/search?category=${encodeURIComponent(catSlug)}`}
+											className="text-gray-600 hover:text-heading transition text-xs"
+										>
+											{catName}
+										</Link>
+									);
+								})()}
 							</div>
 						)}
-						{data?.tags && Array.isArray(data.tags) && data.tags.length > 0 && (
+						{Array.isArray((data as any)?.tags) && (data as any).tags.length > 0 && (
 							<div className="flex items-start">
 								<span className="font-semibold text-heading min-w-[70px]">Tags:</span>
 								<div className="flex flex-wrap gap-1.5">
-									{(data.tags as any[]).map((tag: any, index: number) => (
-										<Link
-											key={tag.id || tag}
-											href={`/search?tag=${tag.slug || tag}`}
-											className="text-gray-600 hover:text-heading transition text-xs"
-										>
-											{(tag as any).name ?? String(tag)}
-											{index < (data.tags as any[]).length - 1 && ","}
-										</Link>
-									))}
+									{((data as any).tags as any[]).map((tag: any, index: number) => {
+										const slugStr = typeof tag === 'string' ? tag : String((tag && (tag.slug || tag.name)) ?? '');
+										const nameStr = typeof tag === 'string' ? tag : String((tag && (tag.name || tag.slug)) ?? '');
+										const keyVal = String((tag && (tag._id || tag.id || tag.slug || tag.name)) ?? slugStr);
+										return (
+											<Link
+												key={keyVal}
+												href={`/search?tag=${encodeURIComponent(slugStr)}`}
+												className="text-gray-600 hover:text-heading transition text-xs"
+											>
+												{nameStr}
+												{index < ((data as any).tags as any[]).length - 1 ? "," : ""}
+											</Link>
+										);
+									})}
 								</div>
 							</div>
 						)}
@@ -368,71 +423,165 @@ const tabs = [
 				</div>
 			</div>
 
-			{/* Tabs Section */}
-			{data?.meta && data.meta.length > 0 && (
-				<div className="mt-8 lg:mt-10">
-					{/* Tab Headers */}
-					<div className="border-b border-gray-200">
-						<div className="flex space-x-6 overflow-x-auto">
-							{tabs.map((tab) => (
-								<button
-									key={tab.id}
-									onClick={() => setActiveTab(tab.id)}
-									className={`py-3 px-1 font-medium text-sm whitespace-nowrap transition border-b-2 ${activeTab === tab.id
-											? 'border-black text-black'
-											: 'border-transparent text-gray-500 hover:text-gray-700'
-										}`}
-								>
-									{tab.label}
-								</button>
-							))}
-						</div>
-					</div>
-
-					{/* Tab Content */}
-					<div className="py-6">
-						{activeTab === "description" && (
-							<div className="prose max-w-none">
-								<p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">
-									{getMetaContent("Description")}
-								</p>
-							</div>
-						)}
-						{activeTab === "shipping" && (
-							<div className="prose max-w-none">
-								<p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">
-									{getMetaContent("Shipping & Return")}
-								</p>
-							</div>
-						)}
-						{activeTab === "refund" && (
-							<div className="prose max-w-none">
-								<p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">
-									{getMetaContent("Refund Policy") || getMetaContent("Shipping & Return")}
-								</p>
-							</div>
-						)}
-						{activeTab === "reviews" && (
-							<div className="space-y-4">
-								<div className="flex items-center space-x-4">
-									<div className="text-4xl font-bold">4.9</div>
-									<div>
-										<div className="flex items-center mb-1">
-											{renderStars(4.9)}
-										</div>
-										<p className="text-sm text-gray-600">Based on 156 reviews</p>
-									</div>
-								</div>
-								<div className="prose max-w-none">
-									<p className="text-gray-700 text-sm leading-relaxed">
-										{getMetaContent("Customer Reviews")}
-									</p>
-								</div>
-							</div>
-						)}
+			{/* Details Tabs (toggle) */}
+			<div className="mt-8 lg:mt-10">
+				<div className="border-b border-gray-200">
+					<div className="flex space-x-8 overflow-x-auto">
+						{[
+							{ id: 'description', label: 'Product description' },
+							{ id: 'shipping', label: 'Shipping policy' },
+							{ id: 'refund', label: 'Refund policy' },
+						].map((t) => (
+							<button
+								key={t.id}
+								onClick={() => setActiveTab(t.id as any)}
+								className={`py-3 px-1 text-sm font-medium whitespace-nowrap border-b-2 transition ${activeTab === t.id ? 'border-black text-black' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
+							>
+								{t.label}
+							</button>
+						))}
 					</div>
 				</div>
-			)}
+				<div className="py-6">
+					{activeTab === 'description' && (
+						<div className="prose max-w-none">
+							{data?.description ? (
+								<div className="text-gray-700 text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: String(data.description) }} />
+							) : (
+								<p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">{getFallback('description')}</p>
+							)}
+						</div>
+					)}
+					{activeTab === 'shipping' && (
+						<div className="prose max-w-none">
+							{(data as any)?.shipping_policy ? (
+								<div className="text-gray-700 text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: String((data as any).shipping_policy) }} />
+							) : (
+								<p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">{getFallback('shipping')}</p>
+							)}
+						</div>
+					)}
+					{activeTab === 'refund' && (
+						<div className="prose max-w-none">
+							{(data as any)?.refund_policy ? (
+								<div className="text-gray-700 text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: String((data as any).refund_policy) }} />
+							) : (
+								<p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">{getFallback('refund')}</p>
+							)}
+						</div>
+					)}
+				</div>
+			</div>
+
+			{/* Reviews Section */}
+			<div className="mt-8 lg:mt-10 space-y-4">
+				<h2 className="text-xl font-semibold">Customer Reviews</h2>
+				<div className="flex items-center space-x-4">
+					<div className="text-4xl font-bold">{avgRating}</div>
+					<div>
+						<div className="flex items-center mb-1">{renderStars(avgRating || 0)}</div>
+						<p className="text-sm text-gray-600">Based on {reviewCount} reviews</p>
+					</div>
+				</div>
+				<div className="space-y-3">
+					{reviews.length === 0 && (
+						<p className="text-sm text-gray-600">No reviews yet.</p>
+					)}
+					{reviews.map((r) => (
+						<div key={r._id} className="border rounded p-3">
+							<div className="flex items-center justify-between mb-1">
+								<span className="font-semibold text-sm">{r.name}</span>
+								<div className="flex items-center">{renderStars(r.rating)}</div>
+							</div>
+							<p className="text-sm text-gray-700 whitespace-pre-line">{r.comment}</p>
+							<p className="text-[11px] text-gray-400 mt-1">{new Date(r.createdAt).toLocaleDateString()}</p>
+						</div>
+					))}
+				</div>
+
+				{hasMoreReviews && (
+					<div className="pt-2">
+						<button
+							onClick={loadMoreReviews}
+							disabled={loadingMoreReviews}
+							className="px-4 py-2 text-sm rounded border border-gray-300 hover:bg-gray-50 disabled:opacity-50"
+						>
+							{loadingMoreReviews ? 'Loading…' : 'Load more reviews'}
+						</button>
+					</div>
+				)}
+
+				{/* Add Review */}
+				<div className="mt-4 border-t pt-4">
+					<h4 className="font-semibold mb-2">Write a review</h4>
+					<form
+						onSubmit={async (e) => {
+							e.preventDefault();
+							const productId = (data as any)?._id || (data as any)?.id;
+							if (!productId) return;
+							setSubmittingReview(true);
+							try {
+								const res = await fetch('/api/reviews', {
+									method: 'POST',
+									headers: { 'Content-Type': 'application/json' },
+									body: JSON.stringify({ product: productId, ...reviewForm }),
+								});
+								const json = await res.json();
+								if (res.ok) {
+									toast('Review submitted for approval', { type: 'success', autoClose: 2000 });
+									setReviewForm({ name: "", email: "", rating: 5, comment: "" });
+								} else {
+									toast(json.error || 'Failed to submit review', { type: 'error' });
+								}
+							} catch (err) {
+								toast('Failed to submit review', { type: 'error' });
+							} finally {
+								setSubmittingReview(false);
+							}
+						}}
+						className="space-y-2"
+					>
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+							<input
+								className="w-full px-3 py-2 border rounded"
+								placeholder="Your name"
+								value={reviewForm.name}
+								onChange={(e) => setReviewForm({ ...reviewForm, name: e.target.value })}
+								required
+							/>
+							<input
+								className="w-full px-3 py-2 border rounded"
+								placeholder="Email (optional)"
+								type="email"
+								value={reviewForm.email}
+								onChange={(e) => setReviewForm({ ...reviewForm, email: e.target.value })}
+							/>
+						</div>
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+							<select
+								className="w-full px-3 py-2 border rounded"
+								value={reviewForm.rating}
+								onChange={(e) => setReviewForm({ ...reviewForm, rating: Number(e.target.value) })}
+							>
+								{[5,4,3,2,1].map((r) => (
+									<option key={r} value={r}>{r} Star{r>1?'s':''}</option>
+								))}
+							</select>
+						</div>
+						<textarea
+							className="w-full px-3 py-2 border rounded min-h-[100px]"
+							placeholder="Your review"
+							value={reviewForm.comment}
+							onChange={(e) => setReviewForm({ ...reviewForm, comment: e.target.value })}
+							required
+						/>
+						<Button type="submit" variant="slim" disabled={submittingReview} loading={submittingReview}>
+							Submit Review
+						</Button>
+						<p className="text-xs text-gray-500">Your review will appear after admin approval.</p>
+					</form>
+				</div>
+			</div>
 
 			{/* Related Products Section */}
 			<div className="mt-8 lg:mt-10">

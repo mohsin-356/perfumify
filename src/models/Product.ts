@@ -21,6 +21,9 @@ const ProductSchema = new Schema(
     name: { type: String, required: true },
     slug: { type: String, required: true, unique: true },
     description: { type: String },
+    shipping_policy: { type: String },
+    refund_policy: { type: String },
+    sale_price: { type: Number },
     price: { type: Number, required: true },
     images: {
       type: [ProductImageSchema],
@@ -30,9 +33,18 @@ const ProductSchema = new Schema(
       type: String, // Storing slug for easier filtering
       required: true,
     },
+    categories: {
+      type: [String], // Additional category slugs
+      default: [],
+    },
     brand: {
       type: String, // Storing slug for easier filtering
       required: true,
+    },
+    gender: {
+      type: String,
+      enum: ['men', 'women', 'unisex'],
+      default: 'unisex',
     },
     stock: {
       type: Number,

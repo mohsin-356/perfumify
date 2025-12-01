@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { FiUpload, FiX, FiLoader } from "react-icons/fi";
+import RichTextEditor from "@/components/admin/RichTextEditor";
 import CloudImage from "@/components/ui/CloudImage";
 
 interface ProductFormProps {
@@ -24,10 +25,15 @@ export default function ProductForm({ initialData, brands = [], categories = [] 
             name: initialData?.name || "",
             slug: initialData?.slug || "",
             description: initialData?.description || "",
+            shipping_policy: initialData?.shipping_policy || "",
+            refund_policy: initialData?.refund_policy || "",
+            sale_price: initialData?.sale_price || undefined,
             price: initialData?.price || 0,
             stock: initialData?.stock || 0,
             brand: initialData?.brand?._id || initialData?.brand || "",
             category: initialData?.category?._id || initialData?.category || "",
+            categories: [],
+            gender: initialData?.gender || "unisex",
             sku: initialData?.sku || "",
             weight: initialData?.weight || "",
             bestSeller: initialData?.bestSeller || false,
@@ -117,10 +123,15 @@ export default function ProductForm({ initialData, brands = [], categories = [] 
                 name: data.name,
                 slug: data.slug,
                 description: data.description,
+                shipping_policy: data.shipping_policy,
+                refund_policy: data.refund_policy,
+                sale_price: data.sale_price ? parseFloat(data.sale_price) : undefined,
                 price: parseFloat(data.price),
                 stock: parseInt(data.stock) || 0,
                 brand: data.brand || null,
                 category: data.category || null,
+                categories: Array.isArray(data.categories) ? data.categories : [],
+                gender: data.gender || "unisex",
                 sku: data.sku || undefined,
                 weight: data.weight ? parseFloat(data.weight) : undefined,
                 bestSeller: data.bestSeller ?? false,
@@ -189,11 +200,25 @@ export default function ProductForm({ initialData, brands = [], categories = [] 
 
                     <div className="space-y-2 md:col-span-2">
                         <label className="text-sm font-medium text-gray-700">Description</label>
-                        <textarea
-                            {...register("description")}
-                            rows={4}
-                            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                            placeholder="Product description..."
+                        <RichTextEditor
+                          value={watch("description")}
+                          onChange={(html) => setValue("description", html, { shouldDirty: true })}
+                        />
+                    </div>
+
+                    <div className="space-y-2 md:col-span-2">
+                        <label className="text-sm font-medium text-gray-700">Shipping Policy</label>
+                        <RichTextEditor
+                          value={watch("shipping_policy")}
+                          onChange={(html) => setValue("shipping_policy", html, { shouldDirty: true })}
+                        />
+                    </div>
+
+                    <div className="space-y-2 md:col-span-2">
+                        <label className="text-sm font-medium text-gray-700">Refund Policy</label>
+                        <RichTextEditor
+                          value={watch("refund_policy")}
+                          onChange={(html) => setValue("refund_policy", html, { shouldDirty: true })}
                         />
                     </div>
                 </div>
@@ -215,6 +240,17 @@ export default function ProductForm({ initialData, brands = [], categories = [] 
                             className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                         />
                         {errors.price && <p className="text-red-500 text-xs">{errors.price.message as string}</p>}
+                    </div>
+
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-700">Sale Price (£)</label>
+                        <input
+                            type="number"
+                            step="0.01"
+                            {...register("sale_price")}
+                            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        />
+                        <p className="text-xs text-gray-500">Leave empty if not on sale.</p>
                     </div>
 
                     <div className="space-y-2">
@@ -311,6 +347,40 @@ export default function ProductForm({ initialData, brands = [], categories = [] 
                                 No categories found. Please create a category first.
                             </p>
                         )}
+                    </div>
+
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-700">Additional Categories</label>
+                        <select
+                            multiple
+                            {...register("categories")}
+                            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white min-h-[120px]"
+                        >
+                            {categories && categories.length > 0 ? (
+                                categories.map((c) => (
+                                    <option key={c._id} value={c._id}>
+                                        {c.name}
+                                    </option>
+                                ))
+                            ) : (
+                                <option value="" disabled>
+                                    No categories available
+                                </option>
+                            )}
+                        </select>
+                        <p className="text-xs text-gray-500">Hold Ctrl/Cmd to select multiple.</p>
+                    </div>
+
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-700">Gender</label>
+                        <select
+                            {...register("gender")}
+                            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white"
+                        >
+                            <option value="unisex">Unisex</option>
+                            <option value="men">Men</option>
+                            <option value="women">Women</option>
+                        </select>
                     </div>
 
                     <div className="space-y-2">

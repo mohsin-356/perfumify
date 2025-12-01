@@ -10,8 +10,36 @@ export const fetchProducts = async ({ queryKey, pageParam = 1 }: any) => {
 	const [_key, _params] = queryKey;
 	try {
 		const limit = _params?.limit || 10;
+		// Map client sort_by -> server 'sort'
+		const sortBy = String(_params?.sort_by || "");
+		let serverSort = undefined as string | undefined;
+		switch (sortBy) {
+			case "best-selling":
+				serverSort = "-quantity"; // approximate by quantity desc
+				break;
+			case "az":
+				serverSort = "name";
+				break;
+			case "za":
+				serverSort = "-name";
+				break;
+			case "low-high":
+				serverSort = "price";
+				break;
+			case "high-low":
+				serverSort = "-price";
+				break;
+			case "old-new":
+				serverSort = "createdAt";
+				break;
+			case "new-old":
+				serverSort = "-createdAt";
+				break;
+			default:
+				break;
+		}
 		const { data: resp } = await http.get(API_ENDPOINTS.PRODUCTS, {
-			params: { ..._params, page: pageParam, limit },
+			params: { ..._params, page: pageParam, limit, ...(serverSort ? { sort: serverSort } : {}) },
 		});
 		// Support both new paginated shape and legacy array
 		const serverPaginator = resp?.paginatorInfo;
@@ -33,7 +61,6 @@ export const fetchProducts = async ({ queryKey, pageParam = 1 }: any) => {
 			});
 		}
 
-		const sortBy = String(_params?.sort_by || "");
 		if (sortBy) {
 			switch (sortBy) {
 				case "best-selling":

@@ -49,7 +49,7 @@ export default function AboutPage() {
 							{/* Contact Info */}
 							<div>
 								<p><strong>Contact Us:</strong></p>
-								<p>Phone: +44 20 7946 0958</p>
+								<p>Phone: +447782274831</p>
 								<p>Email: <span className="text-blue-600">info@perfumify786.co.uk</span></p>
 							</div>
 
