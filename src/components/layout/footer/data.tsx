@@ -28,7 +28,7 @@ export const footer = {
         { id: 3, title: "Men", path: "/category/men" },
         { id: 4, title: "Women", path: "/category/women" },
         { id: 5, title: "All Products", path: "/products" },
-        { id: 6, title: "About", path: "/about-us" },
+        { id: 6, title: "About", path: "/about" },
         { id: 7, title: "Contact", path: "/contact-us" },
       ],
     },
@@ -49,7 +49,7 @@ export const footer = {
       id: 4,
       widgetTitle: "About",
       lists: [
-        { id: 1, title: "About", path: "/about-us" },
+        { id: 1, title: "About", path: "/about" },
         { id: 2, title: "Contact", path: "/contact-us" },
         { id: 3, title: "FAQ's", path: "/faq" },
         { id: 4, title: "Authenticity Guarantee", path: "/authenticity" },

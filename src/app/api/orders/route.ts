@@ -5,6 +5,7 @@ import Customer from "@/models/Customer";
 import { z } from "zod";
 import { sendCustomerEmail, sendNotificationEmail } from "@/lib/mail";
 import crypto from "crypto";
+import { env } from "@/lib/env";
 
 const orderSchema = z.object({
     customer: z.object({
@@ -48,15 +49,38 @@ export async function GET() {
 
 export async function POST(req: Request) {
     try {
-        await connectDB();
+        // If DB URL is missing, short-circuit with a mocked order so UI can proceed in dev
         const body = await req.json();
         const validation = orderSchema.safeParse(body);
 
         if (!validation.success) {
-            return NextResponse.json({ error: validation.error.errors }, { status: 400 });
+            return NextResponse.json({ error: validation.error.issues }, { status: 400 });
         }
 
         const { customer: customerData, items, total, paymentInfo } = validation.data;
+
+        if (!env.MONGODB_URI) {
+            const trackingId = (crypto as any).randomUUID ? crypto.randomUUID() : `TRK-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,8)}`;
+            const mock = {
+                _id: trackingId,
+                trackingId,
+                customer: { ...customerData },
+                items,
+                total,
+                paymentInfo,
+                shippingAddress: customerData.address,
+                status: "Pending",
+                statusHistory: [{ status: "Pending", date: new Date() }],
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+            } as any;
+            // Best-effort emails
+            try { await sendCustomerEmail(customerData.email, `Your Perfumify order is received – Tracking ID ${trackingId}`, `Hi ${customerData.name}, your order has been received. Tracking: ${trackingId}`); } catch {}
+            try { await sendNotificationEmail("New Order Received (DEV mode)", `Tracking: ${trackingId}  Total: £${total}`); } catch {}
+            return NextResponse.json(mock, { status: 201 });
+        }
+
+        await connectDB();
 
         // Find or create customer
         let customer = await Customer.findOne({ email: customerData.email });
@@ -73,10 +97,24 @@ export async function POST(req: Request) {
         // Generate tracking id
         const trackingId = (crypto as any).randomUUID ? crypto.randomUUID() : `TRK-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,8)}`;
 
+        // Sanitize items: include product only if valid ObjectId
+        const sanitizedItems = items.map((it: any) => {
+            const base: any = {
+                quantity: it.quantity,
+                price: it.price,
+                name: it.name,
+                image: it.image,
+            };
+            if (it.product && /^[a-f\d]{24}$/i.test(String(it.product))) {
+                base.product = it.product;
+            }
+            return base;
+        });
+
         const order = await Order.create({
             trackingId,
             customer: customer._id,
-            items,
+            items: sanitizedItems,
             total,
             paymentInfo,
             shippingAddress: customerData.address,
@@ -96,7 +134,8 @@ export async function POST(req: Request) {
 
         return NextResponse.json(order, { status: 201 });
     } catch (error) {
-        console.error(error);
-        return NextResponse.json({ error: "Failed to create order" }, { status: 500 });
+        console.error("Order create error:", error);
+        const message = (error as any)?.message || "Failed to create order";
+        return NextResponse.json({ error: message }, { status: 500 });
     }
 }

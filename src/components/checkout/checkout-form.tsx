@@ -1,12 +1,13 @@
 import Input from "@components/ui/input";
 import { useForm } from "react-hook-form";
 import TextArea from "@components/ui/text-area";
-import { useCheckoutMutation } from "@framework/checkout/use-checkout";
+import { useCheckoutMutation, CreateOrderPayload } from "@framework/checkout/use-checkout";
 import { CheckBox } from "@components/ui/checkbox";
 import Button from "@components/ui/button";
 import Router from "next/router";
 import { ROUTES } from "@utils/routes";
 import { useTranslation } from "next-i18next";
+import { useCart } from "@contexts/cart/cart.context";
 
 interface CheckoutInputType {
 	firstName: string;
@@ -22,15 +23,52 @@ interface CheckoutInputType {
 
 const CheckoutForm: React.FC = () => {
 	const { t } = useTranslation();
-	const { mutate: updateUser, isLoading } = useCheckoutMutation();
+	const { mutateAsync: createOrder, isLoading } = useCheckoutMutation();
+	const { items, total, resetCart } = useCart();
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
 	} = useForm<CheckoutInputType>();
-	function onSubmit(input: CheckoutInputType) {
-		updateUser(input);
-		Router.push(ROUTES.ORDER);
+	async function onSubmit(input: CheckoutInputType) {
+		// Build order payload from form + cart
+		const payload: CreateOrderPayload = {
+			customer: {
+				name: `${input.firstName} ${input.lastName}`.trim(),
+				email: input.email,
+				phone: input.phone,
+				address: {
+					street: input.address,
+					city: input.city || "",
+					state: "",
+					zip: input.zipCode || "",
+					country: "",
+				},
+			},
+			items: items.map((it: any) => ({
+				product: String(it.slug || it.id || ""),
+				quantity: Number(it.quantity || 1),
+				price: Number(it.price || 0),
+				name: String(it.name || "Item"),
+				image: String(it.image || ""),
+			})),
+			total: Number(total || 0),
+			paymentInfo: {
+				method: "Cash on Delivery",
+				status: "Pending",
+			},
+		};
+
+		try {
+			const order = await createOrder(payload);
+			try { resetCart(); } catch {}
+			const tracking = order?.trackingId || order?._id;
+			Router.push(`${ROUTES.ORDER}?id=${tracking}`);
+		} catch (err: any) {
+			const apiMsg = err?.response?.data?.error;
+			const msg = apiMsg || err?.message || "Failed to place order";
+			alert(msg);
+		}
 	}
 
 	return (

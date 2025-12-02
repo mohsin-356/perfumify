@@ -4,8 +4,9 @@ import { API_ENDPOINTS } from "@framework/utils/api-endpoints";
 import { useQuery } from "react-query";
 
 const fetchAllSearchItems = async (): Promise<Product[]> => {
-  const { data } = await http.get(API_ENDPOINTS.SEARCH);
-  return data as Product[];
+  const { data: resp } = await http.get(API_ENDPOINTS.SEARCH, { params: { limit: 1000 } });
+  const items = Array.isArray(resp) ? resp : (resp?.data ?? []);
+  return (items || []) as Product[];
 };
 
 export const useSearchQuery = (

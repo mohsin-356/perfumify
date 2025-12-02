@@ -4,6 +4,11 @@ import Order from "@/models/Order";
 import { FiEye } from "react-icons/fi";
 import { formatDate } from "@/lib/date-utils";
 import { formatPrice } from "@/lib/currency";
+import dynamic from "next/dynamic";
+// Ensure Customer model is registered before populate
+import "@/models/Customer";
+
+const AdminAutoRefresh = dynamic(() => import("@/components/admin/AdminAutoRefresh"), { ssr: false });
 
 async function getOrders() {
     await connectDB();
@@ -16,6 +21,7 @@ export default async function OrdersPage() {
 
     return (
         <div className="space-y-6">
+            <AdminAutoRefresh intervalMs={8000} />
             <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-bold text-gray-800">Orders</h2>
             </div>
