@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 const OrderSchema = new mongoose.Schema(
   {
+    orderId: { type: String, unique: true, index: true },
     trackingId: { type: String, unique: true, index: true },
     customer: {
       type: mongoose.Schema.Types.ObjectId,

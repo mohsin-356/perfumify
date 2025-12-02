@@ -7,6 +7,20 @@ declare global {
 }
 
 export async function connectDB(): Promise<typeof mongoose> {
+    // If an existing connection points to a different host than the current URI, force a reconnect
+    const uriFromEnv = env.MONGODB_URI;
+    if (mongoose.connection?.readyState === 1 && uriFromEnv) {
+        try {
+            const match = uriFromEnv.match(/@([^/]+)/); // extract host between @ and /
+            const expectedHost = match?.[1] || '';
+            const currentHost = (mongoose.connection as any)?.host || '';
+            if (expectedHost && currentHost && !currentHost.includes(expectedHost)) {
+                await mongoose.disconnect();
+                global._mongooseConnection = undefined;
+            }
+        } catch {}
+    }
+
     if (!global._mongooseConnection) {
         if (!env.MONGODB_URI) {
             if (process.env.NODE_ENV !== "production") {
@@ -17,16 +31,13 @@ export async function connectDB(): Promise<typeof mongoose> {
             }
             throw new Error("MONGODB_URI is not defined in environment variables");
         }
-        global._mongooseConnection = mongoose.connect(env.MONGODB_URI, {
+        const uri = env.MONGODB_URI;
+        global._mongooseConnection = mongoose.connect(uri, {
             autoIndex: true,
         }).catch((err) => {
             console.error("MongoDB connection failed:", err?.message);
-            if (process.env.NODE_ENV !== "production") {
-                console.warn("⚠️  Continuing without DB (dev mode). APIs will return empty arrays.");
-                // resolve with existing mongoose object so callers can still use lean()/etc. safely
-                return mongoose;
-            }
-            // rethrow in production
+            // If a URI is provided but connection fails, do NOT silently continue.
+            // This helps catch Atlas/network/whitelist issues immediately.
             throw err;
         });
     }

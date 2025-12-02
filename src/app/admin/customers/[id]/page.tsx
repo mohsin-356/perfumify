@@ -64,15 +64,39 @@ export default async function CustomerDetailsPage({ params }: { params: { id: st
                                 customer.orders.map((order: any) => (
                                     <Link href={`/admin/orders/${order._id}`} key={order._id} className="block border border-gray-100 rounded-lg p-4 hover:bg-gray-50 transition-colors">
                                         <div className="flex justify-between items-center mb-2">
-                                            <span className="font-mono text-sm text-gray-600">#{order._id.toString().slice(-6)}</span>
-                                            <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${order.status === "Delivered" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"
-                                                }`}>
+                                            <div className="flex items-center gap-3">
+                                                <span className="font-mono text-xs text-gray-500">Order ID</span>
+                                                <span className="font-mono text-sm text-gray-800">{order.orderId || '-'}</span>
+                                            </div>
+                                            <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${order.status === "Delivered" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"}`}>
                                                 {order.status}
                                             </span>
                                         </div>
-                                        <div className="flex justify-between items-center">
-                                            <span className="text-sm text-gray-500">{formatDate(order.createdAt, 'short')}</span>
-                                            <span className="font-semibold text-gray-900">${order.total.toFixed(2)}</span>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-gray-700">
+                                            <div>
+                                                <span className="text-gray-500">Date: </span>{formatDate(order.createdAt, 'short')}
+                                            </div>
+                                            <div>
+                                                <span className="text-gray-500">Total: </span>£{Number(order.total || 0).toFixed(2)}
+                                            </div>
+                                            <div className="md:col-span-2">
+                                                <span className="text-gray-500">Items: </span>
+                                                {Array.isArray(order.items) && order.items.length > 0 ? (
+                                                    <ul className="list-disc pl-5 mt-1">
+                                                        {order.items.map((it: any, idx: number) => (
+                                                            <li key={idx} className="text-gray-700">{it.name} × {it.quantity}</li>
+                                                        ))}
+                                                    </ul>
+                                                ) : (
+                                                    <span>-</span>
+                                                )}
+                                            </div>
+                                            <div className="md:col-span-2">
+                                                <span className="text-gray-500">Delivery Address: </span>
+                                                <span>
+                                                    {order.shippingAddress?.street}, {order.shippingAddress?.city} {order.shippingAddress?.zip}, {order.shippingAddress?.country}
+                                                </span>
+                                            </div>
                                         </div>
                                     </Link>
                                 ))

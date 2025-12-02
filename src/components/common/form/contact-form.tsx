@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import TextArea from "@components/ui/text-area";
 import { useTranslation } from "next-i18next";
 import { useState } from "react";
+import http from "@framework/utils/http";
 
 interface ContactFormValues {
   name: string;
@@ -20,11 +21,21 @@ const ContactForm: React.FC = () => {
     formState: { errors },
   } = useForm<ContactFormValues>();
   const [submitting, setSubmitting] = useState(false);
-  async function onSubmit(_values: ContactFormValues) {
-    // You can wire this to an API or email service later
+  const [submitted, setSubmitted] = useState<null | { ok: boolean; error?: string }>(null);
+  async function onSubmit(values: ContactFormValues) {
     setSubmitting(true);
+    setSubmitted(null);
     try {
-      // no-op
+      await http.post("/leads", {
+        name: values.name,
+        email: values.email,
+        phone: values.phone,
+        message: values.message,
+      });
+      setSubmitted({ ok: true });
+    } catch (e: any) {
+      const err = e?.response?.data?.error || e?.message || "Failed to submit";
+      setSubmitted({ ok: false, error: String(err) });
     } finally {
       setSubmitting(false);
     }
@@ -88,6 +99,12 @@ const ContactForm: React.FC = () => {
             SUBMIT NOW
           </Button>
         </div>
+        {submitted?.ok && (
+          <p className="text-green-600 text-sm mt-2">Thanks! We have received your details.</p>
+        )}
+        {submitted && !submitted.ok && (
+          <p className="text-red-600 text-sm mt-2">{submitted.error}</p>
+        )}
       </div>
     </form>
   );

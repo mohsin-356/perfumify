@@ -1,23 +1,5 @@
-import {
-	IoLogoInstagram,
-	IoLogoTwitter,
-	IoLogoFacebook,
-	IoLogoYoutube,
-} from "react-icons/io5";
-
 export const footer = {
 	widgets: [
-    // Social (unchanged)
-    {
-      id: 1,
-      widgetTitle: "Social",
-      lists: [
-        { id: 1, title: "link-instagram", path: "https://www.instagram.com/redqinc/", icon: <IoLogoInstagram /> },
-        { id: 2, title: "link-twitter", path: "https://twitter.com/redqinc", icon: <IoLogoTwitter /> },
-        { id: 3, title: "link-facebook", path: "https://www.facebook.com/redqinc/", icon: <IoLogoFacebook /> },
-        { id: 4, title: "link-youtube", path: "https://www.youtube.com/channel/UCjld1tyVHRNy_pe3ROLiLhw", icon: <IoLogoYoutube /> },
-      ],
-    },
     // Main menu
     {
       id: 2,
@@ -62,11 +44,11 @@ export const footer = {
       id: 5,
       widgetTitle: "Contact Info",
       lists: [
-        { id: 1, title: "Perfumify", path: "/" },
-        { id: 2, title: "Address: 33 Richard Road, Rotherham, S60 2QP, England", path: "/" },
+        { id: 1, title: "Perfumify 786", path: "/" },
+        { id: 2, title: "Address: B82TT St Agathas road 93, Birmingham, England, United Kingdom", path: "/" },
         { id: 3, title: "Company Number: 15735984", path: "/" },
-        { id: 4, title: "Email: info@perfumify.com", path: "mailto:info@perfumify.com" },
-        { id: 5, title: "TEL: +447782274831 Mon to Sun: 10am - 5pm (excludes Bank Holidays)", path: "/" },
+        { id: 4, title: "Email: info@perfumify786.co.uk", path: "mailto:info@perfumify786.co.uk" },
+        { id: 5, title: "TEL: +447782274831", path: "tel:+447782274831" },
       ],
     },
 	],

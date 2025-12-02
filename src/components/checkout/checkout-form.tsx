@@ -8,6 +8,7 @@ import Router from "next/router";
 import { ROUTES } from "@utils/routes";
 import { useTranslation } from "next-i18next";
 import { useCart } from "@contexts/cart/cart.context";
+import { useState } from "react";
 
 interface CheckoutInputType {
 	firstName: string;
@@ -25,6 +26,7 @@ const CheckoutForm: React.FC = () => {
 	const { t } = useTranslation();
 	const { mutateAsync: createOrder, isLoading } = useCheckoutMutation();
 	const { items, total, resetCart } = useCart();
+	const [success, setSuccess] = useState<{ show: boolean; tracking?: string; waUrl?: string }>({ show: false });
 	const {
 		register,
 		handleSubmit,
@@ -63,7 +65,23 @@ const CheckoutForm: React.FC = () => {
 			const order = await createOrder(payload);
 			try { resetCart(); } catch {}
 			const tracking = order?.trackingId || order?._id;
-			Router.push(`${ROUTES.ORDER}?id=${tracking}`);
+			const friendlyOrderId = order?.orderId ? String(order.orderId) : undefined;
+
+			// Compose WhatsApp message
+			const fullName = `${input.firstName} ${input.lastName}`.trim();
+			const addressStr = `${input.address}, ${input.city || ""} ${input.zipCode || ""}`.trim();
+			const itemsLines = items.map((it: any) => `${String(it.name || "Item")} x ${Number(it.quantity || 1)} = £${Number(it.price || 0).toFixed(2)}`).join("\n");
+			const msg = `New order placed\n${friendlyOrderId ? `Order ID: ${friendlyOrderId}\n` : ''}Tracking: ${tracking}\nName: ${fullName}\nEmail: ${input.email}\nPhone: ${input.phone}\nAddress: ${addressStr}\n\nItems:\n${itemsLines}\n\nTotal: £${Number(total || 0).toFixed(2)}`;
+			const waUrl = `https://wa.me/447782274831?text=${encodeURIComponent(msg)}`;
+
+			// Show success overlay (green) and attempt to open WhatsApp chat
+			setSuccess({ show: true, tracking, waUrl });
+			try { window.open(waUrl, "_blank"); } catch {}
+
+			// Redirect to tracking page shortly after
+			setTimeout(() => {
+				Router.push(`${ROUTES.ORDER}?id=${tracking}`);
+			}, 1200);
 		} catch (err: any) {
 			const apiMsg = err?.response?.data?.error;
 			const msg = apiMsg || err?.message || "Failed to place order";
@@ -172,6 +190,21 @@ const CheckoutForm: React.FC = () => {
 					</div>
 				</div>
 			</form>
+
+			{success.show && (
+				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+					<div className="bg-green-50 border border-green-200 text-green-800 rounded-lg p-6 w-[90%] max-w-md shadow-lg">
+						<h3 className="text-lg font-semibold mb-2">Your order has been placed!</h3>
+						<p className="text-sm mb-4">Thank you for shopping with us. You will be redirected to your order tracking shortly.</p>
+						<div className="flex gap-3 flex-wrap">
+							<a href={success.waUrl} target="_blank" rel="noreferrer" className="px-3 py-2 bg-green-600 text-white rounded-md">Send WhatsApp Now</a>
+							{success.tracking && (
+								<a href={`${ROUTES.ORDER}?id=${success.tracking}`} className="px-3 py-2 bg-white border border-green-600 text-green-700 rounded-md">Track Order</a>
+							)}
+						</div>
+					</div>
+				</div>
+			)}
 		</>
 	);
 };

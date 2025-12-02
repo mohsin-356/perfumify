@@ -7,6 +7,7 @@ import { formatPrice } from "@/lib/currency";
 import dynamic from "next/dynamic";
 // Ensure Customer model is registered before populate
 import "@/models/Customer";
+import CopyButton from "@/components/admin/CopyButton";
 
 const AdminAutoRefresh = dynamic(() => import("@/components/admin/AdminAutoRefresh"), { ssr: false });
 
@@ -32,6 +33,7 @@ export default async function OrdersPage() {
                         <tr>
                             <th className="px-6 py-3">Order ID</th>
                             <th className="px-6 py-3">Tracking</th>
+                            <th className="px-6 py-3">Copy</th>
                             <th className="px-6 py-3">Customer</th>
                             <th className="px-6 py-3">Date</th>
                             <th className="px-6 py-3">Total</th>
@@ -42,10 +44,16 @@ export default async function OrdersPage() {
                     <tbody className="divide-y divide-gray-100">
                         {orders.map((order) => (
                             <tr key={order._id} className="hover:bg-gray-50 transition-colors">
-                                <td className="px-6 py-4 font-mono text-sm text-gray-600">#{order._id.toString().slice(-6)}</td>
-                                <td className="px-6 py-4">
-                                    {order.trackingId ? (
+                                <td className="px-6 py-4 font-mono text-sm text-gray-700">{order.orderId || <span className="text-gray-400">—</span>}</td>
+                                <td className="px-6 py-4">{order.trackingId ? (
                                         <span className="px-2 py-1 rounded bg-gray-100 text-gray-700 text-xs font-mono">{String(order.trackingId).slice(0, 10)}…</span>
+                                    ) : (
+                                        <span className="text-gray-400 text-xs">—</span>
+                                    )}
+                                </td>
+                                <td className="px-6 py-4">
+                                    {order.orderId ? (
+                                        <CopyButton text={String(order.orderId)} />
                                     ) : (
                                         <span className="text-gray-400 text-xs">—</span>
                                     )}

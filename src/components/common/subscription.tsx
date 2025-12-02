@@ -3,6 +3,7 @@ import Input from "@components/ui/input";
 import Button from "@components/ui/button";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "next-i18next";
+import http from "@framework/utils/http";
 
 const data = {
 	title: "common:text-subscribe-heading",
@@ -34,8 +35,13 @@ const Subscription: React.FC<Props> = ({
 	});
 	const { t } = useTranslation();
 	const { title, description, buttonText } = data;
-	async function onSubmit(_input: FormValues) {
-		// Handle subscription
+	async function onSubmit(input: FormValues) {
+		try {
+			await http.post("/subscriptions", { email: input.subscription_email });
+			// Optional: we could show a toast, but keeping it simple.
+		} catch (e) {
+			// no-op
+		}
 	}
 	return (
 		<div

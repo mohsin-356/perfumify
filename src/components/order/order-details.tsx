@@ -11,7 +11,6 @@ const OrderItemCard = ({ product }: { product: OrderItem }) => {
 	return (
 		<tr
 			className="border-b font-normal border-gray-300 last:border-b-0"
-			key={product.id}
 		>
 			<td className="p-4">
 				{product.name} * {product.quantity}
@@ -28,27 +27,33 @@ const OrderDetails: React.FC<{ className?: string }> = ({
 	} = useRouter();
 	const { t } = useTranslation("common");
 	const { data: order, isLoading } = useOrderQuery(id?.toString()!);
-	const { price: subtotal } = usePrice(
-		order && {
-			amount: order.total,
-			currencyCode: "GBP",
-		}
-	);
-	const { price: total } = usePrice(
-		order && {
-			amount: order.shipping_fee
-				? order.total + order.shipping_fee
-				: order.total,
-			currencyCode: "GBP",
-		}
-	);
-	const { price: shipping } = usePrice(
-		order && {
-			amount: order.shipping_fee,
-			currencyCode: "GBP",
-		}
-	);
+
+    // Safely compute numeric amounts to avoid undefined
+    const subtotalAmount = Number(order?.total ?? 0);
+    const shippingFee = Number(order?.shipping_fee ?? 0);
+    const totalAmount = Number(subtotalAmount + shippingFee);
+
+    const { price: subtotal } = usePrice({
+        amount: subtotalAmount,
+        currencyCode: "GBP",
+    });
+    const { price: total } = usePrice({
+        amount: totalAmount,
+        currencyCode: "GBP",
+    });
+    const { price: shipping } = usePrice({
+        amount: shippingFee,
+        currencyCode: "GBP",
+    });
+
 	if (isLoading) return <p>Loading...</p>;
+	// Normalize items array from either products[] or items[]
+	const lineItems: OrderItem[] = Array.isArray((order as any)?.products)
+		? ((order as any)?.products as OrderItem[])
+		: Array.isArray((order as any)?.items)
+		? ((order as any)?.items as OrderItem[])
+		: [];
+
 	return (
 		<div className={className}>
 			<h2 className="text-lg md:text-xl xl:text-2xl font-bold text-heading mb-6 xl:mb-8">
@@ -66,7 +71,7 @@ const OrderDetails: React.FC<{ className?: string }> = ({
 					</tr>
 				</thead>
 				<tbody>
-					{order?.products.map((product, index) => (
+					{lineItems.map((product, index) => (
 						<OrderItemCard key={index} product={product} />
 					))}
 				</tbody>

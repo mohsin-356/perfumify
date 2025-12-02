@@ -13,6 +13,8 @@ import {
     FiLogOut,
     FiMessageSquare,
     FiStar,
+    FiUserPlus,
+    FiMail,
 } from "react-icons/fi";
 
 const menuItems = [
@@ -22,6 +24,8 @@ const menuItems = [
     { name: "Brands", href: "/admin/brands", icon: FiTag },
     { name: "Orders", href: "/admin/orders", icon: FiShoppingBag },
     { name: "Customers", href: "/admin/customers", icon: FiUsers },
+    { name: "Leads", href: "/admin/leads", icon: FiUserPlus },
+    { name: "Subscriptions", href: "/admin/subscriptions", icon: FiMail },
     { name: "Reviews", href: "/admin/reviews", icon: FiStar },
     { name: "Chats", href: "/admin/chats", icon: FiMessageSquare },
     { name: "Settings", href: "/admin/settings", icon: FiSettings },

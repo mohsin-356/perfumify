@@ -35,9 +35,22 @@ const orderSchema = z.object({
     }),
 });
 
-export async function GET() {
+export async function GET(req: Request) {
     try {
+        const url = new URL(req.url);
+        const orderId = url.searchParams.get("orderId");
+        const trackingId = url.searchParams.get("trackingId");
         await connectDB();
+
+        if (orderId) {
+            const order = await Order.findOne({ orderId }).populate("customer");
+            return NextResponse.json(order);
+        }
+        if (trackingId) {
+            const order = await Order.findOne({ trackingId }).populate("customer");
+            return NextResponse.json(order);
+        }
+
         const orders = await Order.find()
             .populate("customer")
             .sort({ createdAt: -1 });
@@ -61,9 +74,11 @@ export async function POST(req: Request) {
 
         if (!env.MONGODB_URI) {
             const trackingId = (crypto as any).randomUUID ? crypto.randomUUID() : `TRK-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,8)}`;
+            const orderId = `PF-${new Date().toISOString().slice(0,10).replace(/-/g,"")}-${Math.random().toString(36).slice(2,6).toUpperCase()}`;
             const mock = {
                 _id: trackingId,
                 trackingId,
+                orderId,
                 customer: { ...customerData },
                 items,
                 total,
@@ -75,7 +90,7 @@ export async function POST(req: Request) {
                 updatedAt: new Date().toISOString(),
             } as any;
             // Best-effort emails
-            try { await sendCustomerEmail(customerData.email, `Your Perfumify order is received – Tracking ID ${trackingId}`, `Hi ${customerData.name}, your order has been received. Tracking: ${trackingId}`); } catch {}
+            try { await sendCustomerEmail(customerData.email, `Your Perfumify order is received – Order ID ${orderId}` , `Hi ${customerData.name}, your order has been received.\n\nOrder ID: ${orderId}\nTracking: ${trackingId}`); } catch {}
             try { await sendNotificationEmail("New Order Received (DEV mode)", `Tracking: ${trackingId}  Total: £${total}`); } catch {}
             return NextResponse.json(mock, { status: 201 });
         }
@@ -94,8 +109,9 @@ export async function POST(req: Request) {
             await customer.save();
         }
 
-        // Generate tracking id
+        // Generate tracking id and human-friendly orderId
         const trackingId = (crypto as any).randomUUID ? crypto.randomUUID() : `TRK-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,8)}`;
+        const orderId = `PF-${new Date().toISOString().slice(0,10).replace(/-/g,"")}-${Math.random().toString(36).slice(2,6).toUpperCase()}`;
 
         // Sanitize items: include product only if valid ObjectId
         const sanitizedItems = items.map((it: any) => {
@@ -113,6 +129,7 @@ export async function POST(req: Request) {
 
         const order = await Order.create({
             trackingId,
+            orderId,
             customer: customer._id,
             items: sanitizedItems,
             total,
@@ -127,8 +144,8 @@ export async function POST(req: Request) {
         await customer.save();
 
         // Send customer email (best-effort)
-        const subject = `Your Perfumify order is received – Tracking ID ${trackingId}`;
-        const text = `Hi ${customerData.name},\n\nThank you for your order.\n\nOrder total: £${total}\nTracking ID: ${trackingId}\nStatus: Pending\n\nKeep this Tracking ID to track your order or contact support.\n\n— Perfumify`;
+        const subject = `Your Perfumify order is received – Order ID ${orderId}`;
+        const text = `Hi ${customerData.name},\n\nThank you for your order.\n\nOrder total: £${total}\nOrder ID: ${orderId}\nTracking ID: ${trackingId}\nStatus: Pending\n\nKeep this Order ID to track your order or contact support.\n\n— Perfumify`;
         try { await sendCustomerEmail(customerData.email, subject, text); } catch {}
         try { await sendNotificationEmail("New Order Received", `Tracking: ${trackingId}  Total: £${total}`); } catch {}
 

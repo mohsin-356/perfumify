@@ -4,7 +4,8 @@ import { API_ENDPOINTS } from "@framework/utils/api-endpoints";
 import { useQuery } from "react-query";
 
 export const fetchOrder = async (_id: string) => {
-  const { data } = await http.get(`${API_ENDPOINTS.ORDER}/${_id}`);
+  // Fetch by trackingId via query param so it works with our Next.js route
+  const { data } = await http.get(`${API_ENDPOINTS.ORDER}?trackingId=${encodeURIComponent(_id)}`);
   return data;
 };
 export const useOrderQuery = (id: string) => {
