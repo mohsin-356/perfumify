@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import isEmpty from "lodash/isEmpty";
@@ -33,6 +33,77 @@ export default function ProductPopup() {
   });
   const variations = getVariations(data.variations);
   const { slug, image, name, description } = data;
+
+  // Clean description for popup (avoid showing raw HTML attributes/styles)
+  const descriptionText = useMemo(() => {
+    const html = String(description || "");
+    const noTags = html.replace(/<[^>]*>/g, " ");
+    const decoded = noTags
+      .replace(/&nbsp;/gi, " ")
+      .replace(/&amp;/gi, "&")
+      .replace(/&lt;/gi, "<")
+      .replace(/&gt;/gi, ">")
+      .replace(/&quot;/gi, '"')
+      .replace(/&#39;/gi, "'");
+    return decoded.replace(/\s+/g, " ").trim();
+  }, [description]);
+  const descriptionSnippet = useMemo(() => {
+    const MAX = 420;
+    return descriptionText.length > MAX ? descriptionText.slice(0, MAX) + "…" : descriptionText;
+  }, [descriptionText]);
+
+  // Build a readable, structured block from flat description text
+  const structured = useMemo(() => {
+    const text = descriptionText;
+    if (!text) return { intro: "", items: [] as { title: string; value: string }[] };
+
+    // Add separators before known labels to split into sections
+    const patterns: Array<{ title: string; exp: RegExp }> = [
+      { title: "Brand", exp: /\bBrand:\s*/gi },
+      { title: "Brand Category", exp: /\bBrand\s+Category:\s*/gi },
+      { title: "Gender", exp: /\bGender:\s*/gi },
+      { title: "Fragrance Notes – Top", exp: /\bFragrance\s+Notes\s*[-–]\s*Top:\s*/gi },
+      { title: "Fragrance Notes – Heart", exp: /\bFragrance\s+Notes\s*[-–]\s*Heart:\s*/gi },
+      { title: "Fragrance Notes – Base", exp: /\bFragrance\s+Notes\s*[-–]\s*Base:\s*/gi },
+      { title: "Notes – Top", exp: /\bNotes\s*[-–]\s*Top:\s*/gi },
+      { title: "Notes – Heart", exp: /\bNotes\s*[-–]\s*Heart:\s*/gi },
+      { title: "Notes – Base", exp: /\bNotes\s*[-–]\s*Base:\s*/gi },
+      { title: "Fragrance Family", exp: /\bFragrance\s+Family:\s*/gi },
+      { title: "Key Note", exp: /\bKey\s+Note:\s*/gi },
+      { title: "Strength", exp: /\bStrength:\s*/gi },
+      { title: "Size", exp: /\bSize:\s*/gi },
+      { title: "Bottle Type", exp: /\bBottle\s+Type:\s*/gi },
+      { title: "Scent", exp: /\bScent:\s*/gi },
+      { title: "EAN", exp: /\bEAN:\s*/gi },
+    ];
+
+    let marked = text;
+    patterns.forEach(({ title, exp }) => {
+      marked = marked.replace(exp, () => ` |||${title}: `);
+    });
+
+    const chunks = marked.split(" |||");
+    const intro = (chunks[0] || "").trim();
+    const items: { title: string; value: string }[] = [];
+    for (let i = 1; i < chunks.length; i++) {
+      const part = chunks[i];
+      const idx = part.indexOf(": ");
+      if (idx > 0) {
+        const title = part.slice(0, idx).trim();
+        const value = part.slice(idx + 2).trim();
+        if (title && value) items.push({ title, value });
+      }
+    }
+
+    // Minor normalization for comma-separated notes => nicer spacing
+    items.forEach((it) => {
+      if (/Notes/i.test(it.title)) {
+        it.value = it.value.replace(/\s*,\s*/g, ", ");
+      }
+    });
+
+    return { intro, items };
+  }, [descriptionText]);
 
   // Derive a robust primary image src from multiple possible shapes
   const asString = (v: any): string | undefined => (typeof v === "string" ? v : undefined);
@@ -90,13 +161,13 @@ export default function ProductPopup() {
   return (
     <div className="rounded-lg bg-white">
       <div className="flex flex-col lg:flex-row w-full md:w-[650px] lg:w-[960px] mx-auto overflow-hidden">
-        <div className="flex-shrink-0 flex items-center justify-center w-full lg:w-430px max-h-430px lg:max-h-full overflow-hidden bg-gray-300">
+        <div className="flex-shrink-0 flex items-center justify-center w-full lg:w-[430px] max-h-[320px] sm:max-h-[380px] md:max-h-[420px] lg:max-h-full overflow-hidden bg-gray-300">
           <Image
             src={primarySrc}
             alt={name || "Product image"}
             width={430}
             height={430}
-            className="lg:object-cover lg:w-full lg:h-full"
+            className="w-full h-auto object-contain lg:object-cover lg:w-full lg:h-full"
           />
         </div>
         <div className="flex flex-col p-5 md:p-8 w-full">
@@ -110,9 +181,23 @@ export default function ProductPopup() {
                 {name}
               </h2>
             </div>
-            <p className="text-sm leading-6 md:text-body md:leading-7">
-              {description}
-            </p>
+            <div className="text-sm md:text-body md:leading-7 space-y-2">
+              {structured.intro && (
+                <p>{structured.intro}</p>
+              )}
+              {structured.items.length > 0 && (
+                <ul className="list-disc pl-5 space-y-1">
+                  {structured.items.map((it, idx) => (
+                    <li key={idx}>
+                      <span className="font-semibold">{it.title}:</span> {it.value}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {!structured.intro && structured.items.length === 0 && (
+                <p>{descriptionSnippet}</p>
+              )}
+            </div>
 
             <div className="flex items-center mt-3">
               <div className="text-heading font-semibold text-base md:text-xl lg:text-2xl">

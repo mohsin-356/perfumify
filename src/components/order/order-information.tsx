@@ -1,5 +1,6 @@
 import { IoCheckmarkCircle } from "react-icons/io5";
 import OrderDetails from "@components/order/order-details";
+import OrderTimeline from "@components/order/order-timeline";
 import { useOrderQuery } from "@framework/order/get-order";
 import { useRouter } from "next/router";
 import usePrice from "@framework/product/use-price";
@@ -59,6 +60,14 @@ export default function OrderInformation() {
 					{(data as any)?.payment_gateway || (data as any)?.paymentInfo?.method}
 				</li>
 			</ul>
+
+			<div className="mb-8">
+				<OrderTimeline
+					trackingId={(data as any)?.trackingId || (data as any)?.tracking_number || (data as any)?._id}
+					currentStatus={(data as any)?.status}
+					history={(data as any)?.statusHistory}
+				/>
+			</div>
 
 			<p className="text-heading text-sm md:text-base mb-8">
 				{t("text-pay-cash")}

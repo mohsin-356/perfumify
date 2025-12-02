@@ -99,11 +99,19 @@ export const fetchProducts = async ({ queryKey, pageParam = 1 }: any) => {
 
 		// If server provided paginator, prefer it. Otherwise, paginate locally.
 		if (serverPaginator) {
+			const hasMore = (
+				serverPaginator.hasMorePages !== undefined
+					? !!serverPaginator.hasMorePages
+					: (serverPaginator.hasNextPage !== undefined
+						? !!serverPaginator.hasNextPage
+						: ((serverPaginator.currentPage || pageParam) < (serverPaginator.lastPage || 0))
+					  )
+			);
 			return {
 				data: filtered as Product[],
 				paginatorInfo: {
 					nextPageUrl: serverPaginator.nextPageUrl || "",
-					hasNextPage: !!serverPaginator.hasNextPage,
+					hasNextPage: hasMore,
 					currentPage: serverPaginator.currentPage || pageParam,
 					total: serverPaginator.total ?? filtered.length,
 				},

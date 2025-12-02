@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useUI } from "@contexts/ui.context";
 import usePrice from "@framework/product/use-price";
 import { Product } from "@framework/types";
@@ -62,6 +62,24 @@ const ProductOverlayCard: React.FC<ProductProps> = ({
 	const currentImage = isHovered && product?.gallery?.[1]?.original 
 		? product.gallery[1].original 
 		: product?.image?.original ?? "/assets/placeholder/products/product-featured.png";
+
+    // Render a clean text snippet from HTML description (avoid showing raw tags)
+    const descriptionText = useMemo(() => {
+        const html = String(product?.description || "");
+        const noTags = html.replace(/<[^>]*>/g, " ");
+        const decoded = noTags
+          .replace(/&nbsp;/gi, " ")
+          .replace(/&amp;/gi, "&")
+          .replace(/&lt;/gi, "<")
+          .replace(/&gt;/gi, ">")
+          .replace(/&quot;/gi, '"')
+          .replace(/&#39;/gi, "'");
+        return decoded.replace(/\s+/g, " ").trim();
+    }, [product?.description]);
+    const descriptionSnippet = useMemo(() => {
+        const MAX = 140;
+        return descriptionText.length > MAX ? descriptionText.slice(0, MAX) + "…" : descriptionText;
+    }, [descriptionText]);
 
 	return (
 		<div
@@ -137,7 +155,7 @@ const ProductOverlayCard: React.FC<ProductProps> = ({
 						{product?.name}
 					</h2>
 					<p className="text-body text-xs xl:text-sm leading-normal xl:leading-relaxed truncate max-w-[250px]">
-						{product?.description}
+						{descriptionSnippet}
 					</p>
 				</div>
 				<div className="flex-shrink-0 flex flex-row-reverse md:flex-col lg:flex-row-reverse 2xl:flex-col items-center md:items-end lg:items-start 2xl:items-end justify-end md:text-end lg:text-start xl:text-end mt-2 md:-mt-0.5 lg:mt-2 2xl:-mt-0.5">

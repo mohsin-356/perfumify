@@ -109,7 +109,7 @@ const HeroSlider: React.FC = () => {
 	};
 
 	return (
-		<div className="relative w-full h-[300px] md:h-[350px] lg:h-[400px] overflow-hidden bg-gray-200">
+		<div className="relative w-full h-[330px] md:h-[390px] lg:h-[460px] overflow-hidden bg-gray-200">
 			{/* Slides */}
 			<div
 				className="flex transition-transform duration-500 ease-in-out h-full"

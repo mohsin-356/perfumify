@@ -110,6 +110,8 @@ export type Order = {
   tracking_number?: string;
   trackingId?: string;
   createdAt?: string | Date;
+  status?: string;
+  statusHistory?: { status: string; date: string | Date }[];
   customer: {
     id?: number | string;
     email: string;
@@ -120,5 +122,12 @@ export type Order = {
     method?: string;
     transactionId?: string;
     status?: string;
+  };
+  shippingAddress?: {
+    street?: string;
+    city?: string;
+    state?: string;
+    zip?: string;
+    country?: string;
   };
 };

@@ -3,6 +3,7 @@ import Order from "@/models/Order";
 import { notFound } from "next/navigation";
 import { formatDate } from "@/lib/date-utils";
 import OrderStatusSelect from "@/components/admin/OrderStatusSelect";
+import OrderTimeline from "@/components/order/order-timeline";
 
 async function getOrder(id: string) {
     await connectDB();
@@ -27,6 +28,8 @@ export default async function OrderDetailsPage({ params }: { params: { id: strin
                 </div>
                 <OrderStatusSelect orderId={order._id} currentStatus={order.status} />
             </div>
+
+            <OrderTimeline trackingId={(order as any)?.trackingId || (order as any)?._id} currentStatus={(order as any)?.status} history={(order as any)?.statusHistory} />
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="md:col-span-2 space-y-6">

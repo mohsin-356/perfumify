@@ -26,16 +26,6 @@ const BestSellerProductFeed = dynamic(
 		),
 	}
 );
-const NewArrivalsProductFeed = dynamic(
-	() => import("@components/product/feeds/new-arrivals-product-feed"),
-	{
-		loading: () => (
-			<div className="mt-8">
-				<ProductFeedLoader limit={10} uniqueKey="new-arrivals-fallback" />
-			</div>
-		),
-	}
-);
 import { GetStaticProps } from "next";
 import { QueryClient } from "react-query";
 import { dehydrate } from "react-query/hydration";
@@ -43,7 +33,6 @@ import { API_ENDPOINTS } from "@framework/utils/api-endpoints";
 import { fetchFlashSaleProducts } from "@framework/product/get-all-flash-sale-products";
 import { fetchCategories } from "@framework/category/get-all-categories";
 import { fetchBestSellerProducts } from "@framework/product/get-all-best-seller-products";
-import { fetchNewArrivalProducts } from "@framework/product/get-all-new-arrival-products";
 import { fetchBrands } from "@framework/brand/get-all-brands";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
@@ -55,7 +44,6 @@ export default function Home() {
         <BrandBlock sectionHeading="Shop by Brands" className="mt-8 md:mt-10 lg:mt-12 mb-11 md:mb-12 xl:mb-14" />
         <Divider />
         <BestSellerProductFeed />
-        <NewArrivalsProductFeed />
       </Container>
     </>
   );
@@ -78,10 +66,6 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 		queryClient.prefetchQuery(
 			[API_ENDPOINTS.BEST_SELLER_PRODUCTS, { limit: 10 }],
 			fetchBestSellerProducts
-		),
-		queryClient.prefetchQuery(
-			[API_ENDPOINTS.NEW_ARRIVAL_PRODUCTS, { limit: 10 }],
-			fetchNewArrivalProducts
 		),
 		queryClient.prefetchQuery(
 			[API_ENDPOINTS.BRANDS, { limit: 0 }],

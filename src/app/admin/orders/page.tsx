@@ -25,6 +25,7 @@ export default async function OrdersPage() {
                     <thead className="bg-gray-50 text-gray-600 font-medium border-b border-gray-100">
                         <tr>
                             <th className="px-6 py-3">Order ID</th>
+                            <th className="px-6 py-3">Tracking</th>
                             <th className="px-6 py-3">Customer</th>
                             <th className="px-6 py-3">Date</th>
                             <th className="px-6 py-3">Total</th>
@@ -36,6 +37,13 @@ export default async function OrdersPage() {
                         {orders.map((order) => (
                             <tr key={order._id} className="hover:bg-gray-50 transition-colors">
                                 <td className="px-6 py-4 font-mono text-sm text-gray-600">#{order._id.toString().slice(-6)}</td>
+                                <td className="px-6 py-4">
+                                    {order.trackingId ? (
+                                        <span className="px-2 py-1 rounded bg-gray-100 text-gray-700 text-xs font-mono">{String(order.trackingId).slice(0, 10)}…</span>
+                                    ) : (
+                                        <span className="text-gray-400 text-xs">—</span>
+                                    )}
+                                </td>
                                 <td className="px-6 py-4 font-medium text-gray-900">{order.customer?.name || "Guest"}</td>
                                 <td className="px-6 py-4 text-gray-600">{formatDate(order.createdAt, 'short')}</td>
                                 <td className="px-6 py-4 text-gray-900 font-medium">{formatPrice(order.total)}</td>

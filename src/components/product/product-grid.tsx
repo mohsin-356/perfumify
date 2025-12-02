@@ -31,7 +31,7 @@ export const ProductGrid: FC<ProductGridProps> = ({ className = "", category, br
   return (
     <>
       <div
-        className={`grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-x-3 lg:gap-x-5 xl:gap-x-7 gap-y-3 xl:gap-y-5 2xl:gap-y-8 ${className}`}
+        className={`grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5 gap-x-3 lg:gap-x-5 xl:gap-x-7 gap-y-3 xl:gap-y-5 2xl:gap-y-8 ${className}`}
       >
         {isLoading && !data?.pages?.length ? (
           <ProductFeedLoader limit={20} uniqueKey="search-product" />

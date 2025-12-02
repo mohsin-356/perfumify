@@ -1,7 +1,7 @@
 import cn from "classnames";
 import Image from "next/image";
 import type { FC } from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useUI } from "@contexts/ui.context";
 import usePrice from "@framework/product/use-price";
 import { Product } from "@framework/types";
@@ -30,8 +30,8 @@ const ProductCard: FC<ProductProps> = ({
 	contactClassName = "",
 	imageContentClassName = "",
 	variant = "list",
-	imgWidth = 340,
-	imgHeight = 440,
+	imgWidth = 360,
+	imgHeight = 500,
 	imgLoading = "lazy",
 }) => {
 	const [isHovered, setIsHovered] = useState(false);
@@ -82,10 +82,28 @@ const ProductCard: FC<ProductProps> = ({
 
 	const [imgSrc, setImgSrc] = useState<string>(primarySrc);
 
-	useEffect(() => {
-		setImgSrc(isHovered ? hoverSrc : primarySrc);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [isHovered]);
+  useEffect(() => {
+    setImgSrc(isHovered ? hoverSrc : primarySrc);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isHovered]);
+
+  const descriptionText = useMemo(() => {
+    const html = String(product?.description || "");
+    const noTags = html.replace(/<[^>]*>/g, " ");
+    const decoded = noTags
+      .replace(/&nbsp;/gi, " ")
+      .replace(/&amp;/gi, "&")
+      .replace(/&lt;/gi, "<")
+      .replace(/&gt;/gi, ">")
+      .replace(/&quot;/gi, '"')
+      .replace(/&#39;/gi, "'");
+    return decoded.replace(/\s+/g, " ").trim();
+  }, [product?.description]);
+
+  const descriptionSnippet = useMemo(() => {
+    const MAX = 140;
+    return descriptionText.length > MAX ? descriptionText.slice(0, MAX) + "…" : descriptionText;
+  }, [descriptionText]);
 
 	// Badge
 	const badge = (() => {
@@ -262,8 +280,8 @@ const ProductCard: FC<ProductProps> = ({
 					{product?.name}
 				</h2>
 				{product?.description && (
-					<p className="text-body text-xs lg:text-sm leading-normal xl:leading-relaxed max-w-[250px] truncate">
-						{product?.description}
+					<p suppressHydrationWarning className="text-body text-xs lg:text-sm leading-normal xl:leading-relaxed max-w-[250px] truncate">
+						{descriptionSnippet}
 					</p>
 				)}
 				<div
