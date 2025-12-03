@@ -16,7 +16,9 @@ const MobileNavigation = dynamic(
 );
 const Search = dynamic(() => import("@components/common/search"), { ssr: false });
 
-const Layout: React.FC = ({ children }) => {
+type LayoutProps = { children?: React.ReactNode };
+
+const Layout: React.FC<LayoutProps> = ({ children }) => {
 	const { acceptedCookies, onAcceptCookies } = useAcceptCookies();
 	const { t } = useTranslation("common");
 	return (
