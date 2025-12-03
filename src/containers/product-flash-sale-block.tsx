@@ -1,10 +1,14 @@
+"use client";
 import SectionHeader from "@components/common/section-header";
 import ProductCard from "@components/product/product-card";
 import ProductCardGridLoader from "@components/ui/loaders/product-card-grid-loader";
 import { useFlashSaleProductsQuery } from "@framework/product/get-all-flash-sale-products";
 import Alert from "@components/ui/alert";
 import dynamic from "next/dynamic";
-const Countdown = dynamic(() => import("react-countdown"), { ssr: false });
+const Countdown = dynamic<any>(
+  () => import("react-countdown").then((mod) => mod.default as any),
+  { ssr: false }
+);
 
 interface ProductsProps {
 	sectionHeading?: string;
@@ -58,6 +62,7 @@ const ProductsFlashSaleBlock: React.FC<ProductsProps> = ({
 	const { data, isLoading, error } = useFlashSaleProductsQuery({
 		limit: 10,
 	});
+	const gridTwo: any[] = ((data as any)?.productFlashSellGridTwo) ?? [];
 	return (
 		<div
 			className={`${className} border border-gray-300 rounded-md pt-5 md:pt-6 lg:pt-7 pb-5 lg:pb-7 px-4 md:px-5 lg:px-7`}
@@ -70,14 +75,14 @@ const ProductsFlashSaleBlock: React.FC<ProductsProps> = ({
 				<Alert message={error?.message} />
 			) : (
 				<div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-x-3 md:gap-x-5 xl:gap-x-7 gap-y-4 lg:gap-y-5 xl:lg:gap-y-6 2xl:gap-y-8">
-					{isLoading && data?.productFlashSellGridTwo?.length
+					{isLoading && gridTwo.length === 0
 						? Array.from({ length: 10 }).map((_, idx) => (
 								<ProductCardGridLoader
 									key={idx}
 									uniqueKey={`flash-sale-${idx}`}
 								/>
 						  ))
-						: data?.productFlashSellGridTwo?.map((product: any) => (
+						: gridTwo.map((product: any) => (
 								<ProductCard
 									key={`product--key${product.id}`}
 									product={product}

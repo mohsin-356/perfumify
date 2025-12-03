@@ -1,3 +1,4 @@
+"use client";
 import BrandCard from "@components/common/brand-card";
 import SectionHeader from "@components/common/section-header";
 import BrandCardLoader from "@components/ui/loaders/brand-card-loader";

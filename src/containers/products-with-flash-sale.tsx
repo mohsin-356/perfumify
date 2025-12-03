@@ -1,3 +1,4 @@
+"use client";
 import SellWithProgress from "@components/common/sale-with-progress";
 import SectionHeader from "@components/common/section-header";
 import ProductCard from "@components/product/product-card";
@@ -20,6 +21,7 @@ const ProductsWithFlashSale: React.FC<Props> = ({
 	const { data, isLoading, error } = useTopSellerProductsQuery({
 		limit: 10,
 	});
+    const topProducts: any[] = Array.isArray(data) ? data : [];
 
 	const {
 		data: flashSellProduct,
@@ -40,10 +42,10 @@ const ProductsWithFlashSale: React.FC<Props> = ({
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-5 xl:gap-7 xl:-mt-1.5 2xl:mt-0">
 					{error ? (
 						<Alert message={error?.message} />
-					) : isLoading && !data?.length ? (
+					) : isLoading && topProducts.length === 0 ? (
 						<ProductListFeedLoader limit={4} />
 					) : (
-						data?.map((product) => (
+						topProducts.map((product: any) => (
 							<ProductCard
 								key={`product--key${product.id}`}
 								product={product}
