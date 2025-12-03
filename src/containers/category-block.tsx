@@ -1,3 +1,4 @@
+"use client";
 import Card from "@components/common/card";
 import SectionHeader from "@components/common/section-header";
 import Carousel from "@components/ui/carousel/carousel";
@@ -75,6 +76,7 @@ const CategoryBlock: React.FC<CategoriesProps> = ({
 	const { data, isLoading, error } = useCategoriesQuery({
 		limit: 10,
 	});
+	const categories = data?.categories?.data ?? [];
 
 	return (
 		<div className={className}>
@@ -101,7 +103,7 @@ const CategoryBlock: React.FC<CategoriesProps> = ({
 									</div>
 								);
 						  })
-						: data?.categories?.data?.map((category) => (
+						: categories.map((category) => (
 								<div key={`category--key-${category.id}`}>
 									<Card
 										item={category}

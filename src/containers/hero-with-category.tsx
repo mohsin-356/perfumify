@@ -1,3 +1,4 @@
+"use client";
 import BannerCard from "@components/common/banner-card";
 import CategoryListCard from "@components/common/category-list-card";
 import Carousel from "@components/ui/carousel/carousel";
@@ -39,6 +40,7 @@ const HeroWithCategory: React.FC<Props> = ({
 	const { data, isLoading, error } = useCategoriesQuery({
 		limit: 10,
 	});
+	const categories = data?.categories?.data ?? [];
 	return (
 		<div
 			className={`grid grid-cols-1 2xl:grid-cols-5 gap-5 xl:gap-7 ${className}`}
@@ -48,7 +50,7 @@ const HeroWithCategory: React.FC<Props> = ({
 			) : width < 1500 ? (
 				<div>
 					<Carousel breakpoints={categoryResponsive} buttonSize="small">
-						{isLoading && !data?.categories?.data?.length
+						{isLoading && categories.length === 0
 							? Array.from({ length: 8 }).map((_, idx) => (
 									<div key={`category-list-${idx}`}>
 										<CategoryListCardLoader
@@ -56,7 +58,7 @@ const HeroWithCategory: React.FC<Props> = ({
 										/>
 									</div>
 								))
-							: data?.categories?.data?.map((category) => (
+							: categories.map((category) => (
 									<div key={`category--key${category.id}`}>
 										<CategoryListCard category={category} />
 									</div>
@@ -65,11 +67,11 @@ const HeroWithCategory: React.FC<Props> = ({
 				</div>
 			) : (
 				<div className="2xl:-me-14 grid grid-cols-1 gap-3">
-					{isLoading && !data?.categories?.data?.length ? (
+					{isLoading && categories.length === 0 ? (
 						<CategoryListFeedLoader limit={8} />
 					) : (
-						data?.categories?.data
-							?.slice(0, 8)
+						categories
+							.slice(0, 8)
 							.map((category) => (
 								<CategoryListCard
 									key={`category--key${category.id}`}

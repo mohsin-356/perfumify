@@ -1,3 +1,4 @@
+"use client";
 import BannerCard from "@components/common/banner-card";
 import CategoryListCard from "@components/common/category-list-card";
 import SellWithProgress from "@components/common/sale-with-progress";
@@ -60,6 +61,7 @@ export function CategoryListCardSection() {
 	const { data, isLoading, error } = useCategoriesQuery({
 		limit: 10,
 	});
+	const categories = data?.categories?.data ?? [];
 
 	return (
 		<>
@@ -77,12 +79,12 @@ export function CategoryListCardSection() {
 											uniqueKey={`category-list-${idx}`}
 										/>
 									</div>
-							  ))
-							: data?.categories.data.map((category: any) => (
+								))
+							: categories.map((category: any) => (
 									<div key={`sm-category--key${category.id}`}>
 										<CategoryListCard category={category} />
 									</div>
-							  ))}
+								))}
 					</Carousel>
 				</div>
 			) : (
@@ -93,8 +95,8 @@ export function CategoryListCardSection() {
 									key={idx}
 									uniqueKey={`category-list-${idx}`}
 								/>
-						  ))
-						: data?.categories.data
+							))
+						: categories
 								.slice(0, 7)
 								.map((category: any) => (
 									<CategoryListCard
