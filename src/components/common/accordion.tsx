@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import cn from "classnames";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { heightCollapse } from "@utils/motion/height-collapse";
 import { useTranslation } from "next-i18next";
 
@@ -68,26 +68,23 @@ export const Collapse: React.FC<CollapseProps> = ({
 					/>
 				</div>
 			</motion.header>
-			<AnimatePresence initial={false}>
-				{isOpen && (
-					<motion.div
-						key="content"
-						initial="from"
-						animate="to"
-						exit="from"
-						variants={heightCollapse()}
+			{isOpen ? (
+				<motion.div
+					key="content"
+					initial="from"
+					animate="to"
+					variants={heightCollapse()}
+				>
+					<div
+						className={cn("pb-6 md:pb-7 leading-7 text-sm text-gray-600", {
+							"pt-5 border-t border-gray-300 px-6 md:px-8 lg:px-10":
+								variant === "gray",
+						})}
 					>
-						<div
-							className={cn("pb-6 md:pb-7 leading-7 text-sm text-gray-600", {
-								"pt-5 border-t border-gray-300 px-6 md:px-8 lg:px-10":
-									variant === "gray",
-							})}
-						>
-							{contentKey ? t(contentKey) : content}
-						</div>
-					</motion.div>
-				)}
-			</AnimatePresence>
+						{contentKey ? t(contentKey) : content}
+					</div>
+				</motion.div>
+			) : null}
 		</div>
 	);
 };
