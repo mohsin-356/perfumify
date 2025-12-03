@@ -13,7 +13,6 @@ import RelatedProducts from "@components/product/detail/related-products";
 import RecentlyViewed from "@components/product/detail/recently-viewed";
 import ReviewList from "@components/product/detail/review-list";
 import ReviewForm from "@components/product/detail/review-form";
-import Breadcrumb from "@components/common/breadcrumb";
 
 // Force dynamic rendering since we are fetching from DB
 export const dynamic = "force-dynamic";
