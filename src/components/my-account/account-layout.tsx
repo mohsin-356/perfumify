@@ -3,7 +3,9 @@ import Container from "@components/ui/container";
 import AccountNav from "@components/my-account/account-nav";
 import Subscription from "@components/common/subscription";
 
-const AccountLayout: React.FunctionComponent<{}> = ({ children }) => {
+type AccountLayoutProps = { children?: React.ReactNode };
+
+const AccountLayout: React.FC<AccountLayoutProps> = ({ children }) => {
 	return (
 		<>
 			<PageHeader pageHeader="text-page-my-account" />
