@@ -1,9 +1,10 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import ProductCard from "@components/product/product-card";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { Navigation } from "swiper/core";
 import "swiper/swiper-bundle.css";
-import { Product } from "@framework/types";
+import type { Product } from "@framework/types";
 
 SwiperCore.use([Navigation]);
 
