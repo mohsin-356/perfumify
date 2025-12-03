@@ -1,3 +1,4 @@
+"use client";
 import ProductsBlock from "@containers/products-block";
 import { useNewArrivalProductsQuery } from "@framework/product/get-all-new-arrival-products";
 

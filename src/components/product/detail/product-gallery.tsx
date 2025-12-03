@@ -55,9 +55,8 @@ const ProductGallery: React.FC = () => {
                                     <Image
                                         src={img.url || img.original || img.thumbnail}
                                         alt={`Thumbnail ${idx}`}
-                                        layout="fill"
-                                        objectFit="cover"
-                                        className="rounded-md"
+                                        fill
+                                        className="rounded-md object-cover"
                                     />
                                 </div>
                             </SwiperSlide>
@@ -80,11 +79,10 @@ const ProductGallery: React.FC = () => {
                             <div className="relative w-full h-full">
                                 <Image
                                     src={img.url || img.original}
-                                    alt={product.name}
-                                    layout="fill"
-                                    objectFit="contain"
+                                    alt={String(product.name)}
+                                    fill
                                     priority={idx === 0}
-                                    className="rounded-lg"
+                                    className="rounded-lg object-contain"
                                 />
                             </div>
                         </SwiperSlide>

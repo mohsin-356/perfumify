@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { useProductDetail } from "@contexts/product-detail.context";
 import usePrice from "@framework/product/use-price";
@@ -33,7 +34,7 @@ const ProductInfo: React.FC = () => {
             </div>
 
             {/* Title */}
-            <h1 className="text-3xl md:text-4xl font-bold text-heading">{product.name}</h1>
+            <h1 className="text-3xl md:text-4xl font-bold text-heading">{String(product.name)}</h1>
 
             {/* Reviews (Placeholder) */}
             <div className="flex items-center space-x-2">
@@ -69,9 +70,9 @@ const ProductInfo: React.FC = () => {
             </div>
 
             {/* Short Description */}
-            {product.description && (
+            {Boolean((product as any).description) && (
                 <p className="text-body text-sm leading-7 pt-2 border-t border-gray-200">
-                    {product.description}
+                    {String((product as any).description ?? "")}
                 </p>
             )}
         </div>

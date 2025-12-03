@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import { Collapse } from "@components/common/accordion";
 import ReviewForm from "@components/common/form/review-form";

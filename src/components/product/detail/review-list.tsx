@@ -1,9 +1,8 @@
+"use client";
 import React from "react";
-import { useProductDetail } from "@contexts/product-detail.context";
-import { FiStar, FiThumbsUp, FiCheckCircle } from "react-icons/fi";
+import { FiThumbsUp, FiCheckCircle } from "react-icons/fi";
 
 const ReviewList: React.FC = () => {
-    const { product } = useProductDetail();
 
     // Mock reviews for now
     const reviews = [

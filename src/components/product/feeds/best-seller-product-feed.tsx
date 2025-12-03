@@ -1,3 +1,4 @@
+"use client";
 import ProductsBlock from "@containers/products-block";
 import { useBestSellerProductsQuery } from "@framework/product/get-all-best-seller-products";
 

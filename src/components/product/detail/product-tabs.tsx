@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import { useProductDetail } from "@contexts/product-detail.context";

@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { useProductDetail } from "@contexts/product-detail.context";
 import { FiMinus, FiPlus } from "react-icons/fi";
