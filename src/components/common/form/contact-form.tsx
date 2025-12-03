@@ -2,7 +2,6 @@ import Input from "@components/ui/input";
 import Button from "@components/ui/button";
 import { useForm } from "react-hook-form";
 import TextArea from "@components/ui/text-area";
-import { useTranslation } from "next-i18next";
 import { useState } from "react";
 import http from "@framework/utils/http";
 
@@ -40,7 +39,6 @@ const ContactForm: React.FC = () => {
       setSubmitting(false);
     }
   }
-  const { t } = useTranslation();
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
