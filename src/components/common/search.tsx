@@ -70,7 +70,9 @@ export default function Search() {
 								name="search"
 								value={searchText}
 								onClear={clear}
-								ref={(input) => input && input.focus()}
+								ref={(input) => {
+									if (input) input.focus();
+								}}
 							/>
 						</div>
 						{searchText && (

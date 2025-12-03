@@ -26,8 +26,8 @@ const TextInformation: React.FC<Props> = ({ item, className }) => {
 				<Image
 					src={item.icon}
 					alt={t(`${item.title}`)}
-					width="78"
-					height="78"
+					width={78}
+					height={78}
 				/>
 			</div>
 			<div className="-mb-1">
