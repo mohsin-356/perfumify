@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { FiTrash2 } from "react-icons/fi";
 
 interface DeleteConfirmProps {
@@ -13,7 +12,6 @@ interface DeleteConfirmProps {
 
 export default function DeleteConfirmDialog({
     productName,
-    productId,
     onClose,
     onConfirm,
 }: DeleteConfirmProps) {
