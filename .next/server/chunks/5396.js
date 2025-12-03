@@ -1,0 +1,1 @@
+"use strict";exports.id=5396,exports.ids=[5396],exports.modules={55396:(e,r,t)=>{t.r(r),t.d(r,{default:()=>n});var i=t(11185),d=t.n(i);let s=new(d()).Schema({name:{type:String,required:!0,trim:!0},slug:{type:String,required:!0,unique:!0,lowercase:!0},image:{url:String,public_id:String},description:{type:String}},{timestamps:!0}),n=d().models.Brand||d().model("Brand",s)}};

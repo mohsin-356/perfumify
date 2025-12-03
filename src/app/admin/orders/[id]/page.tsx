@@ -5,6 +5,8 @@ import { formatDate } from "@/lib/date-utils";
 import OrderStatusSelect from "@/components/admin/OrderStatusSelect";
 import OrderTimeline from "@/components/order/order-timeline";
 
+export const dynamic = "force-dynamic";
+
 async function getOrder(id: string) {
     await connectDB();
     const order = await Order.findById(id).populate("customer").lean();

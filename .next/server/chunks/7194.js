@@ -1,0 +1,1 @@
+"use strict";exports.id=7194,exports.ids=[7194],exports.modules={87194:(e,t,r)=>{r.r(t),r.d(t,{default:()=>s});let s=(0,r(45347).createProxy)(String.raw`C:\Users\SMART TECH\Desktop\perfumeStore\src\components\admin\AdminAutoRefresh.tsx#default`)}};

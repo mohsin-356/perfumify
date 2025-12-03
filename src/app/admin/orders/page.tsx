@@ -4,12 +4,14 @@ import Order from "@/models/Order";
 import { FiEye } from "react-icons/fi";
 import { formatDate } from "@/lib/date-utils";
 import { formatPrice } from "@/lib/currency";
-import dynamic from "next/dynamic";
+import nextDynamic from "next/dynamic";
 // Ensure Customer model is registered before populate
 import "@/models/Customer";
 import CopyButton from "@/components/admin/CopyButton";
 
-const AdminAutoRefresh = dynamic(() => import("@/components/admin/AdminAutoRefresh"), { ssr: false });
+export const dynamic = "force-dynamic";
+
+const AdminAutoRefresh = nextDynamic(() => import("@/components/admin/AdminAutoRefresh"), { ssr: false });
 
 async function getOrders() {
     await connectDB();

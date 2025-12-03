@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[3071],{93071:function(e,s,t){t.r(s);var u=t(85893),n=t(90722);t(67294),s.default=e=>{let{isAuthorized:s,href:t,className:r,btnProps:a,children:c}=e;return s?(0,u.jsx)(n.Z,{href:t,className:r,children:c}):(0,u.jsx)("button",{...a})}}}]);

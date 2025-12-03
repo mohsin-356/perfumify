@@ -1,0 +1,131 @@
+{
+  "components\\admin\\RichTextEditor.tsx -> dompurify": {
+    "id": 18848,
+    "files": [
+      "static/chunks/8848.604d673e614d3feb.js"
+    ]
+  },
+  "components\\common\\modal\\managed-modal.tsx -> @components/auth/forget-password-form": {
+    "id": 50040,
+    "files": [
+      "static/chunks/1664-111b77b77123283f.js",
+      "static/chunks/40.46d981cbca7583c6.js"
+    ]
+  },
+  "components\\common\\modal\\managed-modal.tsx -> @components/auth/login-form": {
+    "id": 31762,
+    "files": [
+      "static/chunks/31664189-9514fe9d43ac831e.js",
+      "static/chunks/1664-111b77b77123283f.js",
+      "static/chunks/1762.a717946311648590.js"
+    ]
+  },
+  "components\\common\\modal\\managed-modal.tsx -> @components/auth/sign-up-form": {
+    "id": 51939,
+    "files": [
+      "static/chunks/31664189-9514fe9d43ac831e.js",
+      "static/chunks/1664-111b77b77123283f.js",
+      "static/chunks/1939.1489e8994aeb3861.js"
+    ]
+  },
+  "components\\common\\modal\\managed-modal.tsx -> @components/product/product-popup": {
+    "id": 87881,
+    "files": [
+      "static/chunks/1609-9339ca34f23940d4.js",
+      "static/chunks/9702-29b7811ca1616f37.js",
+      "static/chunks/7881.6f925d9b16e694df.js"
+    ]
+  },
+  "components\\layout\\header\\header.tsx -> @components/cart/cart-button": {
+    "id": 29608,
+    "files": [
+      "static/chunks/9608.805cb5ecb7eac1b1.js"
+    ]
+  },
+  "components\\layout\\layout.tsx -> @components/common/search": {
+    "id": 89859,
+    "files": [
+      "static/chunks/ae51ba48-53c464409a73bbec.js",
+      "static/chunks/9669-fea941294f08720f.js",
+      "static/chunks/9859.90071abc946ca288.js"
+    ]
+  },
+  "components\\layout\\layout.tsx -> @components/layout/mobile-navigation/mobile-navigation": {
+    "id": 20800,
+    "files": [
+      "static/css/d5d4fc68938fb573.css",
+      "static/chunks/133-3ba23a98835d1d17.js",
+      "static/chunks/800.5e75d7a7e4a2892d.js"
+    ]
+  },
+  "components\\layout\\mobile-navigation\\mobile-navigation.tsx -> @components/cart/cart-button": {
+    "id": 29608,
+    "files": [
+      "static/chunks/9608.805cb5ecb7eac1b1.js"
+    ]
+  },
+  "components\\layout\\mobile-navigation\\mobile-navigation.tsx -> @components/layout/header/auth-menu": {
+    "id": 93071,
+    "files": [
+      "static/chunks/3071.9821c88ad17d3422.js"
+    ]
+  },
+  "components\\layout\\mobile-navigation\\mobile-navigation.tsx -> @components/layout/header/mobile-menu": {
+    "id": 72433,
+    "files": [
+      "static/chunks/ae51ba48-53c464409a73bbec.js",
+      "static/chunks/95b64a6e.4d41a28c954fb416.js",
+      "static/chunks/2433.1814c7f170e6672f.js"
+    ]
+  },
+  "pages\\_app.tsx -> @components/common/drawer/managed-drawer": {
+    "id": 72101,
+    "files": [
+      "static/css/d5d4fc68938fb573.css",
+      "static/chunks/ae51ba48-53c464409a73bbec.js",
+      "static/chunks/95b64a6e.4d41a28c954fb416.js",
+      "static/chunks/1664-111b77b77123283f.js",
+      "static/chunks/3074-544fb2328dbda0a1.js",
+      "static/chunks/1609-9339ca34f23940d4.js",
+      "static/chunks/8572-d3668c09e0926224.js",
+      "static/chunks/133-3ba23a98835d1d17.js",
+      "static/chunks/9702-29b7811ca1616f37.js",
+      "static/chunks/2101.390f96e46840306a.js"
+    ]
+  },
+  "pages\\_app.tsx -> @components/common/modal/managed-modal": {
+    "id": 38255,
+    "files": [
+      "static/chunks/ae51ba48-53c464409a73bbec.js",
+      "static/chunks/3074-544fb2328dbda0a1.js",
+      "static/chunks/7536-0179bfe9214ba0c8.js",
+      "static/chunks/8572-d3668c09e0926224.js",
+      "static/chunks/8255.ee709c6330cb9048.js"
+    ]
+  },
+  "pages\\_app.tsx -> react-toastify": {
+    "id": 40782,
+    "files": [
+      "static/chunks/782-59d9736adeb53f43.js"
+    ]
+  },
+  "pages\\index.tsx -> @components/product/feeds/best-seller-product-feed": {
+    "id": 51026,
+    "files": [
+      "static/chunks/5e2a4920-9dfa1271a894507b.js",
+      "static/chunks/9669-fea941294f08720f.js",
+      "static/chunks/1609-9339ca34f23940d4.js",
+      "static/chunks/782-59d9736adeb53f43.js",
+      "static/chunks/8397-b62b0be352ed53fd.js",
+      "static/chunks/5682.b2652e13da350b9a.js"
+    ]
+  },
+  "pages\\index.tsx -> @containers/brand-block": {
+    "id": 26818,
+    "files": [
+      "static/chunks/95b64a6e.4d41a28c954fb416.js",
+      "static/chunks/9669-fea941294f08720f.js",
+      "static/chunks/6818.fd787354518b8851.js"
+    ]
+  }
+}

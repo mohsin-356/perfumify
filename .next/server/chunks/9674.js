@@ -1,0 +1,1 @@
+"use strict";exports.id=9674,exports.ids=[9674],exports.modules={69674:(s,e,t)=>{t.r(e),t.d(e,{default:()=>l});var r=t(20997),d=t(55744);t(16689);let l=({isAuthorized:s,href:e,className:t,btnProps:l,children:o})=>s?r.jsx(d.Z,{href:e,className:t,children:o}):r.jsx("button",{...l})}};
