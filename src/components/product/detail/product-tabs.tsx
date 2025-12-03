@@ -26,12 +26,12 @@ const ProductTabs: React.FC = () => {
                 {/* Description */}
                 <TabPanel>
                     <div className="prose max-w-none text-gray-600 leading-relaxed">
-                        <h3 className="text-lg font-bold text-heading mb-4">About {product.name}</h3>
-                        <p className="mb-4">{product.description}</p>
+                        <h3 className="text-lg font-bold text-heading mb-4">About {String(product.name)}</h3>
+                        <p className="mb-4">{String((product as any).description ?? "")}</p>
 
                         {/* Example static content for now, can be dynamic later */}
                         <ul className="list-disc pl-5 space-y-2">
-                            <li><strong>Brand:</strong> {typeof product.brand === 'object' ? (product.brand as any).name : product.brand}</li>
+                            <li><strong>Brand:</strong> {typeof product.brand === 'object' ? (product.brand as any).name : String((product as any).brand ?? "")}</li>
                             <li><strong>Gender:</strong> Unisex</li>
                             <li><strong>Authenticity:</strong> 100% Original Guaranteed</li>
                         </ul>

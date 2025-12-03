@@ -17,19 +17,19 @@ const ProductInfo: React.FC = () => {
         <div className="product-info space-y-4">
             {/* Brand & Category */}
             <div className="flex items-center text-sm text-gray-500 space-x-2">
-                {product.brand && (
+                {Boolean((product as any).brand) ? (
                     <span className="uppercase tracking-wider font-medium text-gray-900">
                         {typeof product.brand === 'object' ? (product.brand as any).name : String(product.brand)}
                     </span>
-                )}
-                {product.category && (
+                ) : null}
+                {Boolean((product as any).category) ? (
                     <>
                         <span>/</span>
                         <span className="cursor-pointer hover:text-black transition-colors">
-                            {typeof product.category === 'object' ? (product.category as any).name : product.category}
+                            {typeof product.category === 'object' ? (product.category as any).name : String(product.category)}
                         </span>
                     </>
-                )}
+                ) : null}
             </div>
 
             {/* Title */}
