@@ -1,5 +1,6 @@
+"use client";
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Product } from '@framework/types';
+import type { Product } from '@framework/types';
 
 interface ProductDetailContextType {
     product: Product | null;
