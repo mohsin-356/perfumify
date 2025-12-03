@@ -27,3 +27,13 @@ yarn-error.log*
 # .env.test.local
 # .env.production.local
 
+# vercel
+.vercel
+
+# PWA
+workbox-*.js
+sw.js
+.vercel
+
+# Local Netlify folder
+.netlify
