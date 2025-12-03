@@ -5,7 +5,7 @@ import type { FC } from "react";
 import { useState, useEffect, useMemo } from "react";
 import { useUI } from "@contexts/ui.context";
 import usePrice from "@framework/product/use-price";
-import { Product } from "@framework/types";
+import type { Product } from "@framework/types";
 import { FiShoppingCart, FiEye, FiHeart } from "react-icons/fi";
 import { useCart } from "@contexts/cart/cart.context";
 import { useWishlist } from "@contexts/wishlist/wishlist.context";
