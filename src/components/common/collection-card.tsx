@@ -23,6 +23,10 @@ const CollectionCard: React.FC<Props> = ({
 }) => {
 	const { slug, image, title, description } = collection;
 	const { t } = useTranslation("common");
+	const width = typeof imgWidth === "string" ? parseInt(imgWidth, 10) : imgWidth;
+	const height = typeof imgHeight === "string" ? parseInt(imgHeight, 10) : imgHeight;
+	const safeWidth = Number.isFinite(width as number) ? (width as number) : 580;
+	const safeHeight = Number.isFinite(height as number) ? (height as number) : 580;
 	return (
 		<Link
 			href={slug}
@@ -33,8 +37,8 @@ const CollectionCard: React.FC<Props> = ({
 					<Image
 						src={image ?? "/assets/placeholder/collection.svg"}
 						alt={t(`${title}`) || t("text-card-thumbnail")}
-						width={imgWidth}
-						height={imgHeight}
+						width={safeWidth}
+						height={safeHeight}
 						className="bg-gray-300 object-cover sm:rounded-md transition duration-200 ease-in-out group-hover:opacity-90"
 					/>
 				</div>
