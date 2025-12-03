@@ -53,8 +53,7 @@
   "components\\layout\\layout.tsx -> @components/layout/mobile-navigation/mobile-navigation": {
     "id": 20800,
     "files": [
-      "static/css/d5d4fc68938fb573.css",
-      "static/chunks/133-3ba23a98835d1d17.js",
+      "static/chunks/133-7faed1e96da996ad.js",
       "static/chunks/800.5e75d7a7e4a2892d.js"
     ]
   },
@@ -81,14 +80,13 @@
   "pages\\_app.tsx -> @components/common/drawer/managed-drawer": {
     "id": 72101,
     "files": [
-      "static/css/d5d4fc68938fb573.css",
       "static/chunks/ae51ba48-53c464409a73bbec.js",
       "static/chunks/95b64a6e.4d41a28c954fb416.js",
       "static/chunks/1664-111b77b77123283f.js",
       "static/chunks/3074-544fb2328dbda0a1.js",
       "static/chunks/1609-9339ca34f23940d4.js",
       "static/chunks/8572-d3668c09e0926224.js",
-      "static/chunks/133-3ba23a98835d1d17.js",
+      "static/chunks/133-7faed1e96da996ad.js",
       "static/chunks/9702-29b7811ca1616f37.js",
       "static/chunks/2101.390f96e46840306a.js"
     ]
