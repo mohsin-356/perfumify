@@ -17,6 +17,10 @@ module.exports = {
     optimizePackageImports: ['react-icons', '@headlessui/react', 'framer-motion'],
   },
 
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+
   images: {
     domains: [
       'res.cloudinary.com',

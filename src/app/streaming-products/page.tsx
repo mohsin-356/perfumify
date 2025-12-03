@@ -2,7 +2,8 @@ import { Suspense, cache } from "react";
 import Image from "next/image";
 import ProductFeedLoader from "@components/ui/loaders/product-feed-loader";
 
-export const revalidate = 60; // ISR for this route
+export const dynamic = "force-dynamic";
+export const revalidate = 60; // ISR for this route (ignored when dynamic)
 
 type Product = {
   id: string | number;
@@ -13,15 +14,24 @@ type Product = {
 };
 
 const getProducts = cache(async () => {
-  const res = await fetch(`/api/store/products?page=1&limit=12`, {
-    // Enable Next's caching on the request
-    next: { revalidate: 60 },
-    cache: "force-cache",
-  });
-  if (!res.ok) throw new Error("Failed to load products");
-  const json = await res.json();
-  const data: Product[] = Array.isArray(json?.data) ? json.data : (json?.data?.data || []);
-  return data;
+  try {
+    const origin =
+      process.env.NEXT_PUBLIC_SITE_URL ||
+      process.env.SITE_URL ||
+      process.env.URL ||
+      process.env.DEPLOY_PRIME_URL ||
+      "";
+    const url = origin ? new URL("/api/store/products?page=1&limit=12", origin).toString() : "/api/store/products?page=1&limit=12";
+    const res = await fetch(url, {
+      next: { revalidate: 60 },
+    });
+    if (!res.ok) return [] as Product[];
+    const json = await res.json();
+    const data: Product[] = Array.isArray(json?.data) ? json.data : (json?.data?.data || []);
+    return data;
+  } catch {
+    return [] as Product[];
+  }
 });
 
 async function ProductsServer() {

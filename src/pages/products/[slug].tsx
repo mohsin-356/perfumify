@@ -50,17 +50,17 @@ export const getServerSideProps: GetServerSideProps = async ({ locale, params })
 
 	try {
 		await connectDB();
-		const product = await Product.findOne({ slug }).lean();
+		const doc: any = await Product.findOne({ slug }).lean();
 
-		if (product) {
-			productTitle = product.name;
-			productDescription = product.description;
-			const mainImage = product.images?.[0];
+		if (doc) {
+			productTitle = String(doc.name ?? "");
+			productDescription = String(doc.description ?? "");
+			const mainImage = Array.isArray(doc.images) ? doc.images[0] : undefined;
 			if (mainImage) {
 				ogImageUrl = generateProductOgImageUrl({
-					productTitle: product.name,
-					price: product.price,
-					productImagePublicId: mainImage.public_id,
+					productTitle: String(doc.name ?? ""),
+					price: Number(doc.price ?? 0),
+					productImagePublicId: String((mainImage as any).public_id ?? ""),
 				});
 			}
 		}

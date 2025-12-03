@@ -1,8 +1,10 @@
 import { connectDB } from "@/lib/db";
 import Subscription from "@/models/Subscription";
-import dynamic from "next/dynamic";
+import nextDynamic from "next/dynamic";
 
-const AdminAutoRefresh = dynamic(() => import("@/components/admin/AdminAutoRefresh"), { ssr: false });
+export const dynamic = "force-dynamic";
+
+const AdminAutoRefresh = nextDynamic(() => import("@/components/admin/AdminAutoRefresh"), { ssr: false });
 
 async function getSubs() {
   await connectDB();

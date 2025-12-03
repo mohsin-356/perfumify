@@ -6,6 +6,8 @@ import DashboardCharts from "@/components/admin/DashboardCharts";
 import { FiBox, FiShoppingBag, FiUsers, FiDollarSign } from "react-icons/fi";
 import { formatPrice } from "@/lib/currency";
 
+export const dynamic = "force-dynamic";
+
 async function getStats() {
     await connectDB();
     const productCount = await Product.countDocuments();

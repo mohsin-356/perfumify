@@ -3,6 +3,8 @@ import { connectDB } from "@/lib/db";
 import { FiPlus, FiEdit2, FiTrash2 } from "react-icons/fi";
 import CloudImage from "@/components/ui/CloudImage";
 
+export const dynamic = "force-dynamic";
+
 async function getCategories() {
     await connectDB();
     const Category = (await import("@/models/Category")).default;

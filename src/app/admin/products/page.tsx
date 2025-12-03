@@ -2,6 +2,8 @@ import { connectDB } from "@/lib/db";
 import { Product } from "@/models/Product";
 import ProductsListClient from "@/components/admin/ProductsListClient";
 
+export const dynamic = "force-dynamic";
+
 async function getProducts(searchParams: { page?: string; search?: string }) {
     try {
         await connectDB();
