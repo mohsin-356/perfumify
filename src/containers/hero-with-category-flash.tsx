@@ -61,7 +61,7 @@ export function CategoryListCardSection() {
 	const { data, isLoading, error } = useCategoriesQuery({
 		limit: 10,
 	});
-	const categories = data?.categories?.data ?? [];
+	const categoriesList: any[] = ((data as any)?.categories?.data) ?? [];
 
 	return (
 		<>
@@ -72,31 +72,31 @@ export function CategoryListCardSection() {
 			) : width < 1025 ? (
 				<div className="col-span-full">
 					<Carousel breakpoints={categoryResponsive} buttonSize="small">
-						{isLoading
+						{isLoading && categoriesList.length === 0
 							? Array.from({ length: 7 }).map((_, idx) => (
 									<div key={idx}>
 										<CategoryListCardLoader
 											uniqueKey={`category-list-${idx}`}
 										/>
 									</div>
-								))
-							: categories.map((category: any) => (
+							  ))
+							: categoriesList.map((category: any) => (
 									<div key={`sm-category--key${category.id}`}>
 										<CategoryListCard category={category} />
 									</div>
-								))}
+							  ))}
 					</Carousel>
 				</div>
 			) : (
 				<div className="col-span-full lg:col-span-2 grid grid-cols-1 gap-3 justify-between">
-					{isLoading
+					{isLoading && categoriesList.length === 0
 						? Array.from({ length: 7 }).map((_, idx) => (
 								<CategoryListCardLoader
 									key={idx}
 									uniqueKey={`category-list-${idx}`}
 								/>
-							))
-						: categories
+						  ))
+						: categoriesList
 								.slice(0, 7)
 								.map((category: any) => (
 									<CategoryListCard

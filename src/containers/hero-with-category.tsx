@@ -40,7 +40,7 @@ const HeroWithCategory: React.FC<Props> = ({
 	const { data, isLoading, error } = useCategoriesQuery({
 		limit: 10,
 	});
-	const categories = data?.categories?.data ?? [];
+	const categoriesList: any[] = ((data as any)?.categories?.data) ?? [];
 	return (
 		<div
 			className={`grid grid-cols-1 2xl:grid-cols-5 gap-5 xl:gap-7 ${className}`}
@@ -50,7 +50,7 @@ const HeroWithCategory: React.FC<Props> = ({
 			) : width < 1500 ? (
 				<div>
 					<Carousel breakpoints={categoryResponsive} buttonSize="small">
-						{isLoading && categories.length === 0
+						{isLoading && categoriesList.length === 0
 							? Array.from({ length: 8 }).map((_, idx) => (
 									<div key={`category-list-${idx}`}>
 										<CategoryListCardLoader
@@ -58,7 +58,7 @@ const HeroWithCategory: React.FC<Props> = ({
 										/>
 									</div>
 								))
-							: categories.map((category) => (
+							: categoriesList.map((category: any) => (
 									<div key={`category--key${category.id}`}>
 										<CategoryListCard category={category} />
 									</div>
@@ -67,12 +67,12 @@ const HeroWithCategory: React.FC<Props> = ({
 				</div>
 			) : (
 				<div className="2xl:-me-14 grid grid-cols-1 gap-3">
-					{isLoading && categories.length === 0 ? (
+					{isLoading && categoriesList.length === 0 ? (
 						<CategoryListFeedLoader limit={8} />
 					) : (
-						categories
+						categoriesList
 							.slice(0, 8)
-							.map((category) => (
+							.map((category: any) => (
 								<CategoryListCard
 									key={`category--key${category.id}`}
 									category={category}

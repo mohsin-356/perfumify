@@ -1,3 +1,4 @@
+"use client";
 import SectionHeader from "@components/common/section-header";
 import Carousel from "@components/ui/carousel/carousel";
 import CategoryCard from "@components/common/category-card";

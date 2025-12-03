@@ -76,7 +76,7 @@ const CategoryBlock: React.FC<CategoriesProps> = ({
 	const { data, isLoading, error } = useCategoriesQuery({
 		limit: 10,
 	});
-	const categories = data?.categories?.data ?? [];
+	const categoriesList: any[] = ((data as any)?.categories?.data) ?? [];
 
 	return (
 		<div className={className}>
@@ -88,7 +88,7 @@ const CategoryBlock: React.FC<CategoriesProps> = ({
 					breakpoints={type === "rounded" ? breakpoints : breakpointsCircle}
 					buttonClassName="-mt-8 md:-mt-10"
 				>
-					{isLoading && !data
+					{isLoading && categoriesList.length === 0
 						? Array.from({ length: 10 }).map((_, idx) => {
 								if (type === "rounded") {
 									return (
@@ -103,7 +103,7 @@ const CategoryBlock: React.FC<CategoriesProps> = ({
 									</div>
 								);
 						  })
-						: categories.map((category) => (
+						: categoriesList.map((category: any) => (
 								<div key={`category--key-${category.id}`}>
 									<Card
 										item={category}

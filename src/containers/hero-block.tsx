@@ -1,3 +1,4 @@
+"use client";
 import BannerCard from "@components/common/banner-card";
 import Carousel from "@components/ui/carousel/carousel";
 import { homeOneHeroBanner as banners } from "@framework/static/banner";
