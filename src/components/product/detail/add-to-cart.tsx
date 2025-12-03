@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import { useProductDetail } from "@contexts/product-detail.context";
 import { useCart } from "@contexts/cart/cart.context";
