@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { uploadImage } from '@/lib/cloudinary';
+import sharp from 'sharp';
 
 export const runtime = 'nodejs'; // ensures Node.js (not edge) for Cloudinary
 
@@ -22,7 +23,13 @@ export async function POST(req: NextRequest) {
             const arrayBuffer = await file.arrayBuffer();
             const buffer = Buffer.from(arrayBuffer);
 
-            const result = await uploadImage(buffer);
+            const optimized = await sharp(buffer)
+                .rotate()
+                .resize({ width: 2000, height: 2000, fit: 'inside', withoutEnlargement: true })
+                .toFormat('webp', { quality: 85 })
+                .toBuffer();
+
+            const result = await uploadImage(optimized);
 
             return NextResponse.json(
                 {
@@ -47,7 +54,26 @@ export async function POST(req: NextRequest) {
 
         const { file, ...options } = body;
 
-        const result = await uploadImage(file, options);
+        let result;
+        if (typeof file === 'string' && file.startsWith('data:')) {
+            const match = file.match(/^data:(.+);base64,(.*)$/);
+            if (!match) {
+                return NextResponse.json(
+                    { error: 'Invalid data URI' },
+                    { status: 400 },
+                );
+            }
+            const base64Data = match[2];
+            const inputBuffer = Buffer.from(base64Data, 'base64');
+            const optimized = await sharp(inputBuffer)
+                .rotate()
+                .resize({ width: 2000, height: 2000, fit: 'inside', withoutEnlargement: true })
+                .toFormat('webp', { quality: 85 })
+                .toBuffer();
+            result = await uploadImage(optimized, options);
+        } else {
+            result = await uploadImage(file, options);
+        }
 
         return NextResponse.json(
             {
