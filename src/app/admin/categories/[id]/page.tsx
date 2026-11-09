@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { connectDB } from "@/lib/db";
 import CategoryForm from "@/components/admin/CategoryForm";
 import { notFound } from "next/navigation";

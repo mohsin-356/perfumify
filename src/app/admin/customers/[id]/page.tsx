@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { connectDB } from "@/lib/db";
 import Customer from "@/models/Customer";
 import { notFound } from "next/navigation";

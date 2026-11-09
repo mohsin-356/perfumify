@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { connectDB } from "@/lib/db";
 import Review from "@/models/Review";
 import { unstable_noStore as noStore } from "next/cache";

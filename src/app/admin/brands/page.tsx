@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import Link from "next/link";
 import { connectDB } from "@/lib/db";
 import { FiPlus, FiEdit2, FiTrash2 } from "react-icons/fi";

@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { connectDB } from "@/lib/db";
 import Category from "@/models/Category";
 import CategoryForm from "@/components/admin/CategoryForm";

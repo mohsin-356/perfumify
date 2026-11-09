@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { connectDB } from "@/lib/db";
 import BrandForm from "@/components/admin/BrandForm";
 import { notFound } from "next/navigation";
